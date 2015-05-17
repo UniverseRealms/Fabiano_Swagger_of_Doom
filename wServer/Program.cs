@@ -1,16 +1,16 @@
 ﻿#region
 
-using System;
-using System.Globalization;
-using System.IO;
-using System.Threading;
 using db;
 using log4net;
 using log4net.Config;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Threading;
 using wServer.networking;
 using wServer.realm;
-using System.Net.Mail;
-using System.Net;
 
 #endregion
 
@@ -19,7 +19,11 @@ namespace wServer
     internal static class Program
     {
         public static bool WhiteList { get; private set; }
+
         public static bool Verify { get; private set; }
+
+        public static bool TestingMerchants { get; private set; }
+
         internal static SimpleSettings Settings;
 
         private static readonly ILog log = LogManager.GetLogger("Server");
@@ -50,6 +54,7 @@ namespace wServer
 
                 WhiteList = Settings.GetValue<bool>("whiteList", "false");
                 Verify = Settings.GetValue<bool>("verifyEmail", "false");
+                TestingMerchants = Settings.GetValue<bool>("testingMerchants", "false");
                 WhiteListTurnOff = Settings.GetValue<DateTime>("whitelistTurnOff");
 
                 manager.Initialize();
@@ -62,7 +67,7 @@ namespace wServer
 
                 policy.Start();
                 server.Start();
-                if(Settings.GetValue<bool>("broadcastNews", "false") && File.Exists("news.txt"))
+                if (Settings.GetValue<bool>("broadcastNews", "false") && File.Exists("news.txt"))
                     new Thread(autoBroadcastNews).Start();
                 log.Info("Server initialized.");
 
@@ -110,14 +115,14 @@ namespace wServer
 
         private static void autoBroadcastNews()
         {
-                var news = File.ReadAllLines("news.txt");
-                do
-                {
-                    ChatManager cm = new ChatManager(manager);
-                    cm.News(news[new Random().Next(news.Length)]);
-                    Thread.Sleep(300000); //5 min
-                }
-                while (true);
+            var news = File.ReadAllLines("news.txt");
+            do
+            {
+                ChatManager chat = new ChatManager(manager);
+                chat.Announce(news[new Random().Next(news.Length)]);
+                Thread.Sleep(300000); //5 min
             }
+            while (true);
+        }
     }
 }
