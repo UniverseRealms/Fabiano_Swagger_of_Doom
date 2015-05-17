@@ -27,12 +27,12 @@ function export_totals() {
 	var $this = $(this);
 	var type = $this.text().toLowerCase();
 	if (!~EXPORTS.indexOf(type)) return;
-	
+
 	if (type != 'png') {
 		window.open(txtaggr(type), '_blank');
 		return;
 	}
-	
+
 	try {
 		var r = render_totals();
 		if (!$.support.cors) {
@@ -43,7 +43,7 @@ function export_totals() {
 		$this.remove();
 		alert('Sorry, your browser doesn\'t support this feature.');
 	}
-	
+
 	$this.text('...');
 	var req = imgur(r.split(',')[1]);
 	req.complete(function() {
@@ -114,5 +114,3 @@ function imgur(data) {
 		dataType: 'json',
 	});
 }
-
-

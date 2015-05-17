@@ -1,1 +1,1 @@
-﻿AssembleeGameClient201409192100
+﻿client-release

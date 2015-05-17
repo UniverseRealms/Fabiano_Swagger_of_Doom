@@ -1,22 +1,21 @@
-
 		var ProviderController = new function()
 		{
 			var _providerList;
-			
+
 			this.selectProvider = function(e)
 			{
 				var currentSelectedProvider = _providerList.getSelectedProvider();
 				var index = currentSelectedProvider.getPayoutSet().getSelectedIndex();
-				
+
 				var providerId = e.currentTarget.getAttribute("name");
 				// select the new provider
 				var providerToSelect = _providerList.getProviderById(providerId);
 				providerToSelect.setSelected(true);
-				
+
 				var payoutSetToSelect = providerToSelect.getPayoutSet();
 				var newIndex = Math.min(index, payoutSetToSelect.getCount()-1);
 				payoutSetToSelect.selectPayoutByIndex(newIndex);
-				
+
 				if(providerToSelect.getType() === "redeem")
 				{
 					var redeemInput = document.getElementById("redeemInput");
@@ -33,21 +32,19 @@
 					$("#step2").css("visibility", "visible");
 				}
 			};
-	
+
 			this.init = function(providerList)
 			{
 				_providerList = providerList;
 			};
-			
 		}();
-			
-		
+
 		var PayoutController = new function()
 		{
 			var _providerList;
 			var _tooltip;
 			var _customData;
-	
+
 			var _getPayoutId = function(e)
 			{
 				var name = e.currentTarget.getAttribute("name");
@@ -60,7 +57,7 @@
 					return $(e.currentTarget).parents("li")[0].getAttribute("name");
 				}
 			};
-			
+
 			this.selectPayout = function(e)
 			{
 				var payoutId = _getPayoutId(e);
@@ -74,10 +71,10 @@
 				var message = {
 					"method"	: "providerClose"
 				};
-										
+
 				parent.postMessage(JSON.stringify(message), "*");
 			};
-			
+
 			this.buySelectedPayout = function(e)
 			{
 				var payoutSet = _providerList.getSelectedProvider().getPayoutSet();
@@ -86,7 +83,7 @@
 				var extraParams = {};
 				if(isLocalCurrency)
 				{
-					extraParams = 
+					extraParams =
 					{
 						"quantity": 1,		// treating payout as a package
 						"isLocalCurrency" : isLocalCurrency,
@@ -102,9 +99,9 @@
 				var providerId = e.currentTarget.getAttribute("name");
 				// select the new provider
 				var offerProvider = _providerList.getProviderById(providerId);
-				
+
 				var offerId = offerProvider.getId();
-			
+
 				var isLocalCurrency =  _providerList.getSelectedProvider().getName() === KBPAY.Provider.FACEBOOK_LOCAL_CURRENCY;
 				KBPAY.showOffer({"offerid": offerId, "isLocalCurrency": isLocalCurrency}, _paymentClose);
 			};
@@ -123,7 +120,7 @@
 				// show loading
 				var redeemLoading = document.getElementById("redeemLoading");
 				redeemLoading.style.display = "block";
-				KBPAY.redeem(pin, 
+				KBPAY.redeem(pin,
 					function(response)
 					{
 						redeemLoading.style.display = "none";
@@ -155,10 +152,10 @@
 						"method"	: "paymentIframeClose",
 						"iframeDialogId" : iframeDialogId
 					};
-											
+
 					parent.postMessage(JSON.stringify(message), "*");
 			};
-			
+
 			this.showCatalogItems = function(e)
 			{
 				// determine the catalog items
@@ -170,26 +167,25 @@
 				{
 					return;
 				}
-				
+
 				// clear catalog items tooltip
 				var tooltipContent = $(_tooltip).children(".content")[0];
 				tooltipContent.innerHTML = "";
-				
+
 				// set Tooltip Title
 				var catalogTitle = payout.getProperty("catalogTitle") ? "<span>" + pay.lang.en(payout.getProperty("catalogTitle")) + "</span>" : "";
 				$(_tooltip).children(".top").html(catalogTitle);
-				
+
 				var i, catalogItem;
 				for(i = 0; i < catalogItems.length; i++)
 				{
 					catalogItem = catalogItems[i];
 					tooltipContent.innerHTML += '<div class="catalogItem">' + catalogItem.title + " x " + catalogItem.numOfItems + '</div>';
 				}
-					
-				
+
 				_tooltip.style.visibility = "hidden";
 				_tooltip.style.display = "block";
-	
+
 				// determine x
 				var target = $(e.currentTarget);
 				var targetLeft = target.offset().left;
@@ -198,7 +194,7 @@
 				var normalX = targetLeft + targetWidth;
 				var flippedX = Math.max(targetLeft - tooltipWidth, 0);
 				var x = document.body.clientWidth > normalX + tooltipWidth ? normalX : flippedX;
-				
+
 				//determine y
 				var targetTop = target.offset().top;
 				var targetHeight = target.height();
@@ -206,25 +202,23 @@
 				var normalY = targetTop;
 				var flippedY = Math.max(targetTop - tooltipHeight, 0);
 				var y = document.body.clientHeight > normalY + tooltipHeight ? normalY : flippedY;
-				
+
 				_tooltip.style.left = x + "px";
 				_tooltip.style.top = y + "px";
 				_tooltip.style.visibility = "visible";
-				
 			};
-			
+
 			this.hideCatalogItems = function(e)
 			{
 				_tooltip.style.display = "none";
 			};
-			
+
 			this.init = function(providerList, tooltipContainer, customData)
 			{
 				_providerList = providerList;
 				_tooltip = tooltipContainer;
 				_customData = customData;
 			};
-			
 		}();
 
 		var PageController = new function()
@@ -239,43 +233,42 @@
 				{
 					var paymentContainer  = document.getElementById("payments");
 					paymentContainer.innerHTML = "";
-			
+
 					// get the template, process data and render UI
 					$.ajax(
 					{
 						type: "GET",
 						url: templateURL,
 						dataType: "xml",
-						success: function(response) 
+						success: function(response)
 						{
-		
 							// template for the main container
 							var templateText = $(response).find("#mainContainer").text();
-		
+
 							// template for provider
 							var providerTemplateText = $.trim($(response).find("#provider").text());
-		
+
 							// template for payout
 							var payoutTemplateText = $.trim($(response).find("#payout").text());
-							
+
 							paymentContainer.innerHTML = templateText.process(providerInfos);
-			
+
 							var providerList = new KBPAY.ProviderList();
 							var providerListView = new KBPAY.ProviderListView("providerList");
 							providerListView.render(document.getElementById("providerContainer"));
-			
+
 							PayoutController.init(providerList, document.getElementById("tooltip"), customData);
 							ProviderController.init(providerList);
-		
+
 							var gameCurrency = providerInfos.game.currencyName;
-							
+
 							// process payoutsets
 							for(j= 0; j < providerInfos.payoutSets.length; j++)
 							{
 								providerInfo = providerInfos.payoutSets[j];
 								providerInfo.type = "payment";
-			
-								// Alias allow us to rename a payment provider 
+
+								// Alias allow us to rename a payment provider
 								switch(providerInfo.providerName.toLowerCase())
 								{
 									case "boku":
@@ -289,10 +282,10 @@
 								}
 								// unique id allow one payment provider to apprear more than once in the view
 								providerInfo.uniqueId = providerInfo.providerId + "_" + j;
-			
+
 								// create payoutset and provider list model
 								payoutInfos = providerInfo.payouts;
-			
+
 								// show provider only if it has payout
 								if(payoutInfos.length > 0)
 								{
@@ -300,17 +293,16 @@
 									payoutSet = new KBPAY.PayoutSet();
 									provider.setPayoutSet(payoutSet);
 									providerList.add(provider);
-									
+
 									// create provider view
 									providerListItemView = new KBPAY.ProviderListItemView(provider, providerTemplateText);
 									providerListView.add(providerListItemView);
 									payoutSetView = new KBPAY.PayoutSetView(provider, "packages");
 									payoutSetView.render(document.getElementById("packageContainer"));
-									
+
 									// handling payment provider click (make it selected)
 									$(providerListItemView.getHtmlElement()).bind("click", ProviderController.selectProvider);
-									
-			
+
 									// process payouts
 									for(i = 0; i < payoutInfos.length; i++)
 									{
@@ -321,13 +313,13 @@
 											payout = new KBPAY.Payout(payoutInfo);
 											payout.setIgcName(gameCurrency);
 											payoutSet.add(payout);
-			
+
 											// create payout view
 											payoutView = new KBPAY.PayoutView(payout, gameCurrency, payoutTemplateText, null, providerInfos.game.settings);
-											
+
 											// hanle payout view click (make it selected)
 											$(payoutView.getHtmlElement()).bind("click", PayoutController.selectPayout);
-			
+
 											if(payout.getNumOfBonusItems() > 0)
 											{
 												// handling mouse enter / leave the bonus items area
@@ -339,7 +331,7 @@
 									}
 								}
 							}
-		
+
 							if(providerInfos.offer)
 							{
 								var offerProvider = new KBPAY.Provider(
@@ -356,7 +348,7 @@
 								$(offerProviderListItemView.getHtmlElement()).bind("click", PayoutController.showOffer);
 								providerListView.add(offerProviderListItemView);
 							}
-		
+
 							// handling buy button click
 							$("#buyButton").bind("click", PayoutController.buySelectedPayout);
 							$("#redeemButton").bind("click", PayoutController.redeem);
@@ -372,7 +364,6 @@
 					}
 					document.getElementById("payments").innerHTML = "error rendering template";
 				}
-		
 			};
 
 			this.onWindowLoad = function(options, payoutList, templateURL)
@@ -391,7 +382,7 @@
 					}
 					else
 					{
-						document.getElementById("payments").innerHTML = 
+						document.getElementById("payments").innerHTML =
 						'<div style="text-align:center">\
 							<span style="display:inline-block;background:#FFF;color:#000;border:1px solid #000; margin-top:30px;min-width:350px">\
 								<div class="titleBar"></div>\
@@ -409,5 +400,3 @@
 				}
 			};
 		}();
-		
-					

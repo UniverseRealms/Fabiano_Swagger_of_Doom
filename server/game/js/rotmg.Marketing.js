@@ -8,15 +8,15 @@ rotmg.Marketing = (function() {
   };
 
   var appendIframe_ = function(url) {
-    var pixelFrame = document.createElement("IFRAME"); 
+    var pixelFrame = document.createElement("IFRAME");
 
     pixelFrame.setAttribute("src", url);
-    pixelFrame.setAttribute("frameborder", "0"); 
-    pixelFrame.style.width = "1px"; 
+    pixelFrame.setAttribute("frameborder", "0");
+    pixelFrame.style.width = "1px";
     pixelFrame.style.height = "1px";
     pixelFrame.style.overflow = "hidden";
     pixelFrame.style.border = "none";
-    document.body.appendChild(pixelFrame); 
+    document.body.appendChild(pixelFrame);
   };
 
   var track_ = function(name) {

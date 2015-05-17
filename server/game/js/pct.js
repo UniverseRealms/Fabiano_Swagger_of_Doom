@@ -19,20 +19,20 @@
                 }
                 else {
                     this.opener = window.opener;
-                }                
+                }
             }
             else {
                 this.opener = null;
             }
-            
+
             var localStorageItem = '';
 
 			if (window.addEventListener)
 			{
-                if (window.localStorage && 
-                        window.localStorage.getItem && 
+                if (window.localStorage &&
+                        window.localStorage.getItem &&
                         typeof(window.localStorage.getItem) == 'function') {
-                    localStorageItem = localStorage.getItem('__sfCheckoutObserverData');            
+                    localStorageItem = localStorage.getItem('__sfCheckoutObserverData');
                 }
                 if (localStorageItem && typeof(localStorageItem) == 'string') {
                     try {
@@ -45,7 +45,7 @@
                 else {
                     this.storedData = {};
                 }
-                
+
 				window.addEventListener("message", this.openerMessagesRouter.bind(this), false);
 
 				if (this.opener) // A spawned window
@@ -139,7 +139,6 @@
 			this.spawnObserveCheckout();
 		},
 
-
 		completeCheckoutCycle: function()
 		{
 			var sb = similarproducts && similarproducts.b || {};
@@ -206,7 +205,7 @@
 
 		openerMessagesRouter: function(event)
 		{
-            var eventData = event.data;            
+            var eventData = event.data;
 			var arr, data;
             if (eventData && eventData.split) {
                arr = event.data.split('__similarproductsCheckoutNamespaceMarker');
@@ -236,14 +235,13 @@
                 fn: fn,
                 data: data
             };
-            
+
             var messageString = JSON.stringify(message);
             if (messageString && wnd && wnd.postMessage) {
                 try {
                     wnd.postMessage('__similarproductsCheckoutNamespaceMarker'+messageString, '*');
                 }
                 catch (e) {
-                    
                 }
             }
 		}
