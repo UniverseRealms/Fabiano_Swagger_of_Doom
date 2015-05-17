@@ -120,42 +120,17 @@ namespace wServer.logic.behaviors.PetBehaviors
         private int CalculateHeal(int level, ref int cooldown)
         {
             if (Enumerable.Range(0, 30).Contains(level))
-            {
-                cooldown = 4000;
-                return 13;
-            }
+                cooldown = 3821;
             else if (Enumerable.Range(30, 20).Contains(level))
-            {
-                cooldown = 3000;
-                return 23;
-            }
+                cooldown = 2658;
             else if (Enumerable.Range(50, 20).Contains(level))
-            {
-                cooldown = 1500;
-                return 40;
-            }
+                cooldown = 1958;
             else if (Enumerable.Range(70, 20).Contains(level))
-            {
-                cooldown = 1000;
-                return 69;
-            }
+                cooldown = 1420;
             else if (Enumerable.Range(90, 11).Contains(level))
-            {
-                cooldown = 750;
-                return 90;
-            }
-            throw new Exception("Invalid PetLevel");
-            //switch (level)
-            //{
-            //    case 1:
-            //        cooldown = 10000;
-            //        return 10;
-            //    case 2:
-            //        cooldown = 9200;
-            //        return 11;
-            //    default:
-            //        throw new Exception("Invalid PetLevel");
-            //}
+                cooldown = 1000;
+            return (int)Math.Round(5.83283522976111E-07 * Math.Pow(level, 4) - 0.0000469692310249639 * Math.Pow(level, 3) + 0.0076256636031656 * Math.Pow(level, 2) - 0.0776182463432286 * level + 10.0998122309192);
+            throw new Exception("Pet level not supported");
         }
     }
 }
