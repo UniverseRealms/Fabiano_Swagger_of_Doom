@@ -130,7 +130,7 @@ namespace wServer.logic.behaviors.PetBehaviors
             else if (Enumerable.Range(90, 11).Contains(level))
                 cooldown = 1000;
             return (int)Math.Round(5.83283522976111E-07 * Math.Pow(level, 4) - 0.0000469692310249639 * Math.Pow(level, 3) + 0.0076256636031656 * Math.Pow(level, 2) - 0.0776182463432286 * level + 10.0998122309192);
-            throw new Exception("Pet level not supported");
+            throw new Exception("PetLevel not supported");
         }
     }
 }
