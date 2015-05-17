@@ -33,11 +33,12 @@ namespace wServer.realm.entities
         public WmapTerrain Terrain { get; set; }
 
         public int AltTextureIndex { get; set; }
+
         public string LootState { get; set; }
 
         public Position SpawnPoint
         {
-            get { return pos ?? new Position {X = X, Y = Y}; }
+            get { return pos ?? new Position { X = X, Y = Y }; }
         }
 
         protected override void ExportStats(IDictionary<StatsType, object> stats)
@@ -49,7 +50,7 @@ namespace wServer.realm.entities
         protected override void ImportStats(StatsType stats, object val)
         {
             if (stats == StatsType.AltTextureIndex)
-                AltTextureIndex = (int) val;
+                AltTextureIndex = (int)val;
             base.ImportStats(stats, val);
         }
 
@@ -89,7 +90,7 @@ namespace wServer.realm.entities
                 int def = ObjectDesc.Defense;
                 if (noDef)
                     def = 0;
-                dmg = (int) StatsManager.GetDefenseDamage(this, dmg, def);
+                dmg = (int)StatsManager.GetDefenseDamage(this, dmg, def);
                 int effDmg = dmg;
                 if (effDmg > HP)
                     effDmg = HP;
@@ -146,21 +147,22 @@ namespace wServer.realm.entities
                 int def = ObjectDesc.Defense;
                 if (projectile.Descriptor.ArmorPiercing)
                     def = 0;
-                int dmg = (int) StatsManager.GetDefenseDamage(this, projectile.Damage, def);
+                int dmg = (int)StatsManager.GetDefenseDamage(this, projectile.Damage, def);
                 if (!HasConditionEffect(ConditionEffects.Invulnerable))
                     HP -= dmg;
                 foreach (ConditionEffect effect in projectile.Descriptor.Effects)
                 {
                     if (effect.Effect == ConditionEffectIndex.Stunned && ObjectDesc.StunImmune ||
                         effect.Effect == ConditionEffectIndex.Paralyzed && ObjectDesc.ParalyzedImmune ||
-                        effect.Effect == ConditionEffectIndex.Dazed && ObjectDesc.DazedImmune) continue;
+                        effect.Effect == ConditionEffectIndex.Dazed && ObjectDesc.DazedImmune)
+                        continue;
                     ApplyConditionEffect(effect);
                 }
                 Owner.BroadcastPacket(new DamagePacket
                 {
                     TargetId = Id,
                     Effects = projectile.ConditionEffects,
-                    Damage = (ushort) dmg,
+                    Damage = (ushort)dmg,
                     Killed = HP < 0,
                     BulletId = projectile.ProjectileId,
                     ObjectId = projectile.ProjectileOwner.Self.Id
@@ -181,17 +183,17 @@ namespace wServer.realm.entities
         public override void Tick(RealmTime time)
         {
             if (pos == null)
-                pos = new Position {X = X, Y = Y};
+                pos = new Position { X = X, Y = Y };
 
             if (!stat && HasConditionEffect(ConditionEffects.Bleeding))
             {
                 if (bleeding > 1)
                 {
-                    HP -= (int) bleeding;
-                    bleeding -= (int) bleeding;
+                    HP -= (int)bleeding;
+                    bleeding -= (int)bleeding;
                     UpdateCount++;
                 }
-                bleeding += 28*(time.thisTickTimes/1000f);
+                bleeding += 28 * (time.thisTickTimes / 1000f);
             }
             base.Tick(time);
         }

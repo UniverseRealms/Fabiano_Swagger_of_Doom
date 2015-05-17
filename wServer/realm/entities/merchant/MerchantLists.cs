@@ -1,9 +1,9 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
 using db.data;
 using log4net;
+using System;
+using System.Collections.Generic;
 
 #endregion
 
@@ -317,7 +317,7 @@ namespace wServer.realm.entities
             0xb41, 0xbab, 0xbad, 0xbac
         };
 
-        private static readonly ILog log = LogManager.GetLogger(typeof (MerchantLists));
+        private static readonly ILog log = LogManager.GetLogger(typeof(MerchantLists));
 
         public static void InitMerchatLists(XmlData data)
         {

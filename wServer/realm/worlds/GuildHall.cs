@@ -6,6 +6,7 @@ namespace wServer.realm.worlds
     public class GuildHall : World
     {
         public string Guild { get; set; }
+
         public int GuildLevel { get; set; }
 
         public GuildHall(string guild)

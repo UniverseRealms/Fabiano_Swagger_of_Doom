@@ -27,9 +27,11 @@ namespace wServer.logic
         }
 
         public Projectile LastProjectile { get; private set; }
+
         public Player LastHitter { get; private set; }
 
         public DamageCounter Corpse { get; set; }
+
         public DamageCounter Parent { get; set; }
 
         public void UpdateEnemy(Enemy enemy)
@@ -85,16 +87,16 @@ namespace wServer.logic
             }
             if (totalPlayer != 0)
             {
-                float totalExp = totalPlayer*((float) enemy.ObjectDesc.MaxHP/10f)*(enemy.ObjectDesc.ExpMultiplier ?? 1);
-                float lowerLimit = totalExp/totalPlayer*0.1f;
+                float totalExp = totalPlayer * ((float)enemy.ObjectDesc.MaxHP / 10f) * (enemy.ObjectDesc.ExpMultiplier ?? 1);
+                float lowerLimit = totalExp / totalPlayer * 0.1f;
                 int lvUps = 0;
                 foreach (Tuple<Player, int> i in eligiblePlayers)
                 {
-                    float playerXp = totalExp*i.Item2/totalDamage;
+                    float playerXp = totalExp * i.Item2 / totalDamage;
 
-                    float upperLimit = i.Item1.ExperienceGoal*0.1f;
+                    float upperLimit = i.Item1.ExperienceGoal * 0.1f;
                     if (i.Item1.Quest == enemy)
-                        upperLimit = i.Item1.ExperienceGoal*0.5f;
+                        upperLimit = i.Item1.ExperienceGoal * 0.5f;
 
                     if (playerXp < lowerLimit) playerXp = lowerLimit;
                     if (playerXp > upperLimit) playerXp = upperLimit;
@@ -102,7 +104,7 @@ namespace wServer.logic
                     bool killer = (Parent ?? this).LastHitter == i.Item1;
                     if (i.Item1.EnemyKilled(
                         enemy,
-                        (int) playerXp,
+                        (int)playerXp,
                         killer) && !killer)
                         lvUps++;
                 }

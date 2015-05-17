@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using wServer.networking.cliPackets;
 using wServer.networking.svrPackets;
@@ -13,7 +12,9 @@ namespace wServer.realm
     public class TradeManager
     {
         private readonly static ILog log = LogManager.GetLogger(typeof(TradeManager));
+
         public static List<KeyValuePair<Player, Player>> CurrentRequests { get; }
+
         public static List<Player> TradingPlayers { get; }
 
         private readonly Player player1, player2;
@@ -118,7 +119,7 @@ namespace wServer.realm
 
         public void AcceptTrade(Player sender, AcceptTradePacket pkt)
         {
-            if(sender == player1)
+            if (sender == player1)
             {
                 if (pkt.MyOffers.SequenceEqual(player1Trades) && pkt.YourOffers.SequenceEqual(player2Trades))
                 {

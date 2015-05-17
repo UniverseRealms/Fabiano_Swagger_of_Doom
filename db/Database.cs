@@ -1,14 +1,13 @@
 ﻿#region
 
+using db.data;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using db.data;
-using Ionic.Zlib;
-using MySql.Data.MySqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 #endregion
 
@@ -17,6 +16,7 @@ namespace db
     public partial class Database : IDisposable
     {
         private static readonly List<string> emails = new List<string>();
+
         private static readonly string[] Names =
         {
             "Darq", "Deyst", "Drac", "Drol",
@@ -32,6 +32,7 @@ namespace db
 
         private static string _host, _databaseName, _user, _password;
         private readonly MySqlConnection _con;
+
         public MySqlConnection Connection { get { return _con; } }
 
         public Database(string host, string database, string user, string password)
@@ -55,7 +56,7 @@ namespace db
                     {
                         s = rdr.ReadLine();
                         if (s != null && !s.StartsWith("#"))
-                            if(!emails.Contains(s))
+                            if (!emails.Contains(s))
                                 emails.Add(s);
                     } while (s != null);
                 }
@@ -238,8 +239,8 @@ AND characters.charId=death.chrId;";
 
             var fixedTime = new DateTime(converted.Year, converted.Month, converted.Day, 17, 0, 0, 0, DateTimeKind.Unspecified);
 
-            if (quest == null || ((converted.Hour >= 17 && converted.Day-1 == quest.Time.Day) || quest.Time.AddDays(1) <= converted))
-                    quest = GenerateDailyQuest(accId, data, fixedTime);
+            if (quest == null || ((converted.Hour >= 17 && converted.Day - 1 == quest.Time.Day) || quest.Time.AddDays(1) <= converted))
+                quest = GenerateDailyQuest(accId, data, fixedTime);
             return quest;
         }
 
@@ -258,8 +259,8 @@ AND characters.charId=death.chrId;";
             cmd.CommandText = "UPDATE accounts SET muted=1 WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accId", accId);
             cmd.ExecuteNonQuery();
-
         }
+
         public void UnmuteAccount(string accId)
         {
             MySqlCommand cmd = CreateQuery();
@@ -326,11 +327,11 @@ AND characters.charId=death.chrId;";
                 _.Value.Tier == 6 || _.Value.Tier == 7 ||
                 _.Value.Tier == 8 || _.Value.Tier == 9 ||
                 _.Value.Tier == 10).Select(_ => _.Value).ToList();
-            candidates.AddRange(data.Items.Where(_ => 
+            candidates.AddRange(data.Items.Where(_ =>
                 _.Value.SlotType == 4 || _.Value.SlotType == 5 ||
                 _.Value.SlotType == 11 || _.Value.SlotType == 12 ||
                 _.Value.SlotType == 13 || _.Value.SlotType == 15 ||
-                _.Value.SlotType == 16 ||  _.Value.SlotType == 18 ||
+                _.Value.SlotType == 16 || _.Value.SlotType == 18 ||
                 _.Value.SlotType == 19 || _.Value.SlotType == 20 ||
                 _.Value.SlotType == 21 || _.Value.SlotType == 22 ||
                 _.Value.SlotType == 23 || _.Value.SlotType == 25)
@@ -343,7 +344,7 @@ AND characters.charId=death.chrId;";
                 while (items.Contains(item)) item = candidates[(r = rand.Next(candidates.Count))].ObjectType;
                 items.Add(item);
             }
-            while(items.Count < DailyQuestConstants.QuestsPerDay);
+            while (items.Count < DailyQuestConstants.QuestsPerDay);
 
             var cmd = CreateQuery();
             cmd.CommandText = "INSERT INTO dailyQuests(accId, goals, tier, time) VALUES(@accId, @goals, @tier, @time) ON DUPLICATE KEY UPDATE accId=@accId, goals=@goals, tier=@tier, time=@time;";
@@ -393,7 +394,7 @@ AND characters.charId=death.chrId;";
             return GetAccount(accId, data);
         }
 
-        public Account GetAccount(string id, XmlData data, string uuid=null, string password=null)
+        public Account GetAccount(string id, XmlData data, string uuid = null, string password = null)
         {
             if (String.IsNullOrWhiteSpace(id)) return CreateGuestAccount(id ?? String.Empty);
             MySqlCommand cmd = CreateQuery();
@@ -699,6 +700,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
             }
             return null;
         }
+
         public List<AbilityItem> GetPetAbilities(MySqlDataReader rdr)
         {
             List<AbilityItem> ret = new List<AbilityItem>();
@@ -872,18 +874,18 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
         {
             if (acc == null || chr == null) return;
             MySqlCommand cmd = CreateQuery();
-            cmd.CommandText = @"UPDATE characters SET 
-level=@level, 
-exp=@exp, 
-fame=@fame, 
+            cmd.CommandText = @"UPDATE characters SET
+level=@level,
+exp=@exp,
+fame=@fame,
 items=@items,
 hpPotions=@hpPots,
 mpPotions=@mpPots,
-stats=@stats, 
-hp=@hp, 
-mp=@mp, 
-tex1=@tex1, 
-tex2=@tex2, 
+stats=@stats,
+hp=@hp,
+mp=@mp,
+tex1=@tex1,
+tex2=@tex2,
 petId=@pet,
 fameStats=@fameStats,
 hasBackpack=@hasBackpack,
@@ -930,10 +932,10 @@ WHERE accId=@accId AND charId=@charId;";
             cmd.ExecuteNonQuery();
 
             cmd = CreateQuery();
-            cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame) 
-VALUES(@accId, @objType, @bestLv, @bestFame) 
-ON DUPLICATE KEY UPDATE 
-bestLv = GREATEST(bestLv, @bestLv), 
+            cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame)
+VALUES(@accId, @objType, @bestLv, @bestFame)
+ON DUPLICATE KEY UPDATE
+bestLv = GREATEST(bestLv, @bestLv),
 bestFame = GREATEST(bestFame, @bestFame);";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@objType", chr.ObjectType);
@@ -981,9 +983,9 @@ items = @items;";
         public void Death(XmlData data, Account acc, Char chr, string killer) //Save first
         {
             MySqlCommand cmd = CreateQuery();
-            cmd.CommandText = @"UPDATE characters SET 
-dead=TRUE, 
-deathTime=NOW() 
+            cmd.CommandText = @"UPDATE characters SET
+dead=TRUE,
+deathTime=NOW()
 WHERE accId=@accId AND charId=@charId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@charId", chr.CharacterId);
@@ -993,19 +995,19 @@ WHERE accId=@accId AND charId=@charId;";
             int finalFame = chr.FameStats.CalculateTotal(data, acc, chr, chr.CurrentFame, out firstBorn);
 
             cmd = CreateQuery();
-            cmd.CommandText = @"UPDATE stats SET 
-fame=fame+@amount, 
-totalFame=totalFame+@amount 
+            cmd.CommandText = @"UPDATE stats SET
+fame=fame+@amount,
+totalFame=totalFame+@amount
 WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@amount", finalFame);
             cmd.ExecuteNonQuery();
 
             cmd = CreateQuery();
-            cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame) 
-VALUES(@accId, @objType, @bestLv, @bestFame) 
-ON DUPLICATE KEY UPDATE 
-bestLv = GREATEST(bestLv, @bestLv), 
+            cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame)
+VALUES(@accId, @objType, @bestLv, @bestFame)
+ON DUPLICATE KEY UPDATE
+bestLv = GREATEST(bestLv, @bestLv),
 bestFame = GREATEST(bestFame, @bestFame);";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@objType", chr.ObjectType);
@@ -1035,7 +1037,7 @@ WHERE id=@id;";
 
             cmd = CreateQuery();
             cmd.CommandText =
-                @"INSERT INTO death(accId, chrId, name, charType, tex1, tex2, skin, items, fame, exp, fameStats, totalFame, firstBorn, killer) 
+                @"INSERT INTO death(accId, chrId, name, charType, tex1, tex2, skin, items, fame, exp, fameStats, totalFame, firstBorn, killer)
 VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp, @fameStats, @totalFame, @firstBorn, @killer);";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@chrId", chr.CharacterId);
@@ -1053,7 +1055,6 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             cmd.Parameters.AddWithValue("@killer", killer);
             cmd.ExecuteNonQuery();
         }
-
 
         public void AddToArenaLb(int wave, List<string> participants)
         {
@@ -1081,14 +1082,17 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
                 case "alltime":
                     cmd.CommandText = "SELECT * FROM arenalb ORDER BY wave DESC LIMIT 20";
                     break;
+
                 case "weekly":
                     cmd.CommandText =
                         "SELECT * FROM arenalb WHERE date BETWEEN date_sub(now(), INTERVAL 1 WEEK) AND NOW() ORDER BY wave DESC LIMIT 20";
                     break;
+
                 case "personal":
                     cmd.CommandText = "SELECT * FROM arenalb WHERE accid = @accid ORDER BY wave DESC LIMIT 20";
                     cmd.Parameters.AddWithValue("@acc", acc.AccountId);
                     break;
+
                 default:
                     return null;
             }
@@ -1132,7 +1136,6 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
             return guildrankings.ToArray();
         }
-
 
         public List<string> GetLockeds(string accId)
         {
@@ -1243,7 +1246,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
                 //Not finished yet.
                 cmd = CreateQuery();
                 cmd.CommandText =
-                    @"INSERT INTO pets(accId, petId, objType, skinName, skin, rarity, maxLevel, abilities, levels, xp) 
+                    @"INSERT INTO pets(accId, petId, objType, skinName, skin, rarity, maxLevel, abilities, levels, xp)
 VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilities, @levels, @xp);";
                 cmd.Parameters.AddWithValue("@accId", acc.AccountId);
                 cmd.Parameters.AddWithValue("@petId", item.InstanceId);
@@ -1306,7 +1309,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
                 while (rdr.Read())
                 {
                     DateTime lastSeen = rdr.GetDateTime("lastSeen");
-                    if(lastSeen == DateTime.MinValue)
+                    if (lastSeen == DateTime.MinValue)
                         return false;
 
                     int timeInSec = 600 - (int)(DateTime.UtcNow - lastSeen).TotalSeconds;
@@ -1386,10 +1389,10 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
                 foreach (var stat in chrs.Account.Stats.ClassStates)
                 {
                     cmd = CreateQuery();
-                    cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame) 
-VALUES(@accId, @objType, @bestLv, @bestFame) 
-ON DUPLICATE KEY UPDATE 
-bestLv = GREATEST(bestLv, @bestLv), 
+                    cmd.CommandText = @"INSERT INTO classstats(accId, objType, bestLv, bestFame)
+VALUES(@accId, @objType, @bestLv, @bestFame)
+ON DUPLICATE KEY UPDATE
+bestLv = GREATEST(bestLv, @bestLv),
 bestFame = GREATEST(bestFame, @bestFame);";
                     cmd.Parameters.AddWithValue("@accId", oldAccId);
                     cmd.Parameters.AddWithValue("@objType", Utils.FromString(stat.ObjectType.ToString()));

@@ -1,5 +1,6 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using log4net;
 
 #endregion
 
@@ -16,7 +16,7 @@ namespace db.data
 {
     public class XmlData : IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (XmlData));
+        private static readonly ILog log = LogManager.GetLogger(typeof(XmlData));
         private readonly XElement addition;
 
         private readonly Dictionary<string, ushort> id2type_obj;
@@ -97,25 +97,31 @@ namespace db.data
             get { return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location); }
         }
 
-
         public IDictionary<ushort, XElement> ObjectTypeToElement { get; private set; }
 
         public IDictionary<ushort, string> ObjectTypeToId { get; private set; }
+
         public IDictionary<string, ushort> IdToObjectType { get; private set; }
 
         public IDictionary<ushort, XElement> TileTypeToElement { get; private set; }
 
         public IDictionary<ushort, string> TileTypeToId { get; private set; }
+
         public IDictionary<string, ushort> IdToTileType { get; private set; }
 
         public IDictionary<ushort, TileDesc> Tiles { get; private set; }
+
         public IDictionary<ushort, Item> Items { get; private set; }
+
         public IDictionary<ushort, ObjectDesc> ObjectDescs { get; private set; }
+
         public IDictionary<ushort, PortalDesc> Portals { get; private set; }
+
         public IDictionary<ushort, PetStruct> TypeToPet { get; private set; }
+
         public IDictionary<string, PetSkin> IdToPetSkin { get; private set; }
+
         public IDictionary<ushort, SetTypeSkin> SetTypeSkins { get; private set; }
-        
 
         public string[] AdditionXml
         {
@@ -180,6 +186,7 @@ namespace db.data
                     case "Dye":
                         items[type] = new Item((short)type, elem);
                         break;
+
                     case "Portal":
                     case "GuildHallPortal":
                         try
@@ -189,19 +196,23 @@ namespace db.data
                         catch
                         {
                             Console.WriteLine("Error for portal: " + type + " id: " + id);
-                            /*3392,1792,1795,1796,1805,1806,1810,1825 -- no location, assume nexus?* 
+                            /*3392,1792,1795,1796,1805,1806,1810,1825 -- no location, assume nexus?*
         *  Tomb Portal of Cowardice,  Dungeon Portal,  Portal of Cowardice,  Realm Portal,  Glowing Portal of Cowardice,  Glowing Realm Portal,  Nexus Portal,  Locked Wine Cellar Portal*/
                         }
                         break;
+
                     case "Pet":
                         type2pet[type] = new PetStruct(type, elem);
                         break;
+
                     case "PetSkin":
                         id2pet_skin[id] = new PetSkin(type, elem);
                         break;
+
                     case "PetBehavior":
                     case "PetAbility":
                         break;
+
                     default:
                         objDescs[type] = new ObjectDesc(type, elem);
                         break;
@@ -261,7 +272,7 @@ namespace db.data
         {
             if (prevUpdateCount != updateCount)
             {
-                addXml = new[] {addition.ToString()};
+                addXml = new[] { addition.ToString() };
                 prevUpdateCount = updateCount;
             }
         }

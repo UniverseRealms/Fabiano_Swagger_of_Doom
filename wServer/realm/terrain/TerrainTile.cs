@@ -26,15 +26,25 @@ namespace wServer.realm.terrain
     internal struct TerrainTile : IEquatable<TerrainTile>
     {
         public string Biome { get; set; }
+
         public byte Elevation { get; set; }
+
         public float Moisture { get; set; }
+
         public string Name { get; set; }
+
         public int PolygonId { get; set; }
+
         public TileRegion Region { get; set; }
+
         public TerrainType Terrain { get; set; }
+
         public ushort TileId { get; set; }
+
         public string TileObj { get; set; }
+
         public int X { get; set; }
+
         public int Y { get; set; }
 
         public bool Equals(TerrainTile other)

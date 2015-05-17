@@ -2,10 +2,6 @@
 using db.JsonObjects;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Net;
-using System.Web;
 
 namespace server.account
 {
@@ -39,7 +35,7 @@ namespace server.account
                             return;
                         }
 
-                        while(rdr.Read())
+                        while (rdr.Read())
                             contents = rdr.GetString("content");
                     }
 

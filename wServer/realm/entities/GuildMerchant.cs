@@ -1,7 +1,6 @@
 ﻿#region
 
 using db;
-using System;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
 
@@ -28,9 +27,11 @@ namespace wServer.realm.entities
                 case UP1:
                     Price = UP1C;
                     break;
+
                 case UP2:
                     Price = UP2C;
                     break;
+
                 case UP3:
                     Price = UP3C;
                     break;

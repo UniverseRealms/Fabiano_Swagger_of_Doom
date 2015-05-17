@@ -3,6 +3,7 @@
     public class PongPacket : ClientPacket
     {
         public int Serial { get; set; }
+
         public int Time { get; set; }
 
         public override PacketID ID

@@ -1,9 +1,9 @@
 ﻿#region
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MySql.Data.MySqlClient;
 
 #endregion
 
@@ -356,15 +356,19 @@ namespace db
                                 case 40:
                                     founders.Add(add);
                                     break;
+
                                 case 30:
                                     leaders.Add(add);
                                     break;
+
                                 case 20:
                                     officers.Add(add);
                                     break;
+
                                 case 10:
                                     members.Add(add);
                                     break;
+
                                 case 0:
                                     initiates.Add(add);
                                     break;

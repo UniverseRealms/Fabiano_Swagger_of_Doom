@@ -517,6 +517,9 @@
   <ItemGroup>
     <Content Include="air_icon.ico" />
     <Content Include="bugs.txt" />
+    <Content Include="news.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\db\db.csproj">

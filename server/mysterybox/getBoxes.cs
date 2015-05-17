@@ -2,10 +2,7 @@
 
 using db;
 using System;
-using System.Collections.Specialized;
 using System.IO;
-using System.Net;
-using System.Web;
 using System.Xml;
 
 #endregion
@@ -28,14 +25,23 @@ namespace server.mysterybox
     internal class MysteryBox
     {
         internal int BoxId { get; set; }
+
         internal string Title { get; set; }
+
         internal int Weight { get; set; }
+
         internal string Description { get; set; }
+
         internal string Contents { get; set; }
+
         internal string Image { get; set; }
+
         internal string Icon { get; set; }
+
         internal Price Price { get; set; }
+
         internal DateTime StartTime { get; set; }
+
         internal Sale Sale { get; set; }
 
         internal static MysteryBox GetBox(int id)
@@ -45,7 +51,7 @@ namespace server.mysterybox
                 var cmd = db.CreateQuery();
                 cmd.CommandText = "SELECT * FROM mysteryboxes WHERE id=@id AND boxEnd >= now();";
                 cmd.Parameters.AddWithValue("@id", id);
-                using(var rdr = cmd.ExecuteReader())
+                using (var rdr = cmd.ExecuteReader())
                 {
                     if (rdr.HasRows)
                     {
@@ -218,13 +224,16 @@ namespace server.mysterybox
     internal class Price
     {
         internal int Amount { get; set; }
+
         internal int Currency { get; set; }
     }
 
     internal class Sale
     {
         internal int Price { get; set; }
+
         internal int Currency { get; set; }
+
         internal DateTime SaleEnd { get; set; }
     }
 }

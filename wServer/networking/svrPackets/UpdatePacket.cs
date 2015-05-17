@@ -3,7 +3,9 @@
     public class UpdatePacket : ServerPacket
     {
         public TileData[] Tiles { get; set; }
+
         public ObjectDef[] NewObjects { get; set; }
+
         public int[] RemovedObjectIds { get; set; }
 
         public override PacketID ID
@@ -40,21 +42,21 @@
 
         protected override void Write(Client psr, NWriter wtr)
         {
-            wtr.Write((short) Tiles.Length);
+            wtr.Write((short)Tiles.Length);
             foreach (TileData i in Tiles)
             {
                 wtr.Write(i.X);
                 wtr.Write(i.Y);
-                wtr.Write((short) i.Tile);
+                wtr.Write((short)i.Tile);
             }
-            wtr.Write((short) NewObjects.Length);
+            wtr.Write((short)NewObjects.Length);
             foreach (ObjectDef i in NewObjects)
             {
                 i.Write(psr, wtr);
                 //Console.WriteLine(i.ObjectType);
             }
 
-            wtr.Write((short) RemovedObjectIds.Length);
+            wtr.Write((short)RemovedObjectIds.Length);
             foreach (int i in RemovedObjectIds)
             {
                 wtr.Write(i);

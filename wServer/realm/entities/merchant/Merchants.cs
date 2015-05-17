@@ -1,10 +1,10 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using log4net;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
 
@@ -38,7 +38,7 @@ namespace wServer.realm.entities.merchant
 
             if (Random == null) Random = new Random();
             if (AddedTypes == null) AddedTypes = new List<KeyValuePair<string, int>>();
-            if(owner != null) ResolveMType();
+            if (owner != null) ResolveMType();
         }
 
         private static List<KeyValuePair<string, int>> AddedTypes { get; set; }
@@ -46,8 +46,11 @@ namespace wServer.realm.entities.merchant
         public bool Custom { get; set; }
 
         public int MType { get; set; }
+
         public int MRemaining { get; set; }
+
         public int MTime { get; set; }
+
         public int Discount { get; set; }
 
         protected override void ExportStats(IDictionary<StatsType, object> stats)
@@ -164,6 +167,7 @@ namespace wServer.realm.entities.merchant
                                     Message = "{\"key\":\"server.not_enough_gold\"}"
                                 });
                                 break;
+
                             case CurrencyType.Fame:
                                 player.Client.SendPacket(new BuyResultPacket
                                 {
@@ -171,6 +175,7 @@ namespace wServer.realm.entities.merchant
                                     Message = "{\"key\":\"server.not_enough_fame\"}"
                                 });
                                 break;
+
                             case CurrencyType.FortuneTokens:
                                 player.Client.SendPacket(new BuyResultPacket
                                 {
@@ -204,7 +209,7 @@ namespace wServer.realm.entities.merchant
                     }
                 }
 
-                if (MRemaining == 0 &&  MType != -1)
+                if (MRemaining == 0 && MType != -1)
                 {
                     if (AddedTypes.Contains(new KeyValuePair<string, int>(Owner.Name, MType)))
                         AddedTypes.Remove(new KeyValuePair<string, int>(Owner.Name, MType));
@@ -314,7 +319,6 @@ namespace wServer.realm.entities.merchant
             else if (Owner.Map[(int)X, (int)Y].Region == TileRegion.Store_24)
                 list = MerchantLists.ClothingDyeList;
 
-
             if (AddedTypes == null) AddedTypes = new List<KeyValuePair<string, int>>();
             list.Shuffle();
             foreach (var t1 in list.Where(t1 => !AddedTypes.Contains(new KeyValuePair<string, int>(Owner.Name, t1))))
@@ -332,13 +336,13 @@ namespace wServer.realm.entities.merchant
 
                 var s = Random.Next(0, 100);
 
-                if(s < 2)
+                if (s < 2)
                     Discount = 50;
-                else if(s < 5)
+                else if (s < 5)
                     Discount = 25;
                 else if (s < 10)
                     Discount = 15;
-                else if(s < 15)
+                else if (s < 15)
                     Discount = 10;
                 else Discount = 0;
 

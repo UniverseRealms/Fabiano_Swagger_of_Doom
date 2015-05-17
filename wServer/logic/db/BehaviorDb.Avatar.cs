@@ -13,7 +13,7 @@ namespace wServer.logic
             .Init("shtrs Defense System",
                 new State(
                     new DropPortalOnDeath("The Shatters", percent: 65, dropDelaySec: 2, XAdjustment: 0, YAdjustment: 2, PortalDespawnTimeSec: 70),
-                    new ChangeGroundOnDeath(new[] {"Pure Evil"}, new[] {"shtrs Disaster Floor", "shtrs Shattered Floor"},
+                    new ChangeGroundOnDeath(new[] { "Pure Evil" }, new[] { "shtrs Disaster Floor", "shtrs Shattered Floor" },
                         30),
                     new State("spiral",
                         new SetAltTexture(0),

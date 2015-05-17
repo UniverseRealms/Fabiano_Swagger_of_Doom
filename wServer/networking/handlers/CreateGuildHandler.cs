@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using wServer.networking.cliPackets;
-using wServer.realm;
 using wServer.networking.svrPackets;
-using db;
-using wServer.realm.entities;
+using wServer.realm;
 using wServer.realm.entities.player;
 
 namespace wServer.networking.handlers
 {
-    class CreateGuildHandler : PacketHandlerBase<CreateGuildPacket>
+    internal class CreateGuildHandler : PacketHandlerBase<CreateGuildPacket>
     {
         public override PacketID ID { get { return PacketID.CREATEGUILD; } }
 
@@ -20,7 +15,7 @@ namespace wServer.networking.handlers
             client.Manager.Logic.AddPendingAction(t => Handle(client, packet));
         }
 
-        void Handle(Client client, CreateGuildPacket packet)
+        private void Handle(Client client, CreateGuildPacket packet)
         {
             try
             {

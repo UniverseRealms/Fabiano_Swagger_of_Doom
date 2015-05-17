@@ -41,9 +41,10 @@ namespace wServer.realm.entities
             Rotation = rotation;
         }
 
-
         public ConnectionType Type { get; private set; }
+
         public int Rotation { get; private set; }
+
         public uint Bits { get; private set; }
 
         private static void Build(uint bits, ConnectionType type)
@@ -51,7 +52,7 @@ namespace wServer.realm.entities
             for (int i = 0; i < 4; i++)
                 if (!Infos.ContainsKey(bits))
                 {
-                    Infos[bits] = Infos2[Tuple.Create(type, i*90)] = new ConnectionInfo(bits, type, i*90);
+                    Infos[bits] = Infos2[Tuple.Create(type, i * 90)] = new ConnectionInfo(bits, type, i * 90);
                     bits = (bits >> 8) | (bits << 24);
                 }
         }
@@ -66,7 +67,6 @@ namespace wServer.realm.entities
                 for (int x = -1; x <= 1; x++)
                     z[x + 1, y + 1] = offset(x, y);
 
-
             if (z[1, 0] && z[1, 2] && z[0, 1] && z[2, 1])
                 return ConnectionInfo.Infos2[Tuple.Create(ConnectionType.Cross, 0)];
 
@@ -79,7 +79,7 @@ namespace wServer.realm.entities
             if (z[1, 0] && z[1, 1] && z[1, 2] && z[0, 1])
                 return ConnectionInfo.Infos2[Tuple.Create(ConnectionType.T, 270)];
 
-            if (z[1, 0] && z[1, 1] && z[1, 2]) 
+            if (z[1, 0] && z[1, 1] && z[1, 2])
                 return ConnectionInfo.Infos2[Tuple.Create(ConnectionType.Line, 0)];
             if (z[0, 1] && z[1, 1] && z[2, 1])
                 return ConnectionInfo.Infos2[Tuple.Create(ConnectionType.Line, 90)];
@@ -123,7 +123,7 @@ namespace wServer.realm.entities
         protected override void ImportStats(StatsType stats, object val)
         {
             if (stats == StatsType.ObjectConnection)
-                Connection = ConnectionInfo.Infos[(uint) (int) val];
+                Connection = ConnectionInfo.Infos[(uint)(int)val];
             base.ImportStats(stats, val);
         }
 
@@ -132,7 +132,6 @@ namespace wServer.realm.entities
             stats[StatsType.ObjectConnection] = (int)ConnectionComputer.Compute((_x, _y) => false).Bits;
             base.ExportStats(stats);
         }
-
 
         public override bool HitByProjectile(Projectile projectile, RealmTime time)
         {

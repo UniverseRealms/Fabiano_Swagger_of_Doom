@@ -34,11 +34,10 @@ namespace wServer.logic.behaviors
             return null;
         }
 
-
         protected override void TickCore(Entity host, RealmTime time, ref object state)
         {
             if (targetState == null)
-                targetState = FindState(host.Manager.Behaviors.Definitions[(ushort) children].Item1, targetStateName);
+                targetState = FindState(host.Manager.Behaviors.Definitions[(ushort)children].Item1, targetStateName);
             foreach (Entity i in host.GetNearestEntities(range, children))
                 if (!i.CurrentState.Is(targetState))
                     i.SwitchTo(targetState);

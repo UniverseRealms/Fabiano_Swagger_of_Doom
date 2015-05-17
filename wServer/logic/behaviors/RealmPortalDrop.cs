@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.realm;
+﻿using wServer.realm;
 
 namespace wServer.logic.behaviors
 {
     internal class RealmPortalDrop : Behavior
     {
-
         protected internal override void Resolve(State parent)
         {
             parent.Death += (e, s) =>
@@ -34,6 +28,8 @@ namespace wServer.logic.behaviors
             opener.Move(host.X, host.Y);
         }
 
-        protected override void TickCore(Entity host, RealmTime time, ref object state) { }
+        protected override void TickCore(Entity host, RealmTime time, ref object state)
+        {
+        }
     }
 }

@@ -1,9 +1,9 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
 using wServer.logic;
 using wServer.networking;
 using wServer.networking.cliPackets;
@@ -16,6 +16,7 @@ namespace wServer.realm.entities.player
     internal interface IPlayer
     {
         void Damage(int dmg, Entity chr);
+
         bool IsVisibleToEnemy();
     }
 
@@ -191,10 +192,13 @@ namespace wServer.realm.entities.player
         public Client Client { get; }
 
         public int Credits { get; set; }
+
         public int Tokens { get; set; }
+
         public int CurrentFame { get; set; }
 
         public int Experience { get; set; }
+
         public int ExperienceGoal { get; set; }
 
         public int Fame { get; set; }
@@ -214,6 +218,7 @@ namespace wServer.realm.entities.player
         public List<string> Ignored { get; set; }
 
         public bool Invited { get; set; }
+
         public bool Muted { get; set; }
 
         public int Level { get; set; }
@@ -225,6 +230,7 @@ namespace wServer.realm.entities.player
             get { return LootDropBoostTimeLeft > 0; }
             set { LootDropBoostTimeLeft = value ? LootDropBoostTimeLeft : 0.0f; }
         }
+
         public float LootDropBoostTimeLeft { get; set; }
 
         public bool LootTierBoost
@@ -232,17 +238,21 @@ namespace wServer.realm.entities.player
             get { return LootTierBoostTimeLeft > 0; }
             set { LootTierBoostTimeLeft = value ? LootTierBoostTimeLeft : 0.0f; }
         }
+
         public float LootTierBoostTimeLeft { get; set; }
 
         public bool XpBoosted { get; set; }
+
         public float XpBoostTimeLeft { get; set; }
 
         public int MagicPotions { get; set; }
 
         public ushort HpPotionPrice { get; set; }
+
         public ushort MpPotionPrice { get; set; }
 
         public bool HpFirstPurchaseTime { get; set; }
+
         public bool MpFirstPurchaseTime { get; set; }
 
         public new RealmManager Manager { get; }
@@ -450,19 +460,19 @@ namespace wServer.realm.entities.player
             switch (Owner.Name)
             {
                 case "Arena":
-                {
-                    Client.SendPacket(new ArenaDeathPacket
                     {
-                        RestartPrice = 100
-                    });
-                    HP = Client.Character.MaxHitPoints;
-                    ApplyConditionEffect(new ConditionEffect
-                    {
-                        Effect = ConditionEffectIndex.Invulnerable,
-                        DurationMS = -1
-                    });
-                    return;
-                }
+                        Client.SendPacket(new ArenaDeathPacket
+                        {
+                            RestartPrice = 100
+                        });
+                        HP = Client.Character.MaxHitPoints;
+                        ApplyConditionEffect(new ConditionEffect
+                        {
+                            Effect = ConditionEffectIndex.Invulnerable,
+                            DurationMS = -1
+                        });
+                        return;
+                    }
             }
 
             if (Client.Stage == ProtocalStage.Disconnected || resurrecting)
@@ -530,9 +540,9 @@ namespace wServer.realm.entities.player
         {
             //if (Name == "ossimc82" || Name == "C453")
             //{
-                Pet = new Pet(Manager, petInfo, this);
-                Pet.Move(X, Y);
-                Owner.EnterWorld(Pet);
+            Pet = new Pet(Manager, petInfo, this);
+            Pet.Move(X, Y);
+            Owner.EnterWorld(Pet);
             //}
         }
 
@@ -577,7 +587,7 @@ namespace wServer.realm.entities.player
             SendAccountList(Locked, AccountListPacket.LOCKED_LIST_ID);
             SendAccountList(Ignored, AccountListPacket.IGNORED_LIST_ID);
 
-            WorldTimer[] accTimer = {null};
+            WorldTimer[] accTimer = { null };
             owner.Timers.Add(accTimer[0] = new WorldTimer(5000, (w, t) =>
             {
                 Manager.Database.DoActionAsync(db =>
@@ -592,7 +602,7 @@ namespace wServer.realm.entities.player
                 });
             }));
 
-            WorldTimer[] pingTimer = {null};
+            WorldTimer[] pingTimer = { null };
             owner.Timers.Add(pingTimer[0] = new WorldTimer(PING_PERIOD, (w, t) =>
             {
                 Client.SendPacket(new PingPacket { Serial = pingSerial++ });
@@ -645,6 +655,7 @@ namespace wServer.realm.entities.player
                 case 12:
                     chr.Equipment = Inventory.Select(_ => _?.ObjectType ?? (short)-1).ToArray();
                     break;
+
                 case 20:
                     var equip = Inventory.Select(_ => _?.ObjectType ?? (short)-1).ToArray();
                     Array.Resize(ref equip, 12);

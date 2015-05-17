@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using log4net;
-using wServer.realm.entities;
+﻿using log4net;
+using System;
+using wServer.networking;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
-using wServer.networking;
 
 namespace wServer.realm
 {
     public class ChatManager
     {
-        static ILog log = LogManager.GetLogger(typeof(ChatManager));
+        private static ILog log = LogManager.GetLogger(typeof(ChatManager));
 
-        RealmManager manager;
+        private RealmManager manager;
+
         public ChatManager(RealmManager manager)
         {
             this.manager = manager;

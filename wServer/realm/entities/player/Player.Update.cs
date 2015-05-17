@@ -12,6 +12,7 @@ namespace wServer.realm.entities.player
     public partial class Player
     {
         public int UpdatesSend { get; private set; }
+
         public int UpdatesReceived { get; set; }
 
         public const int SIGHTRADIUS = 15;
@@ -33,7 +34,7 @@ namespace wServer.realm.entities.player
             foreach (var i in Owner.PlayersCollision.HitTest(X, Y, SIGHTRADIUS).OfType<Decoy>().Where(i => clientEntities.Add(i)))
                 yield return i;
 
-            foreach (var i in Owner.PlayersCollision.HitTest(X, Y, SIGHTRADIUS).OfType<Pet>().Where(i => clientEntities.Add(i)) )
+            foreach (var i in Owner.PlayersCollision.HitTest(X, Y, SIGHTRADIUS).OfType<Pet>().Where(i => clientEntities.Add(i)))
                 yield return i;
 
             foreach (var i in Owner.EnemiesCollision.HitTest(X, Y, SIGHTRADIUS))
@@ -43,12 +44,11 @@ namespace wServer.realm.entities.player
                     var owner = (i as Container).BagOwners?.Length == 1 ? (i as Container).BagOwners[0] : null;
                     if (owner != null && owner != AccountId) continue;
 
-                    if(owner == AccountId)
+                    if (owner == AccountId)
                         if ((LootDropBoost || LootTierBoost) && (i.ObjectType != 0x500 || i.ObjectType != 0x506))
                             (i as Container).BoostedBag = true; //boosted bag
-
                 }
-                if (!(MathsUtils.DistSqr(i.X, i.Y, X, Y) <= SIGHTRADIUS*SIGHTRADIUS)) continue;
+                if (!(MathsUtils.DistSqr(i.X, i.Y, X, Y) <= SIGHTRADIUS * SIGHTRADIUS)) continue;
                 if (clientEntities.Add(i))
                     yield return i;
             }
@@ -87,7 +87,8 @@ namespace wServer.realm.entities.player
                 var x = i.X + xBase;
                 var y = i.Y + yBase;
                 if (x < 0 || x >= mapWidth ||
-                    y < 0 || y >= mapHeight) continue;
+                    y < 0 || y >= mapHeight)
+                    continue;
 
                 var tile = Owner.Map[x, y];
 
@@ -141,7 +142,8 @@ namespace wServer.realm.entities.player
                 WmapTile tile;
                 if (x < 0 || x >= mapWidth ||
                     y < 0 || y >= mapHeight ||
-                    tiles[x, y] >= (tile = map[x, y]).UpdateCount) continue;
+                    tiles[x, y] >= (tile = map[x, y]).UpdateCount)
+                    continue;
 
                 var world = Manager.GetWorld(Owner.Id);
                 if (world.Dungeon)
@@ -159,7 +161,7 @@ namespace wServer.realm.entities.player
                 sent++;
             }
             FameCounter.TileSent(sent);
-             
+
             var dropEntities = GetRemovedEntities().Distinct().ToArray();
             clientEntities.RemoveWhere(_ => Array.IndexOf(dropEntities, _.Id) != -1);
 
@@ -179,7 +181,8 @@ namespace wServer.realm.entities.player
             }
 
             if (sendEntities.Count <= 0 && list.Count <= 0 && dropEntities.Length <= 0 && newStatics.Length <= 0 &&
-                removedIds.Count <= 0) return;
+                removedIds.Count <= 0)
+                return;
             var packet = new UpdatePacket()
             {
                 Tiles = list.ToArray(),

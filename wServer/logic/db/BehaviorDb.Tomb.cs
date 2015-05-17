@@ -3,6 +3,7 @@
 using wServer.logic.behaviors;
 using wServer.logic.loot;
 using wServer.logic.transitions;
+
 #endregion
 
 namespace wServer.logic
@@ -121,7 +122,7 @@ namespace wServer.logic
                         new Shoot(50, 4, projectileIndex: 2, coolDown: 3000, coolDownOffset: 1000),
                         new Shoot(50, 5, projectileIndex: 3, coolDown: 4000, coolDownOffset: 3000),
                         new Shoot(50, 5, projectileIndex: 4, coolDown: 5000, coolDownOffset: 5000) //,
-            //new HpLessTransition(.66, "double shot")
+                                                                                                   //new HpLessTransition(.66, "double shot")
                         ),
                     new State("rage",
                         new Taunt("This cannot be! You shall not succeed!")
@@ -154,7 +155,7 @@ namespace wServer.logic
                         new Orbit(.6, 5, target: "Tomb Boss Anchor", radiusVariance: 0.5),
                         new Taunt("Geb, eradicate these cretins from our tomb!"),
                         new Shoot(50, 24, projectileIndex: 3, coolDown: 6000, coolDownOffset: 2000)
-            //new HpLessTransition(.97, "active")
+                    //new HpLessTransition(.97, "active")
                     ),
                     new State("rage",
                         new Taunt("This cannot be! You shall not succeed!")

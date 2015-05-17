@@ -1,9 +1,9 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using log4net;
 using wServer.networking;
 
 #endregion
@@ -20,7 +20,7 @@ namespace wServer.realm
     {
         private static readonly ConcurrentQueue<Work> pendings = new ConcurrentQueue<Work>();
         private static SpinWait loopLock = new SpinWait();
-        private readonly ILog log = LogManager.GetLogger(typeof (NetworkTicker));
+        private readonly ILog log = LogManager.GetLogger(typeof(NetworkTicker));
 
         public NetworkTicker(RealmManager manager)
         {
@@ -33,7 +33,6 @@ namespace wServer.realm
         {
             pendings.Enqueue(new Work(parrent, pkt));
         }
-
 
         public void TickLoop()
         {

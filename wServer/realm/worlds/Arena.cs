@@ -34,15 +34,18 @@ namespace wServer.realm.worlds
             "Flamer King", "Lair Skeleton King", "Native Fire Sprite", "Native Ice Sprite", "Native Magic Sprite", "Nomadic Shaman", "Ogre King", "Orc King", "Red Spider", "Sand Phantom",
             "Swarm", "Tawny Warg", "Vampire Bat", "Wasp Queen", "Weretiger"
         };
+
         private readonly string[] NormalEnemies =
         {
             "Aberrant of Oryx", "Abomination of Oryx", "Adult White Dragon", "Assassin of Oryx", "Bile of Oryx", "Gigacorn",
             "Great Lizard", "Minotaur", "Monstrosity of Oryx", "Phoenix Reborn", "Shambling Sludge", "Urgle"
         };
+
         private readonly string[] Gods =
         {
             "Beholder", "Ent God", "Flying Brain", "Djinn", "Ghost God", "Leviathan", "Medusa", "Slime God", "Sprite God", "White Demon"
         };
+
         private readonly string[] Bosses =
         {
             "Tomb Defender", "Tomb Attacker", "Tomb Support", "Arachna the Spider Queen", "Archdemon Malphas", "Crystal Prisoner", "Grand Sphinx", "Limon the Sprite God",
@@ -101,15 +104,15 @@ namespace wServer.realm.worlds
                 List<string> enems = new List<string>();
                 Random r = new Random();
 
-                for (int i = 0; i < wave/3 + 1; i++)
+                for (int i = 0; i < wave / 3 + 1; i++)
                 {
                     enems.Add(Gods[r.Next(0, Gods.Length)]);
                 }
-                for (int i = 0; i < wave/3 + 1; i++)
+                for (int i = 0; i < wave / 3 + 1; i++)
                 {
                     enems.Add(NormalEnemies[r.Next(0, NormalEnemies.Length)]);
                 }
-                for (int i = 0; i < wave/3 + 1; i++)
+                for (int i = 0; i < wave / 3 + 1; i++)
                 {
                     enems.Add(WeakEnemies[r.Next(0, WeakEnemies.Length)]);
                 }

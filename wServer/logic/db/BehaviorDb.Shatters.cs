@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using wServer.realm;
-using wServer.logic.behaviors;
+﻿using wServer.logic.behaviors;
 using wServer.logic.loot;
 using wServer.logic.transitions;
 
@@ -78,7 +71,7 @@ namespace wServer.logic
                     new State("Charge",
                         new TimedTransition(2000, "Follow"),
                         new Charge(4, 5),
-                        new Shoot(5, 6, projectileIndex:0, coolDown:3000)
+                        new Shoot(5, 6, projectileIndex: 0, coolDown: 3000)
                         )
                     )
             )
@@ -93,7 +86,7 @@ namespace wServer.logic
                     new TimedTransition(7000, "Throw"),
                     new Follow(0.8, range: 1),
                     new Shoot(10, 1, projectileIndex: 0, coolDown: 100, predictive: 1),
-                    new Shoot(10, 3, projectileIndex: 1, shootAngle:10, coolDown: 4000, predictive: 1)
+                    new Shoot(10, 3, projectileIndex: 1, shootAngle: 10, coolDown: 4000, predictive: 1)
                 ),
                 new State("Throw",
                     new TossObject("shtrs Ice Portal", 5, coolDown: 8000, coolDownOffset: 7000, randomToss: true),
@@ -105,8 +98,8 @@ namespace wServer.logic
             new State(
                 new State("Main",
                     new ConditionalEffect(ConditionEffectIndex.Invulnerable),
-                    new Shoot(15, 10, coolDown:1000),
-                    new Shoot(15, 1, projectileIndex:1, coolDown:2500)
+                    new Shoot(15, 10, coolDown: 1000),
+                    new Shoot(15, 1, projectileIndex: 1, coolDown: 2500)
                 ),
                 new State("Hide",
                     new SetAltTexture(1),
@@ -561,7 +554,7 @@ namespace wServer.logic
                         new MoveTo(0, 4, 1.5),
                         new Order(1, "shtrs MagiGenerators", "Despawn"),
                         new Taunt("THE POWER...IT CONSUMES ME!"),
-                        new Shoot(15, 20, projectileIndex:2, coolDown:100000000, coolDownOffset:5000),
+                        new Shoot(15, 20, projectileIndex: 2, coolDown: 100000000, coolDownOffset: 5000),
                         new Shoot(15, 20, projectileIndex: 3, coolDown: 100000000, coolDownOffset: 5000),
                         new Shoot(15, 20, projectileIndex: 4, coolDown: 100000000, coolDownOffset: 5100),
                         new Shoot(15, 20, projectileIndex: 2, coolDown: 100000000, coolDownOffset: 5200),
@@ -583,7 +576,7 @@ namespace wServer.logic
                     new State("Death",
                         new ConditionalEffect(ConditionEffectIndex.Invulnerable),
                         new Taunt("I...will........retuuurr...n...n....."),
-                        new Shoot(15, 12, projectileIndex:5, coolDown:1000000, coolDownOffset:30000),
+                        new Shoot(15, 12, projectileIndex: 5, coolDown: 1000000, coolDownOffset: 30000),
                         new CopyDamageOnDeath("shtrs Encounter Chest"),
                         new Order(10, "shtrs encounterchestspawner", "Spawn"),
                         new Suicide()
@@ -673,7 +666,7 @@ namespace wServer.logic
                     )
                 )
             )
-            
+
             .Init("shtrs Inferno",
                 new State(
                     new Follow(1, range: 1, coolDown: 1000),

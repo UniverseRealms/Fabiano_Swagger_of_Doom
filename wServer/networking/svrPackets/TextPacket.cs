@@ -3,11 +3,17 @@
     public class TextPacket : ServerPacket
     {
         public string Name { get; set; }
+
         public int ObjectId { get; set; }
+
         public int Stars { get; set; }
+
         public byte BubbleTime { get; set; }
+
         public string Recipient { get; set; }
+
         public string Text { get; set; }
+
         public string CleanText { get; set; }
 
         public override PacketID ID

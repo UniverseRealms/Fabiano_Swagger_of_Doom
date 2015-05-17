@@ -2,12 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using wServer.networking.cliPackets;
 using wServer.networking.svrPackets;
-using wServer.realm.commands;
-using wServer.realm.entities;
 using wServer.realm.entities.player;
 
 #endregion
@@ -16,7 +11,9 @@ namespace wServer.realm.commands
 {
     internal class GuildChatCommand : Command
     {
-        public GuildChatCommand() : base("guild") { }
+        public GuildChatCommand() : base("guild")
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
@@ -49,13 +46,15 @@ namespace wServer.realm.commands
         }
     }
 
-    class GChatCommand : Command
+    internal class GChatCommand : Command
     {
-        public GChatCommand() : base("g") { }
+        public GChatCommand() : base("g")
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            if(!player.Guild.IsDefault)
+            if (!player.Guild.IsDefault)
             {
                 try
                 {
@@ -84,9 +83,11 @@ namespace wServer.realm.commands
         }
     }
 
-    class GuildInviteCommand : Command
+    internal class GuildInviteCommand : Command
     {
-        public GuildInviteCommand() : base("invite") { }
+        public GuildInviteCommand() : base("invite")
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
@@ -155,13 +156,15 @@ namespace wServer.realm.commands
         }
     }
 
-    class GuildJoinCommand : Command
+    internal class GuildJoinCommand : Command
     {
-        public GuildJoinCommand() : base("join") { }
+        public GuildJoinCommand() : base("join")
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            if(String.IsNullOrWhiteSpace(args[0]))
+            if (String.IsNullOrWhiteSpace(args[0]))
             {
                 player.SendInfo("Usage: /join <guild name>");
                 return false;

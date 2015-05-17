@@ -3,18 +3,31 @@
     public class HelloPacket : ClientPacket
     {
         public string BuildVersion { get; set; }
+
         public int GameId { get; set; }
+
         public string GUID { get; set; }
+
         public string Password { get; set; }
+
         public string Secret { get; set; }
+
         public int randomint1 { get; set; }
+
         public int KeyTime { get; set; }
+
         public byte[] Key { get; set; }
+
         public byte[] MapInfo { get; set; }
+
         public string obf1 { get; set; }
+
         public string obf2 { get; set; }
+
         public string obf3 { get; set; }
+
         public string obf4 { get; set; }
+
         public string obf5 { get; set; }
 
         public override PacketID ID

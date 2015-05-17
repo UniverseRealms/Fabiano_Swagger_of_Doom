@@ -3,8 +3,11 @@
     public class OtherHitPacket : ClientPacket
     {
         public int Time { get; set; }
+
         public byte BulletId { get; set; }
+
         public int ObjectId { get; set; }
+
         public int TargetId { get; set; }
 
         public override PacketID ID

@@ -1,8 +1,8 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Generic;
-using log4net;
 using wServer.realm.entities.player;
 
 #endregion
@@ -11,7 +11,7 @@ namespace wServer.realm.commands
 {
     public abstract class Command
     {
-        protected static readonly ILog log = LogManager.GetLogger(typeof (Command));
+        protected static readonly ILog log = LogManager.GetLogger(typeof(Command));
 
         public Command(string name, int permLevel = 0)
         {
@@ -20,6 +20,7 @@ namespace wServer.realm.commands
         }
 
         public string CommandName { get; private set; }
+
         public int PermissionLevel { get; private set; }
 
         protected abstract bool Process(Player player, RealmTime time, string[] args);
@@ -30,7 +31,6 @@ namespace wServer.realm.commands
                 return 1;
             return 0;
         }
-
 
         public bool HasPermission(Player player)
         {
@@ -63,7 +63,7 @@ namespace wServer.realm.commands
 
     public class CommandManager
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (CommandManager));
+        private static readonly ILog log = LogManager.GetLogger(typeof(CommandManager));
 
         private readonly Dictionary<string, Command> cmds;
 
@@ -73,11 +73,11 @@ namespace wServer.realm.commands
         {
             this.manager = manager;
             cmds = new Dictionary<string, Command>(StringComparer.InvariantCultureIgnoreCase);
-            Type t = typeof (Command);
+            Type t = typeof(Command);
             foreach (Type i in t.Assembly.GetTypes())
                 if (t.IsAssignableFrom(i) && i != t)
                 {
-                    Command instance = (Command) Activator.CreateInstance(i);
+                    Command instance = (Command)Activator.CreateInstance(i);
                     cmds.Add(instance.CommandName, instance);
                 }
         }

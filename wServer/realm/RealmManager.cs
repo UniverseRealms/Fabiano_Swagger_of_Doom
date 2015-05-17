@@ -1,5 +1,8 @@
 ﻿#region
 
+using db;
+using db.data;
+using log4net;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,9 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using db;
-using db.data;
-using log4net;
 using wServer.logic;
 using wServer.networking;
 using wServer.realm.commands;
@@ -90,14 +90,18 @@ namespace wServer.realm
             "NexusPortal.Dragon",
             "NexusPortal.Harpy"
         };
+
         public static List<string> CurrentRealmNames = new List<string>();
         public const int MAX_REALM_PLAYERS = 85;
 
         private static readonly ILog log = LogManager.GetLogger(typeof(RealmManager));
 
         public ConcurrentDictionary<string, Client> Clients { get; private set; }
+
         public ConcurrentDictionary<int, World> Worlds { get; private set; }
+
         public ConcurrentDictionary<string, GuildHall> GuildHalls { get; private set; }
+
         public ConcurrentDictionary<string, World> LastWorld { get; private set; }
 
         private ConcurrentDictionary<string, Vault> vaults;
@@ -136,6 +140,7 @@ namespace wServer.realm
         public RealmPortalMonitor Monitor { get; private set; }
 
         public NetworkTicker Network { get; private set; }
+
         public DatabaseTicker Database { get; private set; }
 
         public bool Terminating { get; private set; }
@@ -175,7 +180,7 @@ namespace wServer.realm
             Client dummy;
             client.Disconnect();
             await client.Save();
-            while (!Clients.TryRemove(client.Account.AccountId, out dummy) && Clients.ContainsKey(client.Account.AccountId));
+            while (!Clients.TryRemove(client.Account.AccountId, out dummy) && Clients.ContainsKey(client.Account.AccountId)) ;
             client.Dispose();
         }
 
@@ -240,7 +245,7 @@ namespace wServer.realm
         public Vault PlayerVault(Client processor)
         {
             Vault v;
-            if(!vaults.TryGetValue(processor.Account.AccountId, out v))
+            if (!vaults.TryGetValue(processor.Account.AccountId, out v))
                 vaults.TryAdd(processor.Account.AccountId, v = (Vault)AddWorld(new Vault(false, processor)));
             return v;
         }
@@ -307,7 +312,7 @@ namespace wServer.realm
                 c.Disconnect();
             }
             //To prevent a buggy Account in use.
-            using(var db = new Database())
+            using (var db = new Database())
                 foreach (Client c in saveAccountUnlock)
                     db.UnlockAccount(c.Account);
 
@@ -336,7 +341,7 @@ namespace wServer.realm
 
         private void OnWorldAdded(World world)
         {
-            if(world.Manager == null)
+            if (world.Manager == null)
                 world.Manager = this;
             if (world is GameWorld)
                 Monitor.WorldAdded(world);

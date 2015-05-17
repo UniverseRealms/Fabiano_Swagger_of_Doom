@@ -3,8 +3,11 @@
     public class InvSwapPacket : ClientPacket
     {
         public int Time { get; set; }
+
         public Position Position { get; set; }
+
         public ObjectSlot SlotObject1 { get; set; }
+
         public ObjectSlot SlotObject2 { get; set; }
 
         public override PacketID ID

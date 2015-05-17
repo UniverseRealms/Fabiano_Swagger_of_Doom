@@ -2,12 +2,8 @@
 
 using db;
 using System;
-using System.Collections.Specialized;
 using System.IO;
-using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Web;
 
 #endregion
 
@@ -43,16 +39,16 @@ namespace server.account
             }
         }
 
-        const string emailBody = @"Hello,
+        private const string emailBody = @"Hello,
 
-If your wish to reset your password in Fabiano Swagger of Doom, please use the 
+If your wish to reset your password in Fabiano Swagger of Doom, please use the
 link below:
 
 {RPLINK}
 
 If you do NOT wish to reset your password, do nothing.
 
-Do not reply to this email, it will not be read. If you need support, go 
+Do not reply to this email, it will not be read. If you need support, go
 here:
 
 {SUPPORTLINK}

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using wServer.realm;
 
 namespace wServer.logic.behaviors
@@ -27,11 +23,13 @@ namespace wServer.logic.behaviors
             {
                 Type type = host.Owner.GetType();
                 MethodInfo method = type.GetMethod(targetMethod);
-                if(method != null)
+                if (method != null)
                     method.Invoke(host.Owner, parameters);
             }
         }
 
-        protected override void TickCore(Entity host, RealmTime time, ref object state) { }
+        protected override void TickCore(Entity host, RealmTime time, ref object state)
+        {
+        }
     }
 }

@@ -1,9 +1,5 @@
 ﻿using Mono.Game;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wServer.realm;
 using wServer.realm.entities;
 using wServer.realm.worlds;
@@ -14,6 +10,7 @@ namespace wServer.logic.behaviors.PetBehaviors
     {
         //State storage: wander state
         private readonly float speed;
+
         private Cooldown coolDown;
 
         public PetWander(double speed, Cooldown coolDown)

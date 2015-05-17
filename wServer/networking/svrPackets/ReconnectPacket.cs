@@ -3,11 +3,17 @@
     public class ReconnectPacket : ServerPacket
     {
         public string Name { get; set; }
+
         public string Host { get; set; }
+
         public int Port { get; set; }
+
         public int GameId { get; set; }
+
         public int KeyTime { get; set; }
+
         public bool IsFromArena { get; set; }
+
         public byte[] Key { get; set; }
 
         public override PacketID ID
@@ -40,7 +46,7 @@
             wtr.Write(GameId);
             wtr.Write(KeyTime);
             wtr.Write(IsFromArena);
-            wtr.Write((ushort) Key.Length);
+            wtr.Write((ushort)Key.Length);
             wtr.Write(Key);
         }
     }

@@ -1,8 +1,6 @@
 ﻿#region
 
 using System.Collections.Generic;
-using db;
-using wServer.networking;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
 using wServer.realm.worlds;
@@ -33,7 +31,9 @@ namespace wServer.realm.entities
         }
 
         public int Price { get; set; }
+
         public CurrencyType Currency { get; set; }
+
         public int RankReq { get; set; }
 
         protected override void ExportStats(IDictionary<StatsType, object> stats)

@@ -3,8 +3,11 @@
     public class UseItemPacket : ClientPacket
     {
         public int Time { get; set; }
+
         public ObjectSlot SlotObject { get; set; }
+
         public Position ItemUsePos { get; set; }
+
         public byte UseType { get; set; }
 
         public override PacketID ID

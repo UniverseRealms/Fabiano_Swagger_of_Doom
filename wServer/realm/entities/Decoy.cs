@@ -1,9 +1,10 @@
 ﻿#region
 
+using Mono.Game;
+
 //using wServer.logic;
 using System;
 using System.Collections.Generic;
-using Mono.Game;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
 
@@ -41,16 +42,21 @@ namespace wServer.realm.entities
             }
         }
 
-        public void Damage(int dmg, Entity chr) { }
+        public void Damage(int dmg, Entity chr)
+        {
+        }
 
-        public bool IsVisibleToEnemy() { return true; }
+        public bool IsVisibleToEnemy()
+        {
+            return true;
+        }
 
         private Vector2 GetRandDirection()
         {
-            double angle = rand.NextDouble()*2*Math.PI;
+            double angle = rand.NextDouble() * 2 * Math.PI;
             return new Vector2(
-                (float) Math.Cos(angle),
-                (float) Math.Sin(angle)
+                (float)Math.Cos(angle),
+                (float)Math.Sin(angle)
                 );
         }
 

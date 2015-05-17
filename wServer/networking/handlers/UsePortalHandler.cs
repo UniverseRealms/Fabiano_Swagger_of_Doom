@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Globalization;
 using wServer.networking.cliPackets;
@@ -62,6 +63,7 @@ namespace wServer.networking.handlers
                                     world = client.Player.Manager.PlayerVault(client);
                                     setWorldInstance = false;
                                     break;
+
                                 case 0x0704:
                                 case 0x0703: //portal of cowardice
                                 case 0x0d40:
@@ -80,22 +82,28 @@ namespace wServer.networking.handlers
                                             world = client.Player.Manager.GetWorld(World.NEXUS_ID);
                                     }
                                     break;
+
                                 case 0x0750:
                                     world = client.Player.Manager.GetWorld(World.MARKET);
                                     break;
+
                                 case 0x071d:
                                     world = client.Player.Manager.GetWorld(World.NEXUS_ID);
                                     break;
+
                                 case 0x0753:
                                     world = client.Manager.AddWorld(new PetYard(client.Player));
                                     setWorldInstance = false;
                                     break;
+
                                 case 0x0712:
                                     world = client.Player.Manager.GetWorld(World.NEXUS_ID);
                                     break;
+
                                 case 0x1756:
                                     world = client.Player.Manager.GetWorld(World.DAILY_QUEST_ID);
                                     break;
+
                                 case 0x072f:
                                     if (client.Player.Guild != null)
                                     {
@@ -104,6 +112,7 @@ namespace wServer.networking.handlers
                                         //world = client.Player.Guild.GuildHall;
                                     }
                                     break;
+
                                 default:
                                     Type worldType = Type.GetType("wServer.realm.worlds." + desc.DungeonName.Replace(" ", String.Empty).Replace("'", String.Empty));
                                     if (worldType != null)

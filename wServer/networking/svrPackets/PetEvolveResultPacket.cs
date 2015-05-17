@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace wServer.networking.svrPackets
+﻿namespace wServer.networking.svrPackets
 {
     public class PetEvolveResultPacket : ServerPacket
     {
         public int PetId1 { get; set; }
+
         public int SkinId1 { get; set; }
+
         public int SkinId2 { get; set; }
 
         public override PacketID ID

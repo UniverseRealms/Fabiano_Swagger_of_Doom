@@ -3,9 +3,13 @@
     public class DeathPacket : ServerPacket
     {
         public string AccountId { get; set; }
+
         public int CharId { get; set; }
+
         public string Killer { get; set; }
+
         public int obf0 { get; set; }
+
         public int obf1 { get; set; }
 
         public override PacketID ID

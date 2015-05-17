@@ -1,9 +1,6 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 
 #endregion
 
@@ -22,6 +19,7 @@ namespace wServer.realm.entities
         }
 
         public int[] SlotTypes { get; private set; }
+
         public Item[] Inventory { get; private set; }
 
         protected override void ExportStats(IDictionary<StatsType, object> stats)

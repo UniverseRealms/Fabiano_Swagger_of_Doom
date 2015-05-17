@@ -36,25 +36,25 @@ var TrimPath;
 // TODO: Handle || (or) characters and backslashes.
 // TODO: Add more modifiers.
 
-(function() {               // Using a closure to keep global namespace clean.
+(function () {               // Using a closure to keep global namespace clean.
     if (TrimPath == null)
         TrimPath = new Object();
     if (TrimPath.evalEx == null)
-        TrimPath.evalEx = function(src) { return eval(src); };
+        TrimPath.evalEx = function (src) { return eval(src); };
 
     var UNDEFINED;
     if (Array.prototype.pop == null)  // IE 5.x fix from Igor Poteryaev.
-        Array.prototype.pop = function() {
-            if (this.length === 0) {return UNDEFINED;}
+        Array.prototype.pop = function () {
+            if (this.length === 0) { return UNDEFINED; }
             return this[--this.length];
         };
     if (Array.prototype.push == null) // IE 5.x fix from Igor Poteryaev.
-        Array.prototype.push = function() {
-            for (var i = 0; i < arguments.length; ++i) {this[this.length] = arguments[i];}
+        Array.prototype.push = function () {
+            for (var i = 0; i < arguments.length; ++i) { this[this.length] = arguments[i]; }
             return this.length;
         };
 
-    TrimPath.parseTemplate = function(tmplContent, optTmplName, optEtc) {
+    TrimPath.parseTemplate = function (tmplContent, optTmplName, optEtc) {
         if (optEtc == null)
             optEtc = TrimPath.parseTemplate_etc;
         var funcSrc = parse(tmplContent, optTmplName, optEtc);
@@ -65,7 +65,7 @@ var TrimPath;
     }
 
     try {
-        String.prototype.process = function(context, optFlags) {
+        String.prototype.process = function (context, optFlags) {
             var template = TrimPath.parseTemplate(this, null);
             if (template != null)
                 return template.process(context, optFlags);
@@ -77,57 +77,61 @@ var TrimPath;
     TrimPath.parseTemplate_etc = {};            // Exposed for extensibility.
     TrimPath.parseTemplate_etc.statementTag = "forelse|for|if|elseif|else|var|macro";
     TrimPath.parseTemplate_etc.statementDef = { // Lookup table for statement tags.
-        "if"     : { delta:  1, prefix: "if (", suffix: ") {", paramMin: 1 },
-        "else"   : { delta:  0, prefix: "} else {" },
-        "elseif" : { delta:  0, prefix: "} else if (", suffix: ") {", paramDefault: "true" },
-        "/if"    : { delta: -1, prefix: "}" },
-        "for"    : { delta:  1, paramMin: 3,
-                     prefixFunc : function(stmtParts, state, tmplName, etc) {
-                        if (stmtParts[2] != "in")
-                            throw new etc.ParseError(tmplName, state.line, "bad for loop statement: " + stmtParts.join(' '));
-                        var iterVar = stmtParts[1];
-                        var listVar = "__LIST__" + iterVar;
-                        return [ "var ", listVar, " = ", stmtParts[3], ";",
-                             // Fix from Ross Shaull for hash looping, make sure that we have an array of loop lengths to treat like a stack.
-                             "var __LENGTH_STACK__;",
-                             "if (typeof(__LENGTH_STACK__) == 'undefined' || !__LENGTH_STACK__.length) __LENGTH_STACK__ = new Array();",
-                             "__LENGTH_STACK__[__LENGTH_STACK__.length] = 0;", // Push a new for-loop onto the stack of loop lengths.
-                             "if ((", listVar, ") != null) { ",
-                             "var ", iterVar, "_ct = 0;",       // iterVar_ct variable, added by B. Bittman
-                             "for (var ", iterVar, "_index in ", listVar, ") { ",
-                             iterVar, "_ct++;",
-                             "if (typeof(", listVar, "[", iterVar, "_index]) == 'function') {continue;}", // IE 5.x fix from Igor Poteryaev.
-                             "__LENGTH_STACK__[__LENGTH_STACK__.length - 1]++;",
-                             "var ", iterVar, " = ", listVar, "[", iterVar, "_index];" ].join("");
-                     } },
-        "forelse" : { delta:  0, prefix: "} } if (__LENGTH_STACK__[__LENGTH_STACK__.length - 1] == 0) { if (", suffix: ") {", paramDefault: "true" },
-        "/for"    : { delta: -1, prefix: "} }; delete __LENGTH_STACK__[__LENGTH_STACK__.length - 1];" }, // Remove the just-finished for-loop from the stack of loop lengths.
-        "var"     : { delta:  0, prefix: "var ", suffix: ";" },
-        "macro"   : { delta:  1,
-                      prefixFunc : function(stmtParts, state, tmplName, etc) {
-                          var macroName = stmtParts[1].split('(')[0];
-                          return [ "var ", macroName, " = function",
-                                   stmtParts.slice(1).join(' ').substring(macroName.length),
-                                   "{ var _OUT_arr = []; var _OUT = { write: function(m) { if (m) _OUT_arr.push(m); } }; " ].join('');
-                     } },
-        "/macro"  : { delta: -1, prefix: " return _OUT_arr.join(''); };" }
+        "if": { delta: 1, prefix: "if (", suffix: ") {", paramMin: 1 },
+        "else": { delta: 0, prefix: "} else {" },
+        "elseif": { delta: 0, prefix: "} else if (", suffix: ") {", paramDefault: "true" },
+        "/if": { delta: -1, prefix: "}" },
+        "for": {
+            delta: 1, paramMin: 3,
+            prefixFunc: function (stmtParts, state, tmplName, etc) {
+                if (stmtParts[2] != "in")
+                    throw new etc.ParseError(tmplName, state.line, "bad for loop statement: " + stmtParts.join(' '));
+                var iterVar = stmtParts[1];
+                var listVar = "__LIST__" + iterVar;
+                return ["var ", listVar, " = ", stmtParts[3], ";",
+                     // Fix from Ross Shaull for hash looping, make sure that we have an array of loop lengths to treat like a stack.
+                     "var __LENGTH_STACK__;",
+                     "if (typeof(__LENGTH_STACK__) == 'undefined' || !__LENGTH_STACK__.length) __LENGTH_STACK__ = new Array();",
+                     "__LENGTH_STACK__[__LENGTH_STACK__.length] = 0;", // Push a new for-loop onto the stack of loop lengths.
+                     "if ((", listVar, ") != null) { ",
+                     "var ", iterVar, "_ct = 0;",       // iterVar_ct variable, added by B. Bittman
+                     "for (var ", iterVar, "_index in ", listVar, ") { ",
+                     iterVar, "_ct++;",
+                     "if (typeof(", listVar, "[", iterVar, "_index]) == 'function') {continue;}", // IE 5.x fix from Igor Poteryaev.
+                     "__LENGTH_STACK__[__LENGTH_STACK__.length - 1]++;",
+                     "var ", iterVar, " = ", listVar, "[", iterVar, "_index];"].join("");
+            }
+        },
+        "forelse": { delta: 0, prefix: "} } if (__LENGTH_STACK__[__LENGTH_STACK__.length - 1] == 0) { if (", suffix: ") {", paramDefault: "true" },
+        "/for": { delta: -1, prefix: "} }; delete __LENGTH_STACK__[__LENGTH_STACK__.length - 1];" }, // Remove the just-finished for-loop from the stack of loop lengths.
+        "var": { delta: 0, prefix: "var ", suffix: ";" },
+        "macro": {
+            delta: 1,
+            prefixFunc: function (stmtParts, state, tmplName, etc) {
+                var macroName = stmtParts[1].split('(')[0];
+                return ["var ", macroName, " = function",
+                         stmtParts.slice(1).join(' ').substring(macroName.length),
+                         "{ var _OUT_arr = []; var _OUT = { write: function(m) { if (m) _OUT_arr.push(m); } }; "].join('');
+            }
+        },
+        "/macro": { delta: -1, prefix: " return _OUT_arr.join(''); };" }
     }
     TrimPath.parseTemplate_etc.modifierDef = {
-        "eat"        : function(v)    { return ""; },
-        "escape"     : function(s)    { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); },
-        "capitalize" : function(s)    { return String(s).toUpperCase(); },
-        "default"    : function(s, d) { return s != null ? s : d; }
+        "eat": function (v) { return ""; },
+        "escape": function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); },
+        "capitalize": function (s) { return String(s).toUpperCase(); },
+        "default": function (s, d) { return s != null ? s : d; }
     }
     TrimPath.parseTemplate_etc.modifierDef.h = TrimPath.parseTemplate_etc.modifierDef.escape;
 
-    TrimPath.parseTemplate_etc.Template = function(tmplName, tmplContent, funcSrc, func, etc) {
-        this.process = function(context, flags) {
+    TrimPath.parseTemplate_etc.Template = function (tmplName, tmplContent, funcSrc, func, etc) {
+        this.process = function (context, flags) {
             if (context == null)
                 context = {};
             if (context._MODIFIERS == null)
                 context._MODIFIERS = {};
             if (context.defined == null)
-                context.defined = function(str) { return (context[str] != undefined); };
+                context.defined = function (str) { return (context[str] != undefined); };
             for (var k in etc.modifierDef) {
                 if (context._MODIFIERS[k] == null)
                     context._MODIFIERS[k] = etc.modifierDef[k];
@@ -135,7 +139,7 @@ var TrimPath;
             if (flags == null)
                 flags = {};
             var resultArr = [];
-            var resultOut = { write: function(m) { resultArr.push(m); } };
+            var resultOut = { write: function (m) { resultArr.push(m); } };
             try {
                 func(resultOut, context, flags);
             } catch (e) {
@@ -147,24 +151,24 @@ var TrimPath;
             }
             return resultArr.join("");
         }
-        this.name       = tmplName;
-        this.source     = tmplContent;
+        this.name = tmplName;
+        this.source = tmplContent;
         this.sourceFunc = funcSrc;
-        this.toString   = function() { return "TrimPath.Template [" + tmplName + "]"; }
+        this.toString = function () { return "TrimPath.Template [" + tmplName + "]"; }
     }
-    TrimPath.parseTemplate_etc.ParseError = function(name, line, message) {
-        this.name    = name;
-        this.line    = line;
+    TrimPath.parseTemplate_etc.ParseError = function (name, line, message) {
+        this.name = name;
+        this.line = line;
         this.message = message;
     }
-    TrimPath.parseTemplate_etc.ParseError.prototype.toString = function() {
+    TrimPath.parseTemplate_etc.ParseError.prototype.toString = function () {
         return ("TrimPath template ParseError in " + this.name + ": line " + this.line + ", " + this.message);
     }
 
-    var parse = function(body, tmplName, etc) {
+    var parse = function (body, tmplName, etc) {
         body = cleanWhiteSpace(body);
-        var funcText = [ "var TrimPath_Template_TEMP = function(_OUT, _CONTEXT, _FLAGS) { with (_CONTEXT) {" ];
-        var state    = { stack: [], line: 1 };                              // TODO: Fix line number counting.
+        var funcText = ["var TrimPath_Template_TEMP = function(_OUT, _CONTEXT, _FLAGS) { with (_CONTEXT) {"];
+        var state = { stack: [], line: 1 };                              // TODO: Fix line number counting.
         var endStmtPrev = -1;
         while (endStmtPrev + 1 < body.length) {
             var begStmt = endStmtPrev;
@@ -180,7 +184,7 @@ var TrimPath;
                     var blockMarkerEnd = body.indexOf('}', blockMarkerBeg);
                     if (blockMarkerEnd >= 0) {
                         var blockMarker;
-                        if( blockMarkerEnd - blockMarkerBeg <= 0 ) {
+                        if (blockMarkerEnd - blockMarkerBeg <= 0) {
                             blockMarker = "{/" + blockType + "}";
                         } else {
                             blockMarker = body.substring(blockMarkerBeg + 1, blockMarkerEnd);
@@ -205,7 +209,7 @@ var TrimPath;
                 } else if (body.charAt(begStmt - 1) != '$' &&               // Not an expression or backslashed,
                            body.charAt(begStmt - 1) != '\\') {              // so check if it is a statement tag.
                     var offset = (body.charAt(begStmt + 1) == '/' ? 2 : 1); // Close tags offset of 2 skips '/'.
-                                                                            // 10 is larger than maximum statement tag length.
+                    // 10 is larger than maximum statement tag length.
                     if (body.substring(begStmt + offset, begStmt + 10 + offset).search(TrimPath.parseTemplate_etc.statementTag) == 0)
                         break;                                              // Found a match.
                 }
@@ -227,7 +231,7 @@ var TrimPath;
         return funcText.join("");
     }
 
-    var emitStatement = function(stmtStr, state, funcText, tmplName, etc) {
+    var emitStatement = function (stmtStr, state, funcText, tmplName, etc) {
         var parts = stmtStr.slice(1, -1).split(' ');
         var stmt = etc.statementDef[parts[0]]; // Here, parts[0] == for/if/else/...
         if (stmt == null) {                    // Not a real statement.
@@ -264,7 +268,7 @@ var TrimPath;
         }
     }
 
-    var emitSectionText = function(text, funcText) {
+    var emitSectionText = function (text, funcText) {
         if (text.length <= 0)
             return;
         var nlPrefix = 0;               // Index to first non-newline in prefix.
@@ -279,7 +283,7 @@ var TrimPath;
             funcText.push('if (_FLAGS.keepWhitespace == true) _OUT.write("');
             var s = text.substring(0, nlPrefix).replace('\n', '\\n'); // A macro IE fix from BJessen.
             if (s.charAt(s.length - 1) == '\n')
-            	s = s.substring(0, s.length - 1);
+                s = s.substring(0, s.length - 1);
             funcText.push(s);
             funcText.push('");');
         }
@@ -293,13 +297,13 @@ var TrimPath;
             funcText.push('if (_FLAGS.keepWhitespace == true) _OUT.write("');
             var s = text.substring(nlSuffix + 1).replace('\n', '\\n');
             if (s.charAt(s.length - 1) == '\n')
-            	s = s.substring(0, s.length - 1);
+                s = s.substring(0, s.length - 1);
             funcText.push(s);
             funcText.push('");');
         }
     }
 
-    var emitSectionTextLine = function(line, funcText) {
+    var emitSectionTextLine = function (line, funcText) {
         var endMarkPrev = '}';
         var endExprPrev = -1;
         while (endExprPrev + endMarkPrev.length < line.length) {
@@ -330,19 +334,19 @@ var TrimPath;
         emitText(line.substring(endExprPrev + endMarkPrev.length), funcText);
     }
 
-    var emitText = function(text, funcText) {
+    var emitText = function (text, funcText) {
         if (text == null ||
             text.length <= 0)
             return;
         text = text.replace(/\\/g, '\\\\');
         text = text.replace(/\n/g, '\\n');
-        text = text.replace(/"/g,  '\\"');
+        text = text.replace(/"/g, '\\"');
         funcText.push('_OUT.write("');
         funcText.push(text);
         funcText.push('");');
     }
 
-    var emitExpression = function(exprArr, index, funcText) {
+    var emitExpression = function (exprArr, index, funcText) {
         // Ex: foo|a:x|b:y1,y2|c:z1,z2 is emitted as c(b(a(foo,x),y1,y2),z1,z2)
         var expr = exprArr[index]; // Ex: exprArr == [firstName,capitalize,default:"John Doe"]
         if (index <= 0) {          // Ex: expr    == 'default:"John Doe"'
@@ -361,18 +365,18 @@ var TrimPath;
         funcText.push(')');
     }
 
-    var cleanWhiteSpace = function(result) {
-        result = result.replace(/\t/g,   "    ");
+    var cleanWhiteSpace = function (result) {
+        result = result.replace(/\t/g, "    ");
         result = result.replace(/\r\n/g, "\n");
-        result = result.replace(/\r/g,   "\n");
+        result = result.replace(/\r/g, "\n");
         result = result.replace(/^(\s*\S*(\s+\S+)*)\s*$/, '$1'); // Right trim by Igor Poteryaev.
         return result;
     }
 
-    var scrubWhiteSpace = function(result) {
-        result = result.replace(/^\s+/g,   "");
-        result = result.replace(/\s+$/g,   "");
-        result = result.replace(/\s+/g,   " ");
+    var scrubWhiteSpace = function (result) {
+        result = result.replace(/^\s+/g, "");
+        result = result.replace(/\s+$/g, "");
+        result = result.replace(/\s+/g, " ");
         result = result.replace(/^(\s*\S*(\s+\S+)*)\s*$/, '$1'); // Right trim by Igor Poteryaev.
         return result;
     }
@@ -380,7 +384,7 @@ var TrimPath;
     // The DOM helper functions depend on DOM/DHTML, so they only work in a browser.
     // However, these are not considered core to the engine.
     //
-    TrimPath.parseDOMTemplate = function(elementId, optDocument, optEtc) {
+    TrimPath.parseDOMTemplate = function (elementId, optDocument, optEtc) {
         if (optDocument == null)
             optDocument = document;
         var element = optDocument.getElementById(elementId);
@@ -391,7 +395,7 @@ var TrimPath;
         return TrimPath.parseTemplate(content, elementId, optEtc);
     }
 
-    TrimPath.processDOMTemplate = function(elementId, context, optFlags, optDocument, optEtc) {
+    TrimPath.processDOMTemplate = function (elementId, context, optFlags, optDocument, optEtc) {
         return TrimPath.parseDOMTemplate(elementId, optDocument, optEtc).process(context, optFlags);
     }
-}) ();
+})();

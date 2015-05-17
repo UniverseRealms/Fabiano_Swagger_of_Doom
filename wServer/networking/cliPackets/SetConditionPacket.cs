@@ -3,6 +3,7 @@
     public class SetConditionPacket : ClientPacket
     {
         public int ConditionEffect { get; set; }
+
         public float ConditionDuration { get; set; }
 
         public override PacketID ID

@@ -33,6 +33,7 @@ namespace wServer.realm.setpieces
             );
 
         public abstract int Size { get; }
+
         public abstract void RenderSetPiece(World world, IntPoint pos);
 
         protected static void Render(Temple temple, World world, IntPoint pos, int[,] ground, int[,] objs)

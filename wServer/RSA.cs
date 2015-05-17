@@ -1,12 +1,12 @@
 ﻿#region
 
-using System;
-using System.IO;
-using System.Text;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.OpenSsl;
+using System;
+using System.IO;
+using System.Text;
 
 #endregion
 
@@ -31,14 +31,14 @@ ZdLyDxdRFXUVbPutlqECQE+4PbsqiekYX4BWRTAnOy5Ly+/ivTWOWNJxHicuNu8i
 0zLn+R6ZamUkKcQI5N/91TGJvkIKXRJTYcII+w5gSdw=
 -----END RSA PRIVATE KEY-----");
 
-/*        
------BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbqweYUxzW0IiCwuBAzx6Htskr
-hWW+B0iX4LMu2xqRh4gh52HUVu9nNiXso7utTKCv/HNK19v5xoWp3Cne23sicp2o
-VGgKMFSowBFbtr+fhsq0yHv+JxixkL3WLnXcY3xREz7LOzVMoybUCmJzzhnzIsLP
-iIPdpI1PxFDcnFbdRQIDAQAB
------END PUBLIC KEY-----
-*/
+        /*
+        -----BEGIN PUBLIC KEY-----
+        MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbqweYUxzW0IiCwuBAzx6Htskr
+        hWW+B0iX4LMu2xqRh4gh52HUVu9nNiXso7utTKCv/HNK19v5xoWp3Cne23sicp2o
+        VGgKMFSowBFbtr+fhsq0yHv+JxixkL3WLnXcY3xREz7LOzVMoybUCmJzzhnzIsLP
+        iIPdpI1PxFDcnFbdRQIDAQAB
+        -----END PUBLIC KEY-----
+        */
 
         private readonly RsaEngine engine;
         private readonly AsymmetricKeyParameter key;

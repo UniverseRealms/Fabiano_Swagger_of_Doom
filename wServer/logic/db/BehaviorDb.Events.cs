@@ -96,7 +96,7 @@ namespace wServer.logic
                         new InvisiToss("Hermit God Tentacle", 5, 225, 90000001, coolDownOffset: 0),
                         new InvisiToss("Hermit God Tentacle", 5, 270, 90000001, coolDownOffset: 0),
                         new InvisiToss("Hermit God Tentacle", 5, 315, 90000001, coolDownOffset: 0),
-            //new InvisiToss("Hermit God Drop", 5, 0, coolDown: 90000001, coolDownOffset: 0),
+                        //new InvisiToss("Hermit God Drop", 5, 0, coolDown: 90000001, coolDownOffset: 0),
 
                         //new Spawn("Hermit God Tentacle", 8, 8, coolDown:9000001),
                         new TimedTransition(1000, "check")

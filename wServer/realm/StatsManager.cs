@@ -28,7 +28,7 @@ namespace wServer.realm
             if (player.HasConditionEffect(ConditionEffects.Paralyzed))
                 att = 0;
 
-            float ret = player.Random.Next(min, max)*(0.5f + att/50f);
+            float ret = player.Random.Next(min, max) * (0.5f + att / 50f);
 
             if (player.HasConditionEffect(ConditionEffects.Damaging))
                 ret *= 1.5f;
@@ -43,7 +43,7 @@ namespace wServer.realm
             if (host.HasConditionEffect(ConditionEffects.ArmorBroken))
                 def = 0;
 
-            float limit = dmg*0.15f;
+            float limit = dmg * 0.15f;
 
             float ret;
             if (dmg - def < limit) ret = limit;
@@ -64,7 +64,7 @@ namespace wServer.realm
                 noDef)
                 def = 0;
 
-            float limit = dmg*0.15f;
+            float limit = dmg * 0.15f;
 
             float ret;
             if (dmg - def < limit) ret = limit;
@@ -78,7 +78,7 @@ namespace wServer.realm
 
         public static float GetSpeed(Entity entity, float stat)
         {
-            float ret = 4 + 5.6f*(stat/75f);
+            float ret = 4 + 5.6f * (stat / 75f);
             if (entity.HasConditionEffect(ConditionEffects.Speedy))
                 ret *= 1.5f;
             if (entity.HasConditionEffect(ConditionEffects.Slowed))
@@ -115,7 +115,7 @@ namespace wServer.realm
             if (player.HasConditionEffect(ConditionEffects.Dazed))
                 dex = 0;
 
-            float ret = 1.5f + 6.5f*(dex/75f);
+            float ret = 1.5f + 6.5f * (dex / 75f);
             if (player.HasConditionEffect(ConditionEffects.Berserk))
                 ret *= 1.5f;
             if (player.HasConditionEffect(ConditionEffects.Stunned))
@@ -129,18 +129,25 @@ namespace wServer.realm
             {
                 case "MaxHitPoints":
                     return 0;
+
                 case "MaxMagicPoints":
                     return 1;
+
                 case "Attack":
                     return 2;
+
                 case "Defense":
                     return 3;
+
                 case "Speed":
                     return 4;
+
                 case "HpRegen":
                     return 5;
+
                 case "MpRegen":
                     return 6;
+
                 case "Dexterity":
                     return 7;
             }
@@ -153,18 +160,25 @@ namespace wServer.realm
             {
                 case 0:
                     return "MaxHitPoints";
+
                 case 1:
                     return "MaxMagicPoints";
+
                 case 2:
                     return "Attack";
+
                 case 3:
                     return "Defense";
+
                 case 4:
                     return "Speed";
+
                 case 5:
                     return "HpRegen";
+
                 case 6:
                     return "MpRegen";
+
                 case 7:
                     return "Dexterity";
             }
@@ -177,18 +191,25 @@ namespace wServer.realm
             {
                 case 0:
                     return "Life";
+
                 case 1:
                     return "Mana";
+
                 case 2:
                     return "Attack";
+
                 case 3:
                     return "Defense";
+
                 case 4:
                     return "Speed";
+
                 case 5:
                     return "Vitality";
+
                 case 6:
                     return "Wisdom";
+
                 case 7:
                     return "Dexterity";
             }

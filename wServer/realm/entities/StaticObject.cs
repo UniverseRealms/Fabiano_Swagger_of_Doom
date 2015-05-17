@@ -27,9 +27,13 @@ namespace wServer.realm.entities
         }
 
         public bool Vulnerable { get; private set; }
+
         public bool Static { get; private set; }
+
         public bool Hittestable { get; private set; }
+
         public int HP { get; set; }
+
         public bool Dying { get; private set; }
 
         public static bool GetStatic(XElement elem)
@@ -50,9 +54,10 @@ namespace wServer.realm.entities
             ObjectDesc desc;
             if (manager.GameData.ObjectDescs.TryGetValue(objType, out desc))
             {
-                if(desc.Class != null)
+                if (desc.Class != null)
                     if (desc.Class == "Container" || desc.Class.ContainsIgnoreCase("wall") ||
-                        desc.Class == "Merchant" || desc.Class == "Portal") return false;
+                        desc.Class == "Merchant" || desc.Class == "Portal")
+                        return false;
                 return !(desc.Static && !desc.Enemy && !desc.EnemyOccupySquare);
             }
             return false;
@@ -86,7 +91,8 @@ namespace wServer.realm.entities
                 {
                     if (effect.Effect == ConditionEffectIndex.Stunned && ObjectDesc.StunImmune ||
                         effect.Effect == ConditionEffectIndex.Paralyzed && ObjectDesc.ParalyzedImmune ||
-                        effect.Effect == ConditionEffectIndex.Dazed && ObjectDesc.DazedImmune) continue;
+                        effect.Effect == ConditionEffectIndex.Dazed && ObjectDesc.DazedImmune)
+                        continue;
                     ApplyConditionEffect(effect);
                 }
                 Owner.BroadcastPacket(new DamagePacket
@@ -116,7 +122,7 @@ namespace wServer.realm.entities
                 {
                     if (ObjectDesc != null &&
                         (ObjectDesc.EnemyOccupySquare || ObjectDesc.OccupySquare))
-                        Owner.Obstacles[(int) (X - 0.5), (int) (Y - 0.5)] = 0;
+                        Owner.Obstacles[(int)(X - 0.5), (int)(Y - 0.5)] = 0;
                     Owner.LeaveWorld(this);
                     return false;
                 }

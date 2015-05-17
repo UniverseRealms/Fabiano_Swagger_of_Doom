@@ -11,6 +11,7 @@ namespace wServer.logic.behaviors
     {
         //State storage: Spawn state
         private readonly ushort children;
+
         private readonly int initialSpawn;
         private readonly int maxChildren;
         private Cooldown coolDown;
@@ -19,7 +20,7 @@ namespace wServer.logic.behaviors
         {
             this.children = BehaviorDb.InitGameData.IdToObjectType[children];
             this.maxChildren = maxChildren;
-            this.initialSpawn = (int) (maxChildren*initialSpawn);
+            this.initialSpawn = (int)(maxChildren * initialSpawn);
             this.coolDown = coolDown.Normalize(0);
         }
 
@@ -35,9 +36,9 @@ namespace wServer.logic.behaviors
                 Entity entity = Entity.Resolve(host.Manager, children);
 
                 entity.Move(
-                    host.X + (float) (Random.NextDouble()*0.5),
-                    host.Y + (float) (Random.NextDouble()*0.5));
-                if(host is Enemy && entity is Enemy)
+                    host.X + (float)(Random.NextDouble() * 0.5),
+                    host.Y + (float)(Random.NextDouble() * 0.5));
+                if (host is Enemy && entity is Enemy)
                     (entity as Enemy).Terrain = (host as Enemy).Terrain;
                 host.Owner.EnterWorld(entity);
             }
@@ -45,7 +46,7 @@ namespace wServer.logic.behaviors
 
         protected override void TickCore(Entity host, RealmTime time, ref object state)
         {
-            SpawnState spawn = (SpawnState) state;
+            SpawnState spawn = (SpawnState)state;
 
             if (spawn.RemainingTime <= 0 && spawn.CurrentNumber < maxChildren)
             {

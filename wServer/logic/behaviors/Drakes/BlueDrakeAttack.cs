@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.networking.svrPackets;
+﻿using wServer.networking.svrPackets;
 using wServer.realm;
 using wServer.realm.entities;
 
@@ -11,7 +6,6 @@ namespace wServer.logic.behaviors.Drakes
 {
     public class BlueDrakeAttack : Behavior
     {
-
         protected override void OnStateEntry(Entity host, RealmTime time, ref object state)
         {
             state = 0;

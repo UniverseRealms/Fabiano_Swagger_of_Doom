@@ -1,10 +1,10 @@
 ﻿#region
 
+using db.data;
 using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using db.data;
 
 #endregion
 
@@ -15,31 +15,54 @@ public class FameStats
     [XmlElement("Char")]
     public Char __Char { get; set; }
 
-
     public int Shots { get; set; }
+
     public int ShotsThatDamage { get; set; }
+
     public int SpecialAbilityUses { get; set; }
+
     public int TilesUncovered { get; set; }
+
     public int Teleports { get; set; }
+
     public int PotionsDrunk { get; set; }
+
     public int MonsterKills { get; set; }
+
     public int MonsterAssists { get; set; }
+
     public int GodKills { get; set; }
+
     public int GodAssists { get; set; }
+
     public int CubeKills { get; set; }
+
     public int OryxKills { get; set; }
+
     public int QuestsCompleted { get; set; }
+
     public int PirateCavesCompleted { get; set; }
+
     public int UndeadLairsCompleted { get; set; }
+
     public int AbyssOfDemonsCompleted { get; set; }
+
     public int SnakePitsCompleted { get; set; }
+
     public int SpiderDensCompleted { get; set; }
+
     public int SpriteWorldsCompleted { get; set; }
+
     public int LevelUpAssists { get; set; }
+
     public int MinutesActive { get; set; }
+
     public int TombsCompleted { get; set; }
+
     public int TrenchesCompleted { get; set; }
+
     public int JunglesCompleted { get; set; }
+
     public int ManorsCompleted { get; set; }
 
     public void Read(byte[] bytes)
@@ -318,7 +341,7 @@ public class FameStats
             bonus = Math.Floor(bonus) + (baseFame + Math.Floor(bonus)) * 0.1;
             doc.DocumentElement.AppendChild(x);
         }
-        if ((double) GodKills/(GodKills + MonsterKills) > 0.1) //Enemy of the Gods
+        if ((double)GodKills / (GodKills + MonsterKills) > 0.1) //Enemy of the Gods
         {
             XmlElement x = doc.CreateElement("Bonus");
             XmlAttribute idAttr = doc.CreateAttribute("id");
@@ -331,7 +354,7 @@ public class FameStats
             bonus = Math.Floor(bonus) + (baseFame + Math.Floor(bonus)) * 0.1;
             doc.DocumentElement.AppendChild(x);
         }
-        if ((double) GodKills/(GodKills + MonsterKills) > 0.5) //Slayer of the Gods
+        if ((double)GodKills / (GodKills + MonsterKills) > 0.5) //Slayer of the Gods
         {
             XmlElement x = doc.CreateElement("Bonus");
             XmlAttribute idAttr = doc.CreateAttribute("id");
@@ -357,7 +380,7 @@ public class FameStats
             bonus = Math.Floor(bonus) + (baseFame + Math.Floor(bonus)) * 0.1;
             doc.DocumentElement.AppendChild(x);
         }
-        if ((double) ShotsThatDamage/Shots > 0.25) //Accurate
+        if ((double)ShotsThatDamage / Shots > 0.25) //Accurate
         {
             XmlElement x = doc.CreateElement("Bonus");
             XmlAttribute idAttr = doc.CreateAttribute("id");
@@ -370,7 +393,7 @@ public class FameStats
             bonus = Math.Floor(bonus) + (baseFame + Math.Floor(bonus)) * 0.1;
             doc.DocumentElement.AppendChild(x);
         }
-        if ((double) ShotsThatDamage/Shots > 0.5) //Sharpshooter
+        if ((double)ShotsThatDamage / Shots > 0.5) //Sharpshooter
         {
             XmlElement x = doc.CreateElement("Bonus");
             XmlAttribute idAttr = doc.CreateAttribute("id");
@@ -383,7 +406,7 @@ public class FameStats
             bonus = Math.Floor(bonus) + (baseFame + Math.Floor(bonus)) * 0.1;
             doc.DocumentElement.AppendChild(x);
         }
-        if ((double) ShotsThatDamage/Shots > 0.75) //Sniper
+        if ((double)ShotsThatDamage / Shots > 0.75) //Sniper
         {
             XmlElement x = doc.CreateElement("Bonus");
             XmlAttribute idAttr = doc.CreateAttribute("id");
@@ -541,7 +564,6 @@ public class FameStats
         XmlElement killed = xmlDoc.CreateElement("KilledBy");
         killed.InnerText = killer;
         xmlDoc.DocumentElement.AppendChild(killed);
-
 
         StringWriter result = new StringWriter();
         xmlDoc.Save(result);

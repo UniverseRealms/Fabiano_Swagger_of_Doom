@@ -41,9 +41,12 @@ public class Chars
     public List<ServerItem> Servers { get; set; }
 
     public string OwnedSkins { get; set; }
+
     [XmlElement("TOSPopup")]
     public string TOSPopup { get; set; }
+
     public string Lat { get; set; }
+
     public string Long { get; set; }
 
     [XmlArray("ClassAvailabilityList")]
@@ -128,6 +131,7 @@ public class Account
 {
     [XmlIgnore]
     public int Rank { get; set; }
+
     private XmlSerializerNamespaces _namespaces;
 
     public Account()
@@ -140,6 +144,7 @@ public class Account
 
     //Because the getProdAccount feature, prod has that many accounts that maybe a long isnt enough anymore
     public string AccountId { get; set; }
+
     public string Name { get; set; }
 
     [XmlIgnore]
@@ -183,6 +188,7 @@ public class Account
 
     [XmlIgnore]
     public string Email { get; set; }
+
     [XmlIgnore]
     public string Password { get; set; }
 
@@ -198,6 +204,7 @@ public class Account
 
     [XmlIgnore]
     public string AuthToken { get; set; }
+
     [XmlIgnore]
     public string NotAcceptedNewTos { get; set; }
 
@@ -259,11 +266,15 @@ public class Account
     }
 
     public int Credits { get; set; }
+
     public int FortuneTokens { get; set; }
+
     public int NextCharSlotPrice { get; set; }
+
     public int? BeginnerPackageTimeLeft { get; set; }
 
     public VaultData Vault { get; set; }
+
     public Guild Guild { get; set; }
 
     [XmlNamespaceDeclarations]
@@ -299,13 +310,18 @@ public class Account
     }
 
     public int PetYardType { get; set; }
+
     public int ArenaTickets { get; set; }
+
     public QuestItem DailyQuest { get; set; }
+
     public int IsAgeVerified { get; set; }
+
     public Stats Stats { get; set; }
 
     [XmlIgnore]
     public bool IsGuestAccount { get; set; }
+
     [XmlIgnore]
     public int DailyQuestId { get; set; }
 }
@@ -313,6 +329,7 @@ public class Account
 public class IP
 {
     public string Address { get; set; }
+
     public bool Banned { get; set; }
 
     public override string ToString()
@@ -351,7 +368,9 @@ public class Stats
     public List<ClassStats> ClassStates { get; set; }
 
     public int BestCharFame { get; set; }
+
     public int TotalFame { get; set; }
+
     public int Fame { get; set; }
 }
 
@@ -362,6 +381,7 @@ public class Guild
     public long Id { get; set; }
 
     public int Rank { get; set; }
+
     public string Name { get; set; }
 
     public int Fame { get; set; }
@@ -374,9 +394,13 @@ public class GuildStruct
     public int Id { get; set; }
 
     public string Name { get; set; }
+
     public int Level { get; set; }
+
     public string[] Members { get; set; }
+
     public int GuildFame { get; set; }
+
     public int TotalGuildFame { get; set; }
 }
 
@@ -387,6 +411,7 @@ public class ClassStats
     public string ObjectType { get; set; }
 
     public int BestLevel { get; set; }
+
     public int BestFame { get; set; }
 }
 
@@ -394,9 +419,13 @@ public class ClassStats
 public class NewsItem
 {
     public string Icon { get; set; }
+
     public string Title { get; set; }
+
     public string TagLine { get; set; }
+
     public string Link { get; set; }
+
     public int Date { get; set; }
 }
 
@@ -404,10 +433,15 @@ public class NewsItem
 public class ServerItem
 {
     public string Name { get; set; }
+
     public string DNS { get; set; }
+
     public double Lat { get; set; }
+
     public double Long { get; set; }
+
     public double Usage { get; set; }
+
     public int RankRequired { get; set; }
 
     [XmlElement("AdminOnly")]
@@ -428,10 +462,15 @@ public class Char
     public int CharacterId { get; set; }
 
     public int ObjectType { get; set; }
+
     public int Level { get; set; }
+
     public int Exp { get; set; }
+
     public int CurrentFame { get; set; }
+
     public int HealthStackCount { get; set; }
+
     public int MagicStackCount { get; set; }
 
     [XmlElement("Equipment")]
@@ -448,22 +487,39 @@ public class Char
     public short[] Backpack { get; set; }
 
     public int HasBackpack { get; set; }
+
     public int MaxHitPoints { get; set; }
+
     public int HitPoints { get; set; }
+
     public int MaxMagicPoints { get; set; }
+
     public int MagicPoints { get; set; }
+
     public int Attack { get; set; }
+
     public int Defense { get; set; }
+
     public int Speed { get; set; }
+
     public int Dexterity { get; set; }
+
     public int HpRegen { get; set; }
+
     public int MpRegen { get; set; }
+
     public int Tex1 { get; set; }
+
     public int Tex2 { get; set; }
+
     public bool XpBoosted { get; set; }
+
     public int XpTimer { get; set; }
+
     public int LDTimer { get; set; }
+
     public int LTTimer { get; set; }
+
     public string PCStats { get; set; }
 
     [XmlElement("casToken")]
@@ -561,13 +617,17 @@ public class QuestItem
 {
     [XmlAttribute("tier")]
     public int Tier { get; set; }
+
     [XmlAttribute("goal")]
     public string Goal { get; set; }
+
     public string Description { get; set; }
+
     public string Image { get; set; }
 
     [XmlIgnore]
     public int Id { get; set; }
+
     [XmlIgnore]
     public DateTime Time { get; set; }
 }

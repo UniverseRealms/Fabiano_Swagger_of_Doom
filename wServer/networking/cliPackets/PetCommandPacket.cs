@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace wServer.networking.cliPackets
+﻿namespace wServer.networking.cliPackets
 {
     public class PetCommandPacket : ClientPacket
     {
@@ -13,6 +7,7 @@ namespace wServer.networking.cliPackets
         public const int RELEASE_PET = 3;
 
         public int CommandId { get; set; }
+
         public uint PetId { get; set; }
 
         public override PacketID ID

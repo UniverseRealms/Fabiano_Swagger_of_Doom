@@ -1,6 +1,5 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
 using wServer.realm.entities;
 
@@ -123,7 +122,6 @@ namespace wServer.realm
         private Pet pet;
         private readonly AbilityType type;
 
-
         //a * (1 - Math.pow(r, level)) / (1 - r)
         //points to get to level
         //with a = 20 , r = 1.08
@@ -142,7 +140,9 @@ namespace wServer.realm
         }
 
         public int Level { get; private set; }
+
         public int Power { get; private set; }
+
         public Ability Ability { get; private set; }
 
         public void Incease(IFeedable petFoodNOMNOMNOM)

@@ -1,17 +1,17 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using log4net;
 using wServer.networking;
 using wServer.realm.entities;
 using wServer.realm.entities.player;
-using wServer.realm.worlds;
 using wServer.realm.terrain;
+using wServer.realm.worlds;
 
 #endregion
 
@@ -21,8 +21,10 @@ namespace wServer.realm
     {
         public const int TUT_ID = -1;
         public const int NEXUS_ID = -2;
+
         //public const int RAND_REALM = -3;
         public const int NEXUS_LIMBO = -3;
+
         public const int VAULT_ID = -5;
         public const int TEST_ID = -6;
         public const int GAUNTLET = -7;
@@ -53,7 +55,7 @@ namespace wServer.realm
             ShowDisplays = true;
             MaxPlayers = -1;
 
-            //Mark world for removal after 2 minutes if the 
+            //Mark world for removal after 2 minutes if the
             //world is a dungeon and if no players in there;
             Timers.Add(new WorldTimer(120 * 1000, (w, t) =>
             {
@@ -78,38 +80,57 @@ namespace wServer.realm
         }
 
         public int Id { get; internal set; }
+
         public int Difficulty { get; protected set; }
+
         public string Name { get; protected set; }
+
         public string ClientWorldName { get; protected set; }
+
         public byte[] PortalKey { get; private set; }
+
         public bool PortalKeyExpired { get; private set; }
 
         public virtual bool NeedsPortalKey => false;
 
         public ConcurrentDictionary<int, Player> Players { get; private set; }
+
         public ConcurrentDictionary<int, Enemy> Enemies { get; private set; }
+
         public ConcurrentDictionary<int, Pet> Pets { get; }
+
         public ConcurrentDictionary<Tuple<int, byte>, Projectile> Projectiles { get; private set; }
+
         public ConcurrentDictionary<int, StaticObject> StaticObjects { get; private set; }
+
         public List<WorldTimer> Timers { get; }
+
         public int Background { get; protected set; }
 
         public CollisionMap<Entity> EnemiesCollision { get; private set; }
+
         public CollisionMap<Entity> PlayersCollision { get; private set; }
+
         public byte[,] Obstacles { get; private set; }
 
         public bool AllowTeleport { get; protected set; }
+
         public bool ShowDisplays { get; protected set; }
+
         public string[] ClientXml { get; protected set; }
+
         public string[] ExtraXml { get; protected set; }
 
         public bool Dungeon { get; protected set; }
+
         public bool Cave { get; protected set; }
+
         public bool Shaking { get; protected set; }
 
         public int MaxPlayers { get; protected set; }
 
         public Wmap Map { get; private set; }
+
         public ConcurrentDictionary<int, Enemy> Quests { get; }
 
         public virtual World GetInstance(Client psr)
@@ -461,7 +482,7 @@ namespace wServer.realm
 
         protected void LoadMap(string embeddedResource, MapType type)
         {
-            if(embeddedResource == null) return;
+            if (embeddedResource == null) return;
             var stream = typeof(RealmManager).Assembly.GetManifestResourceStream(embeddedResource);
             if (stream == null) throw new ArgumentException("Resource not found", nameof(embeddedResource));
 
@@ -470,9 +491,11 @@ namespace wServer.realm
                 case MapType.Wmap:
                     FromWorldMap(stream);
                     break;
+
                 case MapType.Json:
                     FromWorldMap(new MemoryStream(Json2Wmap.Convert(Manager, new StreamReader(stream).ReadToEnd())));
                     break;
+
                 default:
                     throw new ArgumentException("Invalid MapType");
             }

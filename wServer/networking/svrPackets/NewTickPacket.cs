@@ -3,7 +3,9 @@
     public class NewTickPacket : ServerPacket
     {
         public int TickId { get; set; }
+
         public int TickTime { get; set; }
+
         public ObjectStats[] UpdateStatuses { get; set; }
 
         public override PacketID ID
@@ -31,7 +33,7 @@
             wtr.Write(TickId);
             wtr.Write(TickTime);
 
-            wtr.Write((ushort) UpdateStatuses.Length);
+            wtr.Write((ushort)UpdateStatuses.Length);
             foreach (ObjectStats i in UpdateStatuses)
                 i.Write(psr, wtr);
         }

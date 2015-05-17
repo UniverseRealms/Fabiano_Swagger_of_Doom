@@ -1,14 +1,9 @@
 ﻿using MetroFramework.Forms;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 
@@ -70,7 +65,7 @@ namespace AdminPanel
         public string PackageResult => HttpUtility.UrlEncode(this.jsonResult);
     }
 
-    struct package
+    internal struct package
     {
         public string name;
         public int maxPurchase;
@@ -82,7 +77,7 @@ namespace AdminPanel
         public int endDate;
     }
 
-    struct content
+    internal struct content
     {
         public int[] items;
         public int charSlots;

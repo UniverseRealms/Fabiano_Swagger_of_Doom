@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.realm.entities.player;
+﻿using wServer.realm.entities.player;
 
 namespace wServer.realm.worlds
 {
@@ -38,7 +33,7 @@ namespace wServer.realm.worlds
 
         public override void LeaveWorld(Entity entity)
         {
-            if(entity is Player)
+            if (entity is Player)
                 (entity as Player).Client.SendPacket(new networking.svrPackets.Global_NotificationPacket
                 {
                     Text = "showKeyUI",

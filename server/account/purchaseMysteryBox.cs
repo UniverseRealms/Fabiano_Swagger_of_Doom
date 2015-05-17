@@ -1,14 +1,11 @@
 ﻿#region
 
-using System;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
 using db;
 using MySql.Data.MySqlClient;
 using server.mysterybox;
+using System;
+using System.IO;
+using System.Linq;
 using System.Xml;
 
 #endregion
@@ -55,6 +52,7 @@ namespace server.account
                                     return;
                                 }
                                 break;
+
                             case 1:
                                 if (acc.Stats.Fame < box.Sale.Price)
                                 {
@@ -77,6 +75,7 @@ namespace server.account
                                     return;
                                 }
                                 break;
+
                             case 1:
                                 if (acc.Stats.Fame < box.Price.Amount)
                                 {
@@ -138,11 +137,10 @@ namespace server.account
             XmlDocument doc = new XmlDocument();
             XmlNode success = doc.CreateElement("Success");
             doc.AppendChild(success);
-            
+
             XmlNode awards = doc.CreateElement("Awards");
             awards.InnerText = res.Awards;
             success.AppendChild(awards);
-
 
             XmlNode goldLeft = doc.CreateElement(res.Currency == 0 ? "Gold" : "Fame");
             goldLeft.InnerText = res.GoldLeft.ToString();
@@ -157,7 +155,9 @@ namespace server.account
         private class MysteryBoxResult
         {
             public string Awards { get; set; }
+
             public int GoldLeft { get; set; }
+
             public int Currency { get; set; }
         }
     }

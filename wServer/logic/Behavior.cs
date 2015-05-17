@@ -10,7 +10,9 @@ namespace wServer.logic
 {
     public abstract class Behavior : IStateChildren
     {
-        [ThreadStatic] private static Random rand;
+        [ThreadStatic]
+        private static Random rand;
+
         private static int randomCount = 0;
         public static ILog log = LogManager.GetLogger(typeof(Behavior));
 

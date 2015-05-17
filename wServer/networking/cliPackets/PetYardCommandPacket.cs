@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.realm;
+﻿using wServer.realm;
 
 namespace wServer.networking.cliPackets
 {
@@ -14,10 +9,15 @@ namespace wServer.networking.cliPackets
         public const int FUSE_PET = 3;
 
         public byte CommandId { get; set; }
+
         public int PetId1 { get; set; }
+
         public int PetId2 { get; set; }
+
         public int ObjectId { get; set; }
+
         public ObjectSlot ObjectSlot { get; set; }
+
         public CurrencyType Currency { get; set; }
 
         public override PacketID ID

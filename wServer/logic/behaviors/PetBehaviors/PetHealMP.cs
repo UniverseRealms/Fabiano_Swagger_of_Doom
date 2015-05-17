@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wServer.networking.svrPackets;
 using wServer.realm;
 using wServer.realm.entities;
@@ -99,18 +96,21 @@ namespace wServer.logic.behaviors.PetBehaviors
                             return CalculateMagicHeal(host.FirstPetLevel.Level, ref cooldown);
                         }
                         break;
+
                     case 1:
                         if (host.SecondPetLevel.Ability == Ability.MagicHeal)
                         {
                             return CalculateMagicHeal(host.SecondPetLevel.Level, ref cooldown);
                         }
                         break;
+
                     case 2:
                         if (host.ThirdPetLevel.Ability == Ability.MagicHeal)
                         {
                             return CalculateMagicHeal(host.ThirdPetLevel.Level, ref cooldown);
                         }
                         break;
+
                     default:
                         break;
                 }

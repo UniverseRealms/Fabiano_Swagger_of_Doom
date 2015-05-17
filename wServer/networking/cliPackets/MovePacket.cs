@@ -3,8 +3,11 @@
     public class MovePacket : ClientPacket
     {
         public int TickId { get; set; }
+
         public int Time { get; set; }
+
         public Position Position { get; set; }
+
         public TimedPosition[] Records { get; set; }
 
         public override PacketID ID
@@ -34,10 +37,10 @@
             Position.Write(psr, wtr);
             if (Records == null)
             {
-                wtr.Write((ushort) 0);
+                wtr.Write((ushort)0);
                 return;
             }
-            wtr.Write((ushort) Records.Length);
+            wtr.Write((ushort)Records.Length);
             foreach (TimedPosition i in Records)
                 i.Write(psr, wtr);
         }

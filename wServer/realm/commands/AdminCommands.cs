@@ -78,7 +78,7 @@ namespace wServer.realm.commands
 
     internal class BanCommand : Command
     {
-        public BanCommand() : 
+        public BanCommand() :
             base("ban", permLevel: 1)
         {
         }
@@ -102,7 +102,6 @@ namespace wServer.realm.commands
         }
     }
 
-
     internal class AddWorldCommand : Command
     {
         public AddWorldCommand()
@@ -116,7 +115,6 @@ namespace wServer.realm.commands
             return true;
         }
     }
-
 
     internal class SpawnCommand : Command
     {
@@ -385,7 +383,7 @@ namespace wServer.realm.commands
                 if ((i.Value.ObjectDesc != null) &&
                     (i.Value.ObjectDesc.ObjectId != null))
                 {
-                    i.Value.Damage(player, new RealmTime(), 1000 * 10000, true); //may not work for ents/liches, 
+                    i.Value.Damage(player, new RealmTime(), 1000 * 10000, true); //may not work for ents/liches,
                     //i.Value.Owner.LeaveWorld(i.Value);
                 }
             }
@@ -1155,7 +1153,6 @@ namespace wServer.realm.commands
     //        }
     //        else
     //        {
-
     //            player.ApplyConditionEffect(new ConditionEffect()
     //            {
     //                Effect = ConditionEffectIndex.Invincible,
@@ -1243,7 +1240,9 @@ namespace wServer.realm.commands
 
     internal class ListCommands : Command
     {
-        public ListCommands() : base("commands", permLevel: 1) { }
+        public ListCommands() : base("commands", permLevel: 1)
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {

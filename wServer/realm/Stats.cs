@@ -130,9 +130,9 @@ namespace wServer.realm
 
         public bool IsUTF()
         {
-            if(this == StatsType.Name || this == StatsType.AccountId || this == StatsType.OwnerAccountId
+            if (this == StatsType.Name || this == StatsType.AccountId || this == StatsType.OwnerAccountId
                || this == StatsType.Guild || this == StatsType.PetSkin)
-                    return true;
+                return true;
             return false;
         }
 
@@ -179,12 +179,12 @@ namespace wServer.realm
             return type._type != id._type;
         }
 
-        public static implicit operator int(StatsType type)
+        public static implicit operator int (StatsType type)
         {
             return type._type;
         }
 
-        public static implicit operator byte(StatsType type)
+        public static implicit operator byte (StatsType type)
         {
             return type._type;
         }

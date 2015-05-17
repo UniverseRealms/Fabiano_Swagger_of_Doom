@@ -1,9 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
-using System.IO;
 using wServer.realm.entities.player;
-using wServer.realm.terrain;
 
 #endregion
 
@@ -39,6 +37,8 @@ namespace wServer.realm.worlds
             }
         }
 
-        protected override void Init() { }
+        protected override void Init()
+        {
+        }
     }
 }

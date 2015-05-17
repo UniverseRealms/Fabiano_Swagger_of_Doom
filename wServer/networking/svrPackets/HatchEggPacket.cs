@@ -3,6 +3,7 @@
     public class HatchEggPacket : ServerPacket
     {
         public string PetName { get; set; }
+
         public int PetSkinId { get; set; }
 
         public override PacketID ID

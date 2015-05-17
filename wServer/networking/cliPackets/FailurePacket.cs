@@ -3,6 +3,7 @@
     public class FailurePacket : ClientPacket
     {
         public int ErrorId { get; set; }
+
         public string ErrorDescription { get; set; }
 
         public override PacketID ID

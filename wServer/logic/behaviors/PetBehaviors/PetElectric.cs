@@ -18,11 +18,10 @@ namespace wServer.logic.behaviors.PetBehaviors
         protected override void TickCore(Entity host, RealmTime time, ref object state)
         {
             if (state == null) return;
-            int cool = (int) state;
+            int cool = (int)state;
 
             if (cool <= 0)
             {
-                
                 PetLevel level = null;
                 if (host is Pet)
                 {
@@ -54,7 +53,7 @@ namespace wServer.logic.behaviors.PetBehaviors
                     e.Owner.BroadcastPacket(new ShowEffectPacket
                     {
                         EffectType = EffectType.ElectricFlashing,
-                        PosA = new Position { X = level.Level * 40}, // Not sure
+                        PosA = new Position { X = level.Level * 40 }, // Not sure
                         TargetId = e.Id
                     }, null);
 

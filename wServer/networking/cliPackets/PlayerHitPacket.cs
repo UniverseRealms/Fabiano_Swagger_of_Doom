@@ -3,6 +3,7 @@
     public class PlayerHitPacket : ClientPacket
     {
         public byte BulletId { get; set; }
+
         public int ObjectId { get; set; }
 
         public override PacketID ID

@@ -3,6 +3,7 @@
     public class ChangeGuildRankPacket : ClientPacket
     {
         public string Name { get; set; }
+
         public int GuildRank { get; set; }
 
         public override PacketID ID

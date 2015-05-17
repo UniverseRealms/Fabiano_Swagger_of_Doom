@@ -3,9 +3,13 @@
     public class PlayerShootPacket : ClientPacket
     {
         public int Time { get; set; }
+
         public byte BulletId { get; set; }
+
         public short ContainerType { get; set; }
+
         public Position Position { get; set; }
+
         public float Angle { get; set; }
 
         public override PacketID ID

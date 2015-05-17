@@ -3,6 +3,7 @@
     public class LoadPacket : ClientPacket
     {
         public int CharacterId { get; set; }
+
         public bool IsFromArena { get; set; }
 
         public override PacketID ID

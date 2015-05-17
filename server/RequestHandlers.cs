@@ -2,7 +2,6 @@
 
 using db;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
@@ -15,6 +14,7 @@ namespace server
     public abstract class RequestHandler
     {
         protected NameValueCollection Query { get; private set; }
+
         protected HttpListenerContext Context { get; private set; }
 
         public void HandleRequest(HttpListenerContext context)
@@ -38,7 +38,7 @@ namespace server
             HandleRequest();
         }
 
-        public bool CheckAccount(Account acc, Database db, bool checkAccInUse=true)
+        public bool CheckAccount(Account acc, Database db, bool checkAccInUse = true)
         {
             if (acc == null && !String.IsNullOrWhiteSpace(Query["password"]))
             {

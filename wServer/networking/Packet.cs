@@ -18,10 +18,10 @@ namespace wServer.networking
 
         static Packet()
         {
-            foreach (Type i in typeof (Packet).Assembly.GetTypes())
-                if (typeof (Packet).IsAssignableFrom(i) && !i.IsAbstract)
+            foreach (Type i in typeof(Packet).Assembly.GetTypes())
+                if (typeof(Packet).IsAssignableFrom(i) && !i.IsAbstract)
                 {
-                    Packet pkt = (Packet) Activator.CreateInstance(i);
+                    Packet pkt = (Packet)Activator.CreateInstance(i);
                     if (!(pkt is ServerPacket))
                         if (!Packets.ContainsKey(pkt.ID))
                             Packets.Add(pkt.ID, pkt);
@@ -29,6 +29,7 @@ namespace wServer.networking
         }
 
         public abstract PacketID ID { get; }
+
         public abstract Packet CreateInstance();
 
         public abstract void Crypt(Client client, byte[] dat, int offset, int len);
@@ -44,14 +45,15 @@ namespace wServer.networking
             MemoryStream s = new MemoryStream(buff, offset + 5, buff.Length - offset - 5);
             Write(client, new NWriter(s));
 
-            int len = (int) s.Position;
+            int len = (int)s.Position;
             Crypt(client, buff, offset + 5, len);
             Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(len + 5)), 0, buff, offset, 4);
-            buff[offset + 4] = (byte) ID;
+            buff[offset + 4] = (byte)ID;
             return len + 5;
         }
 
         protected abstract void Read(Client client, NReader rdr);
+
         protected abstract void Write(Client client, NWriter wtr);
 
         public override string ToString()
@@ -72,7 +74,7 @@ namespace wServer.networking
     {
         public override PacketID ID
         {
-            get { return (PacketID) 255; }
+            get { return (PacketID)255; }
         }
 
         public override Packet CreateInstance()

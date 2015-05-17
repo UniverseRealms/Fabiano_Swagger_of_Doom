@@ -119,8 +119,11 @@ namespace wServer
             do
             {
                 ChatManager chat = new ChatManager(manager);
-                chat.Announce(news[new Random().Next(news.Length)]);
-                Thread.Sleep(300000); //5 min
+                string text = news[new Random().Next(news.Length)];
+                if (text.StartsWith("$"))
+                    chat.Announce(text);
+                else chat.News(text);
+                Thread.Sleep(300000); // 5 Minutes
             }
             while (true);
         }

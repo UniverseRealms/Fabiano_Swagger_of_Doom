@@ -1,7 +1,7 @@
 ﻿#region
 
-using System;
 using db.data;
+using System;
 
 #endregion
 
@@ -52,7 +52,7 @@ namespace wServer.realm.setpieces
         {
             int[,] t = new int[27, 27];
 
-            int[,] q = (int[,]) quarter.Clone();
+            int[,] q = (int[,])quarter.Clone();
 
             for (int y = 0; y < 14; y++) //Top left
                 for (int x = 0; x < 14; x++)
@@ -77,7 +77,6 @@ namespace wServer.realm.setpieces
                 for (int x = 8; x < 19; x++)
                     t[x, y] = 2;
             t[12, 0] = t[13, 0] = t[14, 0] = 2;
-
 
             int r = rand.Next(0, 4); //Rotation
             for (int i = 0; i < r; i++)
@@ -104,7 +103,6 @@ namespace wServer.realm.setpieces
                         tile.ObjType = 0;
                         world.Map[x + pos.X, y + pos.Y] = tile;
                     }
-
                     else if (t[x, y] == 3)
                     {
                         Entity cyclops = Entity.Resolve(world.Manager, 0x0928);

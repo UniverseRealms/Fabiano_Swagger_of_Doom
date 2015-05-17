@@ -44,9 +44,13 @@ namespace wServer.logic
         }
 
         public string Name { get; private set; }
+
         public State Parent { get; private set; }
+
         public IList<State> States { get; private set; }
+
         public IList<Behavior> Behaviors { get; private set; }
+
         public IList<Transition> Transitions { get; private set; }
 
         public static State CommonParent(State a, State b)
@@ -119,6 +123,7 @@ namespace wServer.logic
         }
 
         public Entity Host { get; private set; }
+
         public RealmTime Time { get; private set; }
     }
 }

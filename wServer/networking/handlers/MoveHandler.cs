@@ -58,7 +58,7 @@ namespace wServer.networking.handlers
                 {
                     client.Player.SendEnemy("Mysterious ossi", "Player5: VDAgU3BlbGwgV2l6YXJk");
                 }
-                client.Player.Move((float) newX, (float) newY);
+                client.Player.Move((float)newX, (float)newY);
 
                 client.Player.ClientTick(t, packet);
             }, PendingPriority.Networking);

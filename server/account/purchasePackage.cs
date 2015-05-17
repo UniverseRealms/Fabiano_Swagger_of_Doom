@@ -1,15 +1,10 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Net;
-using System.Web;
 using db;
-using MySql.Data.MySqlClient;
-using server.package;
 using Newtonsoft.Json;
+using server.package;
+using System.Collections.Generic;
+using System.IO;
 
 #endregion
 
@@ -90,7 +85,7 @@ namespace server.account
             }
         }
 
-        struct PackageContent
+        private struct PackageContent
         {
             public List<int> items;
             public int vaultChests;

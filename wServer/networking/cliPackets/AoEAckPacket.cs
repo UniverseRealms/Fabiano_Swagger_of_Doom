@@ -3,6 +3,7 @@
     public class AOEAckPacket : ClientPacket
     {
         public int Time { get; set; }
+
         public Position Position { get; set; }
 
         public override PacketID ID

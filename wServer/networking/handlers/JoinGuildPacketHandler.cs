@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using wServer.networking.cliPackets;
 using wServer.realm;
-using wServer.networking.svrPackets;
-using db;
-using wServer.realm.entities;
-using wServer.realm.entities.player;
 
 namespace wServer.networking.handlers
 {
-    class JoinGuildPacketHandler : PacketHandlerBase<JoinGuildPacket>
+    internal class JoinGuildPacketHandler : PacketHandlerBase<JoinGuildPacket>
     {
         public override PacketID ID { get { return PacketID.JOINGUILD; } }
 
@@ -20,9 +13,9 @@ namespace wServer.networking.handlers
             client.Manager.Logic.AddPendingAction(t => Handle(client, packet));
         }
 
-        void Handle(Client client, JoinGuildPacket packet)
+        private void Handle(Client client, JoinGuildPacket packet)
         {
-            if(!client.Player.Invited)
+            if (!client.Player.Invited)
             {
                 client.Player.SendInfoWithTokens("server.guild_not_invited", new KeyValuePair<string, object>[1]
                 {

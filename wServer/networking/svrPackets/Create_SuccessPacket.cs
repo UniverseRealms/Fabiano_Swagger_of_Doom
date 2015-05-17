@@ -3,6 +3,7 @@
     public class Create_SuccessPacket : ServerPacket
     {
         public int ObjectID { get; set; }
+
         public int CharacterID { get; set; }
 
         public override PacketID ID

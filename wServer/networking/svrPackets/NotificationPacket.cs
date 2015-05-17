@@ -3,7 +3,9 @@
     public class NotificationPacket : ServerPacket
     {
         public int ObjectId { get; set; }
+
         public string Text { get; set; }
+
         public ARGB Color { get; set; }
 
         public override PacketID ID

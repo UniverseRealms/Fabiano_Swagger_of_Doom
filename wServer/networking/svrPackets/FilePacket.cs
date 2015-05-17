@@ -3,6 +3,7 @@
     public class FilePacket : ServerPacket
     {
         public string Name { get; set; }
+
         public byte[] Bytes { get; set; }
 
         public override PacketID ID

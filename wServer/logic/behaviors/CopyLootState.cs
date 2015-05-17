@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.realm;
+﻿using wServer.realm;
 using wServer.realm.entities;
 
 namespace wServer.logic.behaviors
@@ -24,12 +19,14 @@ namespace wServer.logic.behaviors
             if (host is Enemy)
             {
                 foreach (Entity i in host.GetNearestEntities(radius, children))
-                    if(i is Enemy)
+                    if (i is Enemy)
                         if ((i as Enemy).LootState != (host as Enemy).LootState)
                             (i as Enemy).LootState = (host as Enemy).LootState;
             }
         }
 
-        protected override void TickCore(Entity host, RealmTime time, ref object state) { }
+        protected override void TickCore(Entity host, RealmTime time, ref object state)
+        {
+        }
     }
 }

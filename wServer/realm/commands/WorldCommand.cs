@@ -43,7 +43,7 @@ namespace wServer.realm.commands
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            if(String.IsNullOrWhiteSpace(args[0]))
+            if (String.IsNullOrWhiteSpace(args[0]))
             {
                 player.SendInfo("Usage: /trade <player name>");
                 return false;
@@ -55,7 +55,6 @@ namespace wServer.realm.commands
             return true;
         }
     }
-
 
     internal class WhoCommand : Command
     {
@@ -170,9 +169,11 @@ namespace wServer.realm.commands
         }
     }
 
-    class TellCommand : Command
+    internal class TellCommand : Command
     {
-        public TellCommand() : base("tell") { }
+        public TellCommand() : base("tell")
+        {
+        }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {

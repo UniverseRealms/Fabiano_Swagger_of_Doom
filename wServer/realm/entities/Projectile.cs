@@ -11,6 +11,7 @@ namespace wServer.realm.entities
     public interface IProjectileOwner
     {
         Projectile[] Projectiles { get; }
+
         Entity Self { get; }
     }
 
@@ -26,12 +27,17 @@ namespace wServer.realm.entities
         }
 
         public IProjectileOwner ProjectileOwner { get; set; }
+
         public byte ProjectileId { get; set; }
+
         public short Container { get; set; }
+
         public int Damage { get; set; }
 
         public long BeginTime { get; set; }
+
         public Position BeginPos { get; set; }
+
         public float Angle { get; set; }
 
         public ProjectileDesc Descriptor { get; set; }

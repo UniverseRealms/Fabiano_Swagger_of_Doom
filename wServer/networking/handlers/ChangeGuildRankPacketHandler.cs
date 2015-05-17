@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using wServer.networking.cliPackets;
-using wServer.realm;
 using wServer.networking.svrPackets;
-using db;
-using wServer.realm.entities;
 using wServer.realm.entities.player;
 
 namespace wServer.networking.handlers
 {
-    class ChangeGuildRankPacketHandler : PacketHandlerBase<ChangeGuildRankPacket>
+    internal class ChangeGuildRankPacketHandler : PacketHandlerBase<ChangeGuildRankPacket>
     {
         public override PacketID ID { get { return PacketID.CHANGEGUILDRANK; } }
 
@@ -20,7 +14,7 @@ namespace wServer.networking.handlers
             client.Manager.Logic.AddPendingAction(t => Handle(client, packet));
         }
 
-        void Handle(Client client, ChangeGuildRankPacket packet)
+        private void Handle(Client client, ChangeGuildRankPacket packet)
         {
             client.Manager.Database.DoActionAsync(db =>
             {
@@ -33,7 +27,7 @@ namespace wServer.networking.handlers
                         other.Client.Account.Guild.Rank = packet.GuildRank;
                         db.ChangeGuild(other.Client.Account, other.Client.Account.Guild.Id, other.Guild[other.AccountId].Rank, other.Client.Account.Guild.Fame, false);
                         other.UpdateCount++;
-                        foreach(Player p in client.Player.Guild)
+                        foreach (Player p in client.Player.Guild)
                             p.SendInfo(other.Name + " has become a " + client.Player.ResolveRankName(packet.GuildRank));
                     }
                     else

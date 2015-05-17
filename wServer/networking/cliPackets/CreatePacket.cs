@@ -3,6 +3,7 @@
     public class CreatePacket : ClientPacket
     {
         public int ClassType { get; set; }
+
         public int SkinType { get; set; }
 
         public override PacketID ID
@@ -23,8 +24,8 @@
 
         protected override void Write(Client psr, NWriter wtr)
         {
-            wtr.Write((ushort) ClassType);
-            wtr.Write((ushort) SkinType);
+            wtr.Write((ushort)ClassType);
+            wtr.Write((ushort)SkinType);
         }
     }
 }

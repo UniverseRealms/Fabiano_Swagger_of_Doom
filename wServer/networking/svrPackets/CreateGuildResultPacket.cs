@@ -3,6 +3,7 @@
     public class CreateGuildResultPacket : ServerPacket
     {
         public bool Success { get; set; }
+
         public string ErrorText { get; set; }
 
         public override PacketID ID

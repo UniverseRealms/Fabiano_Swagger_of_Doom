@@ -3,7 +3,9 @@
     public class EditAccountListPacket : ClientPacket
     {
         public int AccountListId { get; set; }
+
         public bool Add { get; set; }
+
         public int ObjectId { get; set; }
 
         public override PacketID ID

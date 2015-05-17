@@ -1,11 +1,10 @@
 ﻿#region
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using db;
-using MySql.Data.MySqlClient;
 using wServer.networking;
 using wServer.realm.entities;
 
@@ -20,6 +19,7 @@ namespace wServer.realm.worlds
 
         private readonly bool isLimbo;
         private readonly Client psr;
+
         public string AccountId { get; private set; }
 
         public Vault(bool isLimbo, Client psr = null)
@@ -77,8 +77,8 @@ namespace wServer.realm.worlds
                         giftChestPosition.Add(new IntPoint(x, y));
                 }
             vaultChestPosition.Sort((x, y) => Comparer<int>.Default.Compare(
-                (x.X - spawn.X)*(x.X - spawn.X) + (x.Y - spawn.Y)*(x.Y - spawn.Y),
-                (y.X - spawn.X)*(y.X - spawn.X) + (y.Y - spawn.Y)*(y.Y - spawn.Y)));
+                (x.X - spawn.X) * (x.X - spawn.X) + (x.Y - spawn.Y) * (x.Y - spawn.Y),
+                (y.X - spawn.X) * (y.X - spawn.X) + (y.Y - spawn.Y) * (y.Y - spawn.Y)));
 
             List<VaultChest> chests = psr.Account.Vault.Chests;
 
@@ -136,8 +136,8 @@ namespace wServer.realm.worlds
                         _ =>
                             _ == -1
                                 ? null
-                                : (Manager.GameData.Items.ContainsKey((ushort) _)
-                                    ? Manager.GameData.Items[(ushort) _]
+                                : (Manager.GameData.Items.ContainsKey((ushort)_)
+                                    ? Manager.GameData.Items[(ushort)_]
                                     : null))
                         .ToArray();
                 for (int j = 0; j < 8; j++)
@@ -249,7 +249,7 @@ namespace wServer.realm.worlds
                     _ =>
                         _ == -1
                             ? null
-                            : (Manager.GameData.Items.ContainsKey((ushort) _) ? Manager.GameData.Items[(ushort) _] : null))
+                            : (Manager.GameData.Items.ContainsKey((ushort)_) ? Manager.GameData.Items[(ushort)_] : null))
                     .ToArray();
             for (int j = 0; j < 8; j++)
                 con.Inventory[j] = inv[j];

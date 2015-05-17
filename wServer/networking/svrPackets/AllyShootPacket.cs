@@ -3,8 +3,11 @@
     public class AllyShootPacket : ServerPacket
     {
         public byte BulletId { get; set; }
+
         public int OwnerId { get; set; }
+
         public short ContainerType { get; set; }
+
         public float Angle { get; set; }
 
         public override PacketID ID

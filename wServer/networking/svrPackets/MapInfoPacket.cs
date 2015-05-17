@@ -3,15 +3,25 @@
     public class MapInfoPacket : ServerPacket
     {
         public int Width { get; set; }
+
         public int Height { get; set; }
+
         public string Name { get; set; }
+
         public string ClientWorldName { get; set; }
+
         public int Difficulty { get; set; }
+
         public uint Fp { get; set; }
+
         public int Background { get; set; }
+
         public bool AllowTeleport { get; set; }
+
         public bool ShowDisplays { get; set; }
+
         public string[] ClientXML { get; set; }
+
         public string[] ExtraXML { get; set; }
 
         public override PacketID ID
@@ -57,11 +67,11 @@
             wtr.Write(AllowTeleport);
             wtr.Write(ShowDisplays);
 
-            wtr.Write((ushort) ClientXML.Length);
+            wtr.Write((ushort)ClientXML.Length);
             foreach (string i in ClientXML)
                 wtr.Write32UTF(i);
 
-            wtr.Write((ushort) ExtraXML.Length);
+            wtr.Write((ushort)ExtraXML.Length);
             foreach (string i in ExtraXML)
                 wtr.Write32UTF(i);
         }

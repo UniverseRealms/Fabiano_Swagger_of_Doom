@@ -18,7 +18,7 @@ public class WeakReference<T> : WeakReference where T : class
 
     public new T Target
     {
-        get { return (T) base.Target; }
+        get { return (T)base.Target; }
     }
 
     public static WeakReference<T> Create(T target)
@@ -31,7 +31,7 @@ public class WeakReference<T> : WeakReference where T : class
 }
 
 // Provides a weak reference to a null target object, which, unlike
-// other weak references, is always considered to be alive. This 
+// other weak references, is always considered to be alive. This
 // facilitates handling null dictionary values, which are perfectly
 // legal.
 internal class WeakNullReference<T> : WeakReference<T> where T : class
@@ -66,7 +66,7 @@ internal sealed class WeakKeyReference<T> : WeakReference<T> where T : class
 
 // Compares objects of the given type or WeakKeyReferences to them
 // for equality based on the given comparer. Note that we can only
-// implement IEqualityComparer<T> for T = object as there is no 
+// implement IEqualityComparer<T> for T = object as there is no
 // other common base between T and WeakKeyReference<T>. We need a
 // single comparer to handle both types because we don't want to
 // allocate a new weak reference for every lookup.
@@ -87,7 +87,7 @@ internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
     {
         WeakKeyReference<T> weakKey = obj as WeakKeyReference<T>;
         if (weakKey != null) return weakKey.HashCode;
-        return comparer.GetHashCode((T) obj);
+        return comparer.GetHashCode((T)obj);
     }
 
     // Note: There are actually 9 cases to handle here.
@@ -95,10 +95,10 @@ internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
     //  Let Wa = Alive Weak Reference
     //  Let Wd = Dead Weak Reference
     //  Let S  = Strong Reference
-    //  
+    //
     //  x  | y  | Equals(x,y)
     // -------------------------------------------------
-    //  Wa | Wa | comparer.Equals(x.Target, y.Target) 
+    //  Wa | Wa | comparer.Equals(x.Target, y.Target)
     //  Wa | Wd | false
     //  Wa | S  | comparer.Equals(x.Target, y)
     //  Wd | Wa | false
@@ -131,7 +131,7 @@ internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
         }
         else
         {
-            target = (T) obj;
+            target = (T)obj;
             isDead = false;
         }
         return target;
@@ -159,11 +159,17 @@ public abstract class BaseDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     private ValueCollection values;
 
     public abstract int Count { get; }
+
     public abstract void Clear();
+
     public abstract void Add(TKey key, TValue value);
+
     public abstract bool ContainsKey(TKey key);
+
     public abstract bool Remove(TKey key);
+
     public abstract bool TryGetValue(TKey key, out TValue value);
+
     public abstract IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();
 
     public bool IsReadOnly
@@ -415,11 +421,11 @@ public sealed class WeakDictionary<TKey, TValue> : BaseDictionary<TKey, TValue>
     public override IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
         return (from kvp in dictionary
-            let weakKey = (WeakReference<TKey>) (kvp.Key)
-            let value = kvp.Value
-            let key = weakKey.Target
-            where weakKey.IsAlive
-            select new KeyValuePair<TKey, TValue>(key, value)).GetEnumerator();
+                let weakKey = (WeakReference<TKey>)(kvp.Key)
+                let value = kvp.Value
+                let key = weakKey.Target
+                where weakKey.IsAlive
+                select new KeyValuePair<TKey, TValue>(key, value)).GetEnumerator();
     }
 
     // Removes the left-over weak references for entries in the dictionary
@@ -431,7 +437,7 @@ public sealed class WeakDictionary<TKey, TValue> : BaseDictionary<TKey, TValue>
         List<object> toRemove = null;
         foreach (KeyValuePair<object, TValue> pair in dictionary)
         {
-            WeakReference<TKey> weakKey = (WeakReference<TKey>) (pair.Key);
+            WeakReference<TKey> weakKey = (WeakReference<TKey>)(pair.Key);
 
             if (!weakKey.IsAlive)
             {

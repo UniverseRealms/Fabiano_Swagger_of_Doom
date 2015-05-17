@@ -1,10 +1,10 @@
 ﻿#region
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient;
-using wServer.realm.entities.player;
 using wServer.networking.svrPackets;
+using wServer.realm.entities.player;
 using wServer.realm.worlds;
 
 #endregion
@@ -61,7 +61,9 @@ namespace wServer.realm.entities
         }
 
         public int PetId { get; private set; }
+
         public int SkinId { get; private set; }
+
         public int MaximumLevel { get; private set; }
 
         public string Skin { get; private set; }
@@ -69,9 +71,13 @@ namespace wServer.realm.entities
         public bool UpdateNeeded { get; set; }
 
         public PetItem Info { get; private set; }
+
         public PetLevel FirstPetLevel { get; private set; }
+
         public PetLevel SecondPetLevel { get; private set; }
+
         public PetLevel ThirdPetLevel { get; private set; }
+
         public Player PlayerOwner { get; set; }
 
         public Position SpawnPoint
@@ -80,6 +86,7 @@ namespace wServer.realm.entities
         }
 
         public Rarity PetRarity { get; private set; }
+
         public Family PetFamily { get; private set; }
 
         public void Feed(IFeedable petFoodNOMNOMNOM)
@@ -213,6 +220,7 @@ namespace wServer.realm.entities
                         item.Abilities[2].Power = 1;
                         item.Abilities[2].Points = 0;
                         break;
+
                     case 2:
                         item.MaxAbilityPower = 70;
                         item.Abilities[0].Power = 50;
@@ -222,6 +230,7 @@ namespace wServer.realm.entities
                         item.Abilities[2].Power = 1;
                         item.Abilities[2].Points = 0;
                         break;
+
                     case 3:
                         item.MaxAbilityPower = 90;
                         item.Abilities[0].Power = 70;
@@ -231,6 +240,7 @@ namespace wServer.realm.entities
                         item.Abilities[2].Power = 30;
                         item.Abilities[2].Points = 2080;
                         break;
+
                     case 4:
                         item.MaxAbilityPower = 100;
                         item.Abilities[0].Power = 90;
@@ -240,6 +250,7 @@ namespace wServer.realm.entities
                         item.Abilities[2].Power = 50;
                         item.Abilities[2].Points = 10607;
                         break;
+
                     default:
                         item.MaxAbilityPower = 30;
                         item.Abilities[0].Power = 1;
@@ -301,16 +312,18 @@ namespace wServer.realm.entities
                 case Rarity.Uncommon:
                     power = 30;
                     break;
+
                 case Rarity.Rare:
                     power = 50;
                     break;
+
                 case Rarity.Legendary:
                     power = 70;
                     break;
             }
 
             for (int i = 0; i < 3; i++)
-			{
+            {
                 if (i == 0 && petStruct.FirstAbility != null)
                 {
                     ret.Add(new AbilityItem
@@ -341,8 +354,7 @@ namespace wServer.realm.entities
                     else
                         abilities.Remove(ability);
                 }
-			}
-            
+            }
 
             return ret;
         }
@@ -389,7 +401,9 @@ namespace wServer.realm.entities
             newPetStruct = s;
         }
 
-        public void Damage(int dmg, Entity chr) { }
+        public void Damage(int dmg, Entity chr)
+        {
+        }
 
         public bool IsVisibleToEnemy()
         {

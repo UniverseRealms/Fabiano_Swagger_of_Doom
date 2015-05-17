@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wServer.realm.entities.player;
 using wServer.networking.svrPackets;
-using wServer.realm.worlds;
+using wServer.realm.entities.player;
 
 namespace wServer.realm
 {
     public class GuildManager : List<Player>
     {
         public static Dictionary<string, GuildManager> CurrentManagers { get { return _currentManagers; } }
+
         private static Dictionary<string, GuildManager> _currentManagers = new Dictionary<string, GuildManager>();
 
         public static GuildManager Add(Player player, Guild guildStruct)
         {
-            if(guildStruct == null) return null;
+            if (guildStruct == null) return null;
             GuildManager ret = null;
             if (CurrentManagers.ContainsKey(guildStruct.Name))
             {
@@ -67,26 +64,30 @@ namespace wServer.realm
         }
 
         private Dictionary<string, Guild> _guildStructs;
+
         public Dictionary<string, Guild> GuildStructs
         {
             get { return _guildStructs; }
         }
+
         public Guild this[string accountId] { get { return _guildStructs.ContainsKey(accountId) ? _guildStructs[accountId] : new Guild { Name = "" }; } }
 
         private readonly string name;
+
         public string Name
         {
             get { return name; }
         }
 
         private readonly long id;
+
         public long Id
         {
             get { return id; }
         }
 
-
         public bool UpgradeInProgress { get; private set; }
+
         //public World GuildHall { get; private set; }
 
         public GuildManager(Guild guildInfo, RealmManager manager)
@@ -162,7 +163,6 @@ namespace wServer.realm
             if (player.Name == sender.Name)
                 foreach (Player p in this)
                     p.SendInfo(sender.Name + " has left " + Name);
-
             else
                 foreach (Player p in this)
                     p.SendInfo(sender.Name + " removed " + player.Name + " from " + Name);
@@ -197,6 +197,6 @@ namespace wServer.realm
             }
         }
 
-        public bool IsDefault{ get { return _guildStructs.Values.ToArray()[0].Name == ""; } }
+        public bool IsDefault { get { return _guildStructs.Values.ToArray()[0].Name == ""; } }
     }
 }

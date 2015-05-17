@@ -3,6 +3,7 @@
     public class PlaySoundPacket : ServerPacket
     {
         public int OwnerId { get; set; }
+
         public int SoundId { get; set; }
 
         public override PacketID ID
@@ -24,7 +25,7 @@
         protected override void Write(Client psr, NWriter wtr)
         {
             wtr.Write(OwnerId);
-            wtr.Write((byte) SoundId);
+            wtr.Write((byte)SoundId);
         }
     }
 }

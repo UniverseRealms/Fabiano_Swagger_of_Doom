@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AdminPanel
 {
@@ -27,6 +26,7 @@ namespace AdminPanel
             cmd.CommandText = query;
             return cmd;
         }
+
         public Task CreateQueryAsync(string query, params KeyValuePair<string, object>[] args)
         {
             return Task.Factory.StartNew(() =>

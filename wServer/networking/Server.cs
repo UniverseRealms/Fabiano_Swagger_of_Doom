@@ -1,10 +1,10 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using log4net;
 using wServer.realm;
 
 #endregion
@@ -13,7 +13,7 @@ namespace wServer.networking
 {
     internal class Server
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (Server));
+        private static readonly ILog log = LogManager.GetLogger(typeof(Server));
 
         public Server(RealmManager manager)
         {
@@ -22,6 +22,7 @@ namespace wServer.networking
         }
 
         public Socket Socket { get; private set; }
+
         public RealmManager Manager { get; private set; }
 
         public void Start()

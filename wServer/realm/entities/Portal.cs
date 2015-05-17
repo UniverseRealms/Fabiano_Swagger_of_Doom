@@ -21,7 +21,9 @@ namespace wServer.realm.entities
         }
 
         public string PortalName { get; set; }
+
         public string EWorld { get; set; }
+
         public new World WorldInstance { get; set; }
 
         protected override void ExportStats(IDictionary<StatsType, object> stats)
@@ -33,7 +35,7 @@ namespace wServer.realm.entities
 
         public override void Tick(RealmTime time)
         {
-            if(WorldInstance != null && IsRealmPortal)
+            if (WorldInstance != null && IsRealmPortal)
                 Usable = !(WorldInstance.Players.Count >= RealmManager.MAX_REALM_PLAYERS);
             base.Tick(time);
         }

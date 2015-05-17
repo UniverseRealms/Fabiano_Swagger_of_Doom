@@ -1,14 +1,14 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
 using wServer.logic;
-using wServer.realm.entities;
-using wServer.realm.entities.player;
 using wServer.logic.transitions;
+using wServer.realm.entities;
 using wServer.realm.entities.merchant;
+using wServer.realm.entities.player;
 
 #endregion
 
@@ -67,15 +67,15 @@ namespace wServer.realm
             if (ObjectDesc != null)
                 Tags = ObjectDesc.Tags;
 
-            if (objType == 0x0d60) ApplyConditionEffect(new ConditionEffect
-            {
-                Effect = ConditionEffectIndex.Invincible,
-                DurationMS = -1
-            });
+            if (objType == 0x0d60)
+                ApplyConditionEffect(new ConditionEffect
+                {
+                    Effect = ConditionEffectIndex.Invincible,
+                    DurationMS = -1
+                });
         }
 
         public RealmManager Manager { get; private set; }
-
 
         public ObjectDesc ObjectDesc => desc;
 
@@ -86,14 +86,16 @@ namespace wServer.realm
         public int UpdateCount { get; set; }
 
         public ushort ObjectType { get; private set; }
+
         public int Id { get; internal set; }
 
         public bool Usable { get; set; }
 
-
         //Stats
         public string Name { get; set; }
+
         public int Size { get; set; }
+
         public ConditionEffects ConditionEffects { get; set; }
 
         public IDictionary<object, object> StateStorage => states ?? (states = new Dictionary<object, object>());
@@ -101,8 +103,11 @@ namespace wServer.realm
         public State CurrentState { get; private set; }
 
         public float X { get; private set; }
+
         public float Y { get; private set; }
+
         public CollisionNode<Entity> CollisionNode { get; set; }
+
         public CollisionMap<Entity> Parent { get; set; }
 
         Entity IProjectileOwner.Self => this;
@@ -193,7 +198,6 @@ namespace wServer.realm
             Y = y;
             return this;
         }
-
 
         protected virtual void ImportStats(StatsType stats, object val)
         {
@@ -299,7 +303,6 @@ namespace wServer.realm
             return posHistory[(byte)(posIdx - 2)];
         }
 
-
         /*
          * ArenaGuard,
          * ArenaPortal,
@@ -354,38 +357,48 @@ namespace wServer.realm
                     throw new Exception("Projectile should not instantiated using Entity.Resolve");
                 case "Sign":
                     return new Sign(manager, id);
+
                 case "Wall":
                 case "DoubleWall":
                     return new Wall(manager, id, node);
+
                 case "ConnectedWall":
                 case "CaveWall":
                     return new ConnectedObject(manager, id);
+
                 case "GameObject":
                 case "CharacterChanger":
                 case "MoneyChanger":
                 case "NameChanger":
                     return new StaticObject(manager, id, StaticObject.GetHP(node), StaticObject.GetStatic(node), false, true);
+
                 case "GuildRegister":
                 case "GuildChronicle":
                 case "GuildBoard":
                     return new StaticObject(manager, id, null, false, false, false);
+
                 case "Container":
                     return new Container(manager, node);
+
                 case "Player":
                     throw new Exception("Player should not instantiated using Entity.Resolve");
                 case "Character": //Other characters means enemy
                     return new Enemy(manager, id);
+
                 case "Portal":
                 case "GuildHallPortal":
                     return new Portal(manager, id, null);
+
                 case "ClosedVaultChest":
                 case "ClosedVaultChestGold":
                 case "ClosedGiftChest":
                 case "VaultChest":
                 case "Merchant":
                     return new Merchants(manager, id);
+
                 case "GuildMerchant":
                     return new GuildMerchant(manager, id);
+
                 case "ArenaGuard":
                 case "ArenaPortal":
                 case "MysteryBoxGround":
@@ -395,8 +408,10 @@ namespace wServer.realm
                 case "YardUpgrader":
                 case "FortuneGround":
                     return new StaticObject(manager, id, null, true, false, false);
+
                 case "QuestRewards":
                     return new Tinker(manager, id, null, false);
+
                 case "Pet":
                     throw new Exception("Pets should not instantiated using Entity.Resolve");
                 default:
@@ -437,7 +452,6 @@ namespace wServer.realm
         public virtual void ProjectileHit(Projectile projectile, Entity target)
         {
         }
-
 
         private void ProcessConditionEffects(RealmTime time)
         {

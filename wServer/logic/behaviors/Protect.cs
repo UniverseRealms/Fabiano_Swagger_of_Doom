@@ -11,6 +11,7 @@ namespace wServer.logic.behaviors
     {
         //State storage: protect state
         private readonly float acquireRange;
+
         private readonly ushort protectee;
         private readonly float protectionRange;
         private readonly float reprotectRange;
@@ -19,18 +20,18 @@ namespace wServer.logic.behaviors
         public Protect(double speed, string protectee, double acquireRange = 10, double protectionRange = 2,
             double reprotectRange = 1)
         {
-            this.speed = (float) speed;
+            this.speed = (float)speed;
             this.protectee = BehaviorDb.InitGameData.IdToObjectType[protectee];
-            this.acquireRange = (float) acquireRange;
-            this.protectionRange = (float) protectionRange;
-            this.reprotectRange = (float) reprotectRange;
+            this.acquireRange = (float)acquireRange;
+            this.protectionRange = (float)protectionRange;
+            this.reprotectRange = (float)reprotectRange;
         }
 
         protected override void TickCore(Entity host, RealmTime time, ref object state)
         {
             ProtectState s;
             if (state == null) s = ProtectState.DontKnowWhere;
-            else s = (ProtectState) state;
+            else s = (ProtectState)state;
 
             Status = CycleStatus.NotStarted;
 
@@ -47,6 +48,7 @@ namespace wServer.logic.behaviors
                         goto case ProtectState.Protecting;
                     }
                     break;
+
                 case ProtectState.Protecting:
                     if (entity == null)
                     {
@@ -58,8 +60,8 @@ namespace wServer.logic.behaviors
                     {
                         Status = CycleStatus.InProgress;
                         vect.Normalize();
-                        float dist = host.GetSpeed(speed)*(time.thisTickTimes/1000f);
-                        host.ValidateAndMove(host.X + vect.X*dist, host.Y + vect.Y*dist);
+                        float dist = host.GetSpeed(speed) * (time.thisTickTimes / 1000f);
+                        host.ValidateAndMove(host.X + vect.X * dist, host.Y + vect.Y * dist);
                         host.UpdateCount++;
                     }
                     else
@@ -68,6 +70,7 @@ namespace wServer.logic.behaviors
                         s = ProtectState.Protected;
                     }
                     break;
+
                 case ProtectState.Protected:
                     if (entity == null)
                     {

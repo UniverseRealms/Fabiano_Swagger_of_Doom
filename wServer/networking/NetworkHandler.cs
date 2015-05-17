@@ -1,12 +1,12 @@
 ﻿#region
 
+using log4net;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using log4net;
 using System.Text;
 
 #endregion
@@ -17,7 +17,7 @@ namespace wServer.networking
     internal class NetworkHandler : IDisposable
     {
         public const int BUFFER_SIZE = 0x10000;
-        private static readonly ILog log = LogManager.GetLogger(typeof (NetworkHandler));
+        private static readonly ILog log = LogManager.GetLogger(typeof(NetworkHandler));
         private readonly Client parent;
         private readonly ConcurrentQueue<Packet> pendingPackets = new ConcurrentQueue<Packet>();
         private readonly object sendLock = new object();
@@ -65,8 +65,8 @@ namespace wServer.networking
             wtr.WriteNullTerminatedString(@"<cross-domain-policy>
      <allow-access-from domain=""*"" to-ports=""*"" />
 </cross-domain-policy>");
-            wtr.Write((byte) '\r');
-            wtr.Write((byte) '\n');
+            wtr.Write((byte)'\r');
+            wtr.Write((byte)'\n');
             parent.Disconnect();
         }
 
@@ -84,7 +84,7 @@ namespace wServer.networking
                 }
 
                 if (e.SocketError != SocketError.Success)
-                    throw new SocketException((int) e.SocketError);
+                    throw new SocketException((int)e.SocketError);
 
                 switch (receiveState)
                 {
@@ -131,6 +131,7 @@ namespace wServer.networking
                         e.SetBuffer(0, len);
                         skt.ReceiveAsync(e);
                         break;
+
                     case ReceiveState.ReceivingBody:
                         if (e.BytesTransferred < (e.UserToken as ReceiveToken).Length)
                         {
@@ -151,6 +152,7 @@ namespace wServer.networking
                             skt.ReceiveAsync(e);
                         }
                         break;
+
                     default:
                         throw new InvalidOperationException(e.LastOperation.ToString());
                 }
@@ -179,6 +181,7 @@ namespace wServer.networking
                         if (!skt.Connected) return;
                         skt.SendAsync(e);
                         break;
+
                     case SendState.Sending:
                         (e.UserToken as SendToken).Packet = null;
 
@@ -200,7 +203,6 @@ namespace wServer.networking
                 OnError(ex);
             }
         }
-
 
         private void OnError(Exception ex)
         {
@@ -279,6 +281,7 @@ namespace wServer.networking
         private class ReceiveToken
         {
             public int Length { get; set; }
+
             public Packet Packet { get; set; }
         }
 

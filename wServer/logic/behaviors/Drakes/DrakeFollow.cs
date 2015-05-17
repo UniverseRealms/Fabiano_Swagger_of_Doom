@@ -1,9 +1,5 @@
 ﻿using Mono.Game;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wServer.realm;
 using wServer.realm.entities.player;
 
@@ -35,6 +31,7 @@ namespace wServer.logic.behaviors.Drakes
                     else
                         s.State = F.Acquired;
                     break;
+
                 case F.Acquired:
                     if (player == null)
                     {

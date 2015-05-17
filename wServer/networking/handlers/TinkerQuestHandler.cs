@@ -1,9 +1,4 @@
 ﻿using db;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wServer.networking.cliPackets;
 using wServer.networking.svrPackets;
 
@@ -29,7 +24,7 @@ namespace wServer.networking.handlers
                         Message = client.Player.GetLanguageString("server.quest_complete")
                     });
                     client.Player.Inventory[packet.Object.SlotId] = null;
-                    if(client.Player.DailyQuest.Tier == 3)
+                    if (client.Player.DailyQuest.Tier == 3)
                         client.Player.Tokens = db.UpdateFortuneToken(client.Account, +2);
                     else
                         client.Player.Tokens = db.UpdateFortuneToken(client.Account, +1);

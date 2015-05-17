@@ -3,11 +3,17 @@
     public class AOEPacket : ServerPacket
     {
         public Position Position { get; set; }
+
         public float Radius { get; set; }
+
         public ushort Damage { get; set; }
+
         public ConditionEffectIndex Effects { get; set; }
+
         public float EffectDuration { get; set; }
+
         public short OriginType { get; set; }
+
         //public ARGB Color { get; set; }
 
         public override PacketID ID
@@ -25,7 +31,7 @@
             Position = Position.Read(psr, rdr);
             Radius = rdr.ReadSingle();
             Damage = rdr.ReadUInt16();
-            Effects = (ConditionEffectIndex) rdr.ReadByte();
+            Effects = (ConditionEffectIndex)rdr.ReadByte();
             EffectDuration = rdr.ReadSingle();
             OriginType = rdr.ReadInt16();
             //Color = ARGB.Read(psr, rdr);
@@ -36,7 +42,7 @@
             Position.Write(psr, wtr);
             wtr.Write(Radius);
             wtr.Write(Damage);
-            wtr.Write((byte) Effects);
+            wtr.Write((byte)Effects);
             wtr.Write(EffectDuration);
             wtr.Write(OriginType);
             //Color.Write(psr, wtr);

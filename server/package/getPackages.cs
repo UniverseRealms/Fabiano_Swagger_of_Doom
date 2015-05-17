@@ -3,10 +3,7 @@
 using db;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
-using System.Net;
-using System.Web;
 using System.Xml;
 
 #endregion
@@ -94,12 +91,19 @@ namespace server.package
         public int PackageId { get; set; }
 
         public string Name { get; set; }
+
         public int Price { get; set; }
+
         public int Quantity { get; set; }
+
         public int MaxPurchase { get; set; }
+
         public int Weight { get; set; }
+
         public string BgURL { get; set; }
+
         public DateTime EndDate { get; set; }
+
         public string Contents { get; set; }
 
         internal static Package GetPackage(int id)

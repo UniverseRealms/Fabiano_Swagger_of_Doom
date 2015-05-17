@@ -12,7 +12,9 @@ namespace wServer
     public struct BitmapData
     {
         public int Width { get; set; }
+
         public int Height { get; set; }
+
         public byte[] Bytes { get; set; }
 
         public static BitmapData Read(Client psr, NReader rdr)
@@ -20,7 +22,7 @@ namespace wServer
             BitmapData ret = new BitmapData();
             ret.Width = rdr.ReadInt32();
             ret.Height = rdr.ReadInt32();
-            ret.Bytes = new byte[ret.Width*ret.Height*4];
+            ret.Bytes = new byte[ret.Width * ret.Height * 4];
             ret.Bytes = rdr.ReadBytes(ret.Bytes.Length);
             return ret;
         }
@@ -42,7 +44,7 @@ namespace wServer
 
         public int GetHashCode(IntPoint obj)
         {
-            return obj.X*23 << 16 + obj.Y*17;
+            return obj.X * 23 << 16 + obj.Y * 17;
         }
     }
 
@@ -116,10 +118,10 @@ namespace wServer
 
         public ARGB(uint argb)
         {
-            A = (byte) ((argb & 0xff000000) >> 24);
-            R = (byte) ((argb & 0x00ff0000) >> 16);
-            G = (byte) ((argb & 0x0000ff00) >> 8);
-            B = (byte) ((argb & 0x000000ff) >> 0);
+            A = (byte)((argb & 0xff000000) >> 24);
+            R = (byte)((argb & 0x00ff0000) >> 16);
+            G = (byte)((argb & 0x0000ff00) >> 8);
+            B = (byte)((argb & 0x000000ff) >> 0);
         }
 
         public static ARGB Read(Client psr, NReader rdr)
@@ -259,7 +261,7 @@ namespace wServer
             ret.Stats = new KeyValuePair<StatsType, object>[rdr.ReadInt16()];
             for (int i = 0; i < ret.Stats.Length; i++)
             {
-                StatsType type = (StatsType) rdr.ReadByte();
+                StatsType type = (StatsType)rdr.ReadByte();
                 if (type == StatsType.Guild || type == StatsType.Name)
                     ret.Stats[i] = new KeyValuePair<StatsType, object>(type, rdr.ReadUTF());
                 else
@@ -282,7 +284,7 @@ namespace wServer
                     else wtr.Write((int)i.Value);
                 }
             }
-            catch(Exception) { }
+            catch (Exception) { }
         }
     }
 }

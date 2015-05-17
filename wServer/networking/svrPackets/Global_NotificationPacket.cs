@@ -3,6 +3,7 @@
     public class Global_NotificationPacket : ServerPacket
     {
         public int Type { get; set; }
+
         public string Text { get; set; }
 
         public override PacketID ID

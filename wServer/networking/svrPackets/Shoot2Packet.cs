@@ -3,10 +3,15 @@
     public class Shoot2Packet : ServerPacket
     {
         public byte BulletId { get; set; }
+
         public int OwnerId { get; set; }
+
         public int ContainerType { get; set; }
+
         public Position StartingPos { get; set; }
+
         public float Angle { get; set; }
+
         public short Damage { get; set; }
 
         public override PacketID ID
