@@ -12,4 +12,4 @@ You are free to use this source as long as u credit this guys:
 - everyone else that have contributed to this project on mpgh or any other site
 
 You are allowed to modify it or do whatever you want with it but not to sell it
-Whatever you are doing with it, you need to give credits to the guys shown at the top
+Whatever you are doing with it, you need to give credits to the guys shown at the top.
