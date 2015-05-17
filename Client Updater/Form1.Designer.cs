@@ -50,7 +50,7 @@
             this.c453_btn.Name = "c453_btn";
             this.c453_btn.Size = new System.Drawing.Size(127, 23);
             this.c453_btn.TabIndex = 1;
-            this.c453_btn.Text = "c453.pw";
+            this.c453_btn.Text = "Hamachi";
             this.c453_btn.UseVisualStyleBackColor = true;
             this.c453_btn.Click += new System.EventHandler(this.c453_btn_Click);
             // 
