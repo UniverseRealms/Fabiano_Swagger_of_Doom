@@ -131,6 +131,7 @@
     <Compile Include="account\checkGiftCode.cs" />
     <Compile Include="account\forgotPassword.cs" />
     <Compile Include="account\getProdAccount.cs" />
+    <Compile Include="account\listGiftCodes.cs" />
     <Compile Include="account\playFortuneGame.cs" />
     <Compile Include="account\purchaseCharSlot.cs" />
     <Compile Include="account\purchaseSkin.cs" />
