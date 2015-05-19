@@ -28,7 +28,7 @@ namespace AdminPanel
         {
             try
             {
-                var webRequest = WebRequest.CreateHttp(String.Format("http://127.0.0.1/account/verify?guid={0}&password={1}", emailTextBox.Text, passwordTextBox.Text));
+                var webRequest = WebRequest.CreateHttp(String.Format("http://127.0.0.1:8080/account/verify?guid={0}&password={1}", emailTextBox.Text, passwordTextBox.Text));
                 using (StreamReader rdr = new StreamReader(webRequest.GetResponse().GetResponseStream()))
                 {
                     var xml = rdr.ReadToEnd();

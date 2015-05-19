@@ -36,6 +36,8 @@ namespace server
         internal static ILog logger { get; } = LogManager.GetLogger("Server");
 
         internal static string InstanceId { get; set; }
+        public static string ServerDomain { get; private set; }
+        public static int ServerPort { get; private set; }
 
         private static void Main(string[] args)
         {
@@ -52,6 +54,8 @@ namespace server
                 Settings.GetValue<string>("db_auth", ""));
             GameData = new XmlData();
 
+            ServerDomain = Settings.GetValue("serverDomain", "127.0.0.1");
+            ServerPort = Settings.GetValue<int>("port", "80");
             InstanceId = Guid.NewGuid().ToString();
             Console.CancelKeyPress += (sender, e) => e.Cancel = true;
 

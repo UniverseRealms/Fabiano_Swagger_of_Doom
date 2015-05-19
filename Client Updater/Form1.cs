@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using MetroFramework.Forms;
+using System;
 
 namespace Client_Updater
 {
-    public partial class Form1 : Form
+    public partial class Form1 : MetroForm
     {
         private ClientUpdater updater;
 
@@ -14,13 +14,13 @@ namespace Client_Updater
 
         private void localhost_btn_Click(object sender, EventArgs e)
         {
-            updater = new ClientUpdater("127.0.0.1:8080", label1);
+            updater = new ClientUpdater("127.0.0.1", label1);
             updater.UpdateClient();
         }
 
         private void c453_btn_Click(object sender, EventArgs e)
         {
-            updater = new ClientUpdater("25.48.226.249:8080", label1);
+            updater = new ClientUpdater("25.108.113.162", label1);
             updater.UpdateClient();
         }
 

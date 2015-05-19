@@ -22,7 +22,7 @@ namespace server.account
                     {
                         foreach (var item in rdr)
                         {
-                            status += (rdr.GetString("code") + @"<a href=" + new Uri("http://25.48.226.249:8080/account/checkGiftCode?code=" + rdr.GetString("code")) + @" style='color: red'> Check contents</a></br>");
+                            status += $"{rdr.GetString("code")} <a href='{Program.ServerDomain}:{Program.ServerPort}/account/checkGiftCode?code={rdr.GetString("code")}' style='color: red'>Check contents</a>";
                         }
                     }
                 }

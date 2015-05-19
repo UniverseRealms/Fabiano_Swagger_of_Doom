@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -175,5 +176,16 @@ public static class Utils
         var r = new Random();
         r.NextBytes(arr);
         return arr;
+    }
+
+    public static void ExecuteSync(this Task task)
+    {
+        task.Wait();
+    }
+
+    public static T ExecuteSync<T>(this Task<T> task)
+    {
+        task.Wait();
+        return task.Result;
     }
 }

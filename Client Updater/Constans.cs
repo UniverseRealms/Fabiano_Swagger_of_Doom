@@ -1,4 +1,5 @@
-﻿namespace Client_Updater
+﻿
+namespace Client_Updater
 {
     public class Constans
     {
