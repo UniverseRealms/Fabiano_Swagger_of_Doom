@@ -214,7 +214,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
             }
         }
 
@@ -229,7 +229,7 @@ namespace wServer.realm.entities.player
 
             if (pkt.SlotObject.SlotId != 255 && pkt.SlotObject.SlotId != 254 && con.Inventory[pkt.SlotObject.SlotId] != item)
             {
-                log.FatalFormat("Cheat engine detected for player {0},\nItem should be {1}, but its {2}.",
+                logger.FatalFormat("Cheat engine detected for player {0},\nItem should be {1}, but its {2}.",
                     Name, Inventory[pkt.SlotObject.SlotId].ObjectId, item.ObjectId);
                 foreach (Player player in Owner.Players.Values)
                     if (player.Client.Account.Rank >= 2)
@@ -768,12 +768,12 @@ namespace wServer.realm.entities.player
                                 }
                                 catch (Exception ex)
                                 {
-                                    log.ErrorFormat("Poison ShowEffect:\n{0}", ex);
+                                    logger.ErrorFormat("Poison ShowEffect:\n{0}", ex);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                log.ErrorFormat("Poisons General:\n{0}", ex);
+                                logger.ErrorFormat("Poisons General:\n{0}", ex);
                             }
                         }
                         break;
@@ -926,9 +926,9 @@ namespace wServer.realm.entities.player
                                                 w.LeaveWorld(entity);
                                             }
                                             catch (Exception ex)
-                                        //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                        {
-                                                log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                            //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
+                                            {
+                                                logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                                             }
                                         }));
                                 }
@@ -962,9 +962,9 @@ namespace wServer.realm.entities.player
                                             w.LeaveWorld(entity);
                                         }
                                         catch (Exception ex)
-                                    //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                    {
-                                            log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                        //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
+                                        {
+                                            logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                                         }
                                     }));
                             }
@@ -1132,7 +1132,7 @@ namespace wServer.realm.entities.player
                             }
                             catch (Exception ex)
                             {
-                                log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                             }
                         }));
                         break;

@@ -11,7 +11,7 @@ namespace wServer.networking
 {
     internal class PolicyServer
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(PolicyServer));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(PolicyServer));
 
         private readonly TcpListener listener;
         private bool started;
@@ -43,13 +43,13 @@ namespace wServer.networking
             catch (ObjectDisposedException) { }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
             }
         }
 
         public void Start()
         {
-            log.Info("Starting policy server...");
+            logger.Info("Starting policy server...");
             try
             {
                 listener.Start();
@@ -59,8 +59,8 @@ namespace wServer.networking
             catch (ObjectDisposedException) { }
             catch (Exception ex)
             {
-                log.Error(ex);
-                log.Warn("Could not start Socket Policy Server, is port 843 occupied?");
+                logger.Error(ex);
+                logger.Warn("Could not start Socket Policy Server, is port 843 occupied?");
                 started = false;
             }
         }
@@ -69,7 +69,7 @@ namespace wServer.networking
         {
             if (started)
             {
-                log.Info("Stopping policy server...");
+                logger.Info("Stopping policy server...");
                 listener.Stop();
             }
         }

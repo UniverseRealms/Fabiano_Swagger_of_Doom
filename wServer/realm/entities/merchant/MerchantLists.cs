@@ -317,11 +317,11 @@ namespace wServer.realm.entities
             0xb41, 0xbab, 0xbad, 0xbac
         };
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(MerchantLists));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(MerchantLists));
 
         public static void InitMerchatLists(XmlData data)
         {
-            log.Info("Loading merchant lists...");
+            logger.Info("Loading MerchantLists");
             List<int> accessoryDyeList = new List<int>();
             List<int> clothingDyeList = new List<int>();
             List<int> accessoryClothList = new List<int>();
@@ -360,7 +360,7 @@ namespace wServer.realm.entities
             ClothingClothList = clothingClothList.ToArray();
             AccessoryClothList = accessoryClothList.ToArray();
             AccessoryDyeList = accessoryDyeList.ToArray();
-            log.Info("Merchat lists added.");
+            logger.Info("MerchantLists added");
         }
     }
 }

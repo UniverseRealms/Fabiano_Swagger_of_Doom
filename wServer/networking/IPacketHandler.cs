@@ -20,12 +20,12 @@ namespace wServer.networking
 
     internal abstract class PacketHandlerBase<T> : IPacketHandler where T : ClientPacket
     {
-        protected ILog log;
+        protected ILog logger;
         private Client client;
 
         public PacketHandlerBase()
         {
-            log = LogManager.GetLogger(GetType());
+            logger = LogManager.GetLogger(GetType());
         }
 
         public abstract PacketID ID { get; }

@@ -19,7 +19,7 @@
                 Cookies.expire("serverEmail");
                 Cookies.expire("serverPassword");
             }
-            
+
             accounts = {}
             var email = Cookies.get('serverEmail');
             var pass = Cookies.get("serverPassword");
@@ -31,7 +31,7 @@
             }
             else
                 accounts[getParameterByName('username')] = "";
-            
+
             function getParameterByName(name) {
                 name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -39,7 +39,7 @@
                 var ret = results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
                 return ret;
             }
-            
+
             function isUndefinedNullOrEmpty(s) {
                 return (s === undefined || s === null || s === "");
             }

@@ -17,7 +17,7 @@ namespace wServer.networking
     internal class NetworkHandler : IDisposable
     {
         public const int BUFFER_SIZE = 0x10000;
-        private static readonly ILog log = LogManager.GetLogger(typeof(NetworkHandler));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(NetworkHandler));
         private readonly Client parent;
         private readonly ConcurrentQueue<Packet> pendingPackets = new ConcurrentQueue<Packet>();
         private readonly object sendLock = new object();
@@ -98,7 +98,7 @@ namespace wServer.networking
                         if (e.Buffer[0] == 0x4d && e.Buffer[1] == 0x61 &&
                             e.Buffer[2] == 0x64 && e.Buffer[3] == 0x65 && e.Buffer[4] == 0xff)
                         {
-                            log.InfoFormat("Usage request from: @ {0}.", skt.RemoteEndPoint);
+                            logger.InfoFormat("Usage request from: @ {0}.", skt.RemoteEndPoint);
                             byte[] c = Encoding.ASCII.GetBytes(parent.Manager.MaxClients +
                                 ":" + parent.Manager.Clients.Count.ToString());
                             skt.Send(c);
@@ -123,7 +123,7 @@ namespace wServer.networking
                         }
                         catch
                         {
-                            log.ErrorFormat("Packet ID not found: {0}", e.Buffer[4]);
+                            logger.ErrorFormat("Packet ID not found: {0}", e.Buffer[4]);
                         }
                         (e.UserToken as ReceiveToken).Packet = packet;
 
@@ -206,7 +206,7 @@ namespace wServer.networking
 
         private void OnError(Exception ex)
         {
-            log.Error("Socket error.", ex);
+            logger.Error("Socket error.", ex);
             parent.Disconnect();
         }
 

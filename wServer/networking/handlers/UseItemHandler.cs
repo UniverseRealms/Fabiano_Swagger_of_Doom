@@ -23,9 +23,10 @@ namespace wServer.networking.handlers
         {
             if (client.Player.Owner == null) return;
 
-            client.Manager.Logic.AddPendingAction(async t =>
+            client.Manager.Logic.AddPendingAction(t =>
             {
                 IContainer container = client.Player.Owner.GetEntity(packet.SlotObject.ObjectId) as IContainer;
+                if (container == null) return;
                 Item item;
                 if (packet.SlotObject.SlotId == 254)
                 {
@@ -33,7 +34,7 @@ namespace wServer.networking.handlers
 
                     if (item.ObjectId != "Health Potion")
                     {
-                        log.FatalFormat("Cheat engine detected for player {0},\nItem should be a Health Potion, but its {1}.",
+                        logger.FatalFormat("Cheat engine detected for player {0},\nItem should be a Health Potion, but its {1}.",
                             client.Player.Name, item.ObjectId);
                         foreach (Player player in client.Player.Owner.Players.Values)
                             if (player.Client.Account.Rank >= 2)
@@ -155,7 +156,7 @@ namespace wServer.networking.handlers
 
                     if (item.ObjectId != "Magic Potion")
                     {
-                        log.FatalFormat("Cheat engine detected for player {0},\nItem should be a Magic Potion, but its {1}.",
+                        logger.FatalFormat("Cheat engine detected for player {0},\nItem should be a Magic Potion, but its {1}.",
                             client.Player.Name, item.ObjectId);
                         foreach (Player player in client.Player.Owner.Players.Values)
                             if (player.Client.Account.Rank >= 2)
@@ -320,6 +321,7 @@ namespace wServer.networking.handlers
                     if (container.SlotTypes[packet.SlotObject.SlotId] != -1)
                         client.Player.FameCounter.UseAbility();
 
+                ((Entity)container).UpdateCount++;
                 client.Player.UpdateCount++;
                 client.Player.SaveToCharacter();
                 client.Save();

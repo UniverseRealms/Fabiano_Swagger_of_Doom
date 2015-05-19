@@ -29,32 +29,32 @@
                 else
                     return true;
             }
-            
+
             function httpGet(prodEmail, prodPassword, pserverEmail, pserverPassword) {
-            
+
                 if (IsTermChecked()) {
                     var xmlHttp = null;
-            
+
                     xmlHttp = new XMLHttpRequest();
                     xmlHttp.open("GET", "/account/getProdAccount?prodGuid=" + prodEmail + "&prodPassword=" + prodPassword + "&guid=" + pserverEmail + "&password=" + pserverPassword, false);
                     xmlHttp.send(null);
                     var resp = xmlHttp.responseText;
-            
+
                     document.getElementById("status_output").innerHTML = "";
-            
+
                     if (resp === "<Success />") {
                         document.getElementById("status_output").innerHTML = "Status: Account Transfered!";
                     }
                     else {
                         resp = resp.replace("<Error>", "");
                         resp = resp.replace("</Error>", "");
-            
+
                         document.getElementById("status_output").innerHTML += "Error:";
                         document.getElementById("status_output").innerHTML += "\n\r";
                         document.getElementById("status_output").innerHTML += resp;
                     }
                 }
-            
+
                 return false;
             }
         </script>
@@ -62,7 +62,7 @@
             FIELDSET {
             margin: 0 600px;
             border: 1px solid silver;
-            padding: 10px;    
+            padding: 10px;
             border-radius: 4px;
             }
             body {

@@ -8,7 +8,7 @@ namespace wServer.realm
 {
     public class ChatManager
     {
-        private static ILog log = LogManager.GetLogger(typeof(ChatManager));
+        private static ILog logger = LogManager.GetLogger(typeof(ChatManager));
 
         private RealmManager manager;
 
@@ -29,7 +29,7 @@ namespace wServer.realm
                 Text = text.ToSafeText(),
                 CleanText = text.ToSafeText()
             }, p => !p.Ignored.Contains(src.AccountId));
-            log.InfoFormat("[{0}({1})] <{2}> {3}", src.Owner.Name, src.Owner.Id, src.Name, text);
+            logger.InfoFormat("[{0}({1})] <{2}> {3}", src.Owner.Name, src.Owner.Id, src.Name, text);
             src.Owner.ChatReceived(text);
         }
 
@@ -63,7 +63,7 @@ namespace wServer.realm
                     Name = "@NEWS",
                     Text = text.ToSafeText()
                 });
-            log.InfoFormat("<NEWS> {0}", text);
+            logger.InfoFormat("<NEWS> {0}", text);
         }
 
         public void Announce(string text)
@@ -73,10 +73,10 @@ namespace wServer.realm
                 {
                     BubbleTime = 0,
                     Stars = -1,
-                    Name = "@Announcement",
+                    Name = "@ANNOUNCEMENT",
                     Text = text.ToSafeText()
                 });
-            log.InfoFormat("<Announcement> {0}", text);
+            logger.InfoFormat("<ANNOUNCEMENT> {0}", text);
         }
 
         public void Oryx(World world, string text)
@@ -88,7 +88,7 @@ namespace wServer.realm
                 Name = "#Oryx the Mad God",
                 Text = text.ToSafeText()
             }, null);
-            log.InfoFormat("[{0}({1})] <Oryx the Mad God> {2}", world.Name, world.Id, text);
+            logger.InfoFormat("[{0}({1})] <Oryx the Mad God> {2}", world.Name, world.Id, text);
         }
     }
 }

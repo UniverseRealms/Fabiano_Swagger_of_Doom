@@ -70,7 +70,6 @@ body
     padding: 10px 0px;
 }
 
-
 .radioPaymentWall .packageContainer
 {
     width:550px;
@@ -199,7 +198,6 @@ body
     white-space:nowrap;
 }
 
-
 .radioPaymentWall ul li .bonusIGC
 {
     width:190px;
@@ -231,7 +229,6 @@ body
 {
     visibility:hidden;
 }
-
 
 .radioPaymentWall ul li .priceTag
 {
@@ -365,7 +362,6 @@ body
     margin-left:15px;
 }
 
-
 .radioPaymentWall .providerContainer
 {
     width:520px;
@@ -374,14 +370,12 @@ body
     padding:0px 15px;
 }
 
-
 .radioPaymentWall .providers .providerHeader
 {
     width:520px;
     margin:0px auto;
     padding:0px 15px;
 }
-
 
 .radioPaymentWall .providers #providerContainer
 {
@@ -525,7 +519,6 @@ body
 {
     background: url(../images/kabamPayment/TrialPay.png) left center no-repeat;
     width:157px;
-
 }
 
 .radioPaymentWall .providerList li.PlaySpan .picContainer
@@ -538,7 +531,6 @@ body
 {
     background: url(../images/kabamPayment/vindicia.png) left center no-repeat;
     width:157px;
-
 }
 
 .radioPaymentWall .providerList li.PayPal .picContainer
@@ -571,7 +563,6 @@ body
   width: 150px;
 }
 
-
 .radioPaymentWall .providerList li.Boku .picContainer span,
 .radioPaymentWall .providerList li.Offer .picContainer span,
 .radioPaymentWall .providerList li.Facebook .picContainer span,
@@ -580,7 +571,6 @@ body
     visibility: visible;
     white-space: nowrap;
 }
-
 
 .radioPaymentWall .providerList li.selected .radioButton
 {
@@ -599,7 +589,6 @@ body
 {
     display:block;
 }
-
 
 .radioPaymentWall .footerContainer
 {
@@ -755,7 +744,6 @@ body
     line-height:10px;
 }
 
-
 .radioPaymentWall .redeemCard .redeemLoading
 {
     /*background: url("../images/kabamPayment/small_loading.gif") no-repeat scroll left top transparent;*/
@@ -764,9 +752,6 @@ body
     float:left;
     display:none;
 }
-
-
-
 
 .gradientButton
 {
@@ -791,7 +776,6 @@ body
     text-decoration:none;
     vertical-align:middle;
 }
-
 
 a.gradientButton.buyButton
 {

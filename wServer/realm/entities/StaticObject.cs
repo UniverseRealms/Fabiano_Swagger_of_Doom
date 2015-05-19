@@ -129,7 +129,7 @@ namespace wServer.realm.entities
             }
             catch (Exception ex)
             {
-                Log.ErrorFormat("Crash halted - HP check error:\n{0}", ex);
+                logger.ErrorFormat("Crash halted - HP check error:\n{0}", ex);
             }
             return true;
         }

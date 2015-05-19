@@ -30,7 +30,7 @@ namespace wServer.realm.entities.player
 
     public partial class Player : Character, IContainer, IPlayer
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Player));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Player));
 
         private bool dying;
 
@@ -104,7 +104,7 @@ namespace wServer.realm.entities.player
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
 
                 if (HasBackpack == 1)
@@ -174,7 +174,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 
@@ -320,7 +320,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error("Error while processing playerDamage: ", e);
+                logger.Error("Error while processing playerDamage: ", e);
             }
         }
 
@@ -532,7 +532,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 
@@ -730,7 +730,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
                 SendError("player.cannotTeleportTo");
                 return;
             }
@@ -781,7 +781,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
 
             if (Stats != null && Boost != null)
@@ -826,14 +826,14 @@ namespace wServer.realm.entities.player
                     SendUpdate(time);
                     if (!Owner.IsPassable((int)X, (int)Y) && Client.Account.Rank < 2)
                     {
-                        log.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
+                        logger.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
                         Client.Disconnect();
                     }
                 }
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
             try
             {
@@ -841,7 +841,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
 
             if (HP < 0 && !dying)

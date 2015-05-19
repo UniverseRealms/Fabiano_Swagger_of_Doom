@@ -17,7 +17,7 @@ namespace wServer.realm
     public class Entity : IProjectileOwner, ICollidable<Entity>, IDisposable
     {
         private const int EFFECT_COUNT = 31;
-        protected static readonly ILog Log = LogManager.GetLogger(typeof(Entity));
+        protected static readonly ILog logger = LogManager.GetLogger(typeof(Entity));
         private readonly ObjectDesc desc;
         private readonly int[] effects;
         private Position[] posHistory;
@@ -415,7 +415,7 @@ namespace wServer.realm
                 case "Pet":
                     throw new Exception("Pets should not instantiated using Entity.Resolve");
                 default:
-                    Log.Warn("Not supported type: " + type);
+                    logger.Warn("Not supported type: " + type);
                     return new Entity(manager, id);
             }
         }

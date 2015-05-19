@@ -94,7 +94,7 @@ namespace wServer.realm
         public static List<string> CurrentRealmNames = new List<string>();
         public const int MAX_REALM_PLAYERS = 85;
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(RealmManager));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(RealmManager));
 
         public ConcurrentDictionary<string, Client> Clients { get; private set; }
 
@@ -221,7 +221,7 @@ namespace wServer.realm
 
         public void Initialize()
         {
-            log.Info("Initializing Realm Manager...");
+            logger.Info("Initializing Realm Manager...");
 
             GameData = new XmlData();
             Behaviors = new BehaviorDb(this);
@@ -239,7 +239,7 @@ namespace wServer.realm
             Chat = new ChatManager(this);
             Commands = new CommandManager(this);
 
-            log.Info("Realm Manager initialized.");
+            logger.Info("Realm Manager initialized.");
         }
 
         public Vault PlayerVault(Client processor)
@@ -270,7 +270,7 @@ namespace wServer.realm
                     GC.Collect();
                 }
                 catch (Exception e)
-                { log.Fatal(e); }
+                { logger.Fatal(e); }
                 return true;
             }
             return false;
@@ -278,7 +278,7 @@ namespace wServer.realm
 
         public void Run()
         {
-            log.Info("Starting Realm Manager...");
+            logger.Info("Starting Realm Manager...");
 
             Network = new NetworkTicker(this);
             Logic = new LogicTicker(this);
@@ -297,12 +297,12 @@ namespace wServer.realm
             logic.Start();
             network.Start();
 
-            log.Info("Realm Manager started.");
+            logger.Info("Realm Manager started.");
         }
 
         public void Stop()
         {
-            log.Info("Stopping Realm Manager...");
+            logger.Info("Stopping Realm Manager...");
 
             Terminating = true;
             List<Client> saveAccountUnlock = new List<Client>();
@@ -320,7 +320,7 @@ namespace wServer.realm
             logic.Join();
             network.Join();
 
-            log.Info("Realm Manager stopped.");
+            logger.Info("Realm Manager stopped.");
         }
 
         public bool TryConnect(Client psr)
@@ -345,7 +345,7 @@ namespace wServer.realm
                 world.Manager = this;
             if (world is GameWorld)
                 Monitor.WorldAdded(world);
-            log.InfoFormat("World {0}({1}) added.", world.Id, world.Name);
+            logger.InfoFormat("World {0}({1}) added.", world.Id, world.Name);
         }
 
         private void OnWorldRemoved(World world)
@@ -353,7 +353,7 @@ namespace wServer.realm
             world.Manager = null;
             if (world is GameWorld)
                 Monitor.WorldRemoved(world);
-            log.InfoFormat("World {0}({1}) removed.", world.Id, world.Name);
+            logger.InfoFormat("World {0}({1}) removed.", world.Id, world.Name);
         }
     }
 

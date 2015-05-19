@@ -129,7 +129,7 @@ namespace wServer.realm.worlds
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                logger.Error(ex);
             }
         }
 

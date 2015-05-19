@@ -126,7 +126,7 @@ namespace wServer.networking.handlers
                                         {
                                             client.Player.SendError("Error while creating world instance:");
                                             client.Player.SendError(ex.ToString());
-                                            log.Error(ex);
+                                            logger.Error(ex);
                                         }
                                     }
                                     else

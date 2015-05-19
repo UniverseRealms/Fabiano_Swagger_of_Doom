@@ -9,7 +9,7 @@ namespace wServer.realm
 {
     public class WorldTimer
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(WorldTimer));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(WorldTimer));
         private readonly Action<World, RealmTime> cb;
         private readonly int total;
         private int remain;
@@ -54,7 +54,7 @@ namespace wServer.realm
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
                 return true;
             }

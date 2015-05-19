@@ -139,7 +139,7 @@ namespace wServer.networking.handlers
                         }
                         catch (Exception ex)
                         {
-                            log.Error(ex);
+                            logger.Error(ex);
                         }
                     }
                     con1.Inventory[packet.SlotObject1.SlotId] = null;
@@ -224,7 +224,7 @@ namespace wServer.networking.handlers
 
         private bool IsValid(Item item1, Item item2, IContainer con1, IContainer con2, InvSwapPacket packet, Client client)
         {
-            if (con2 is Container)
+            if (con2 is Container || con2 is OneWayContainer)
                 return true;
 
             bool ret = false;
@@ -235,7 +235,7 @@ namespace wServer.networking.handlers
 
                 if (!ret)
                 {
-                    log.FatalFormat("Cheat engine detected for player {0},\nInvalid InvSwap. {1} instead of {2}",
+                    logger.FatalFormat("Cheat engine detected for player {0},\nInvalid InvSwap. {1} instead of {2}",
                             client.Player.Name, client.Manager.GameData.Items[packet.SlotObject1.ObjectType].ObjectId, item1.ObjectId);
                     foreach (Player player in client.Player.Owner.Players.Values)
                         if (player.Client.Account.Rank >= 2)
@@ -249,7 +249,7 @@ namespace wServer.networking.handlers
 
                 if (!ret)
                 {
-                    log.FatalFormat("Cheat engine detected for player {0},\nInvalid InvSwap. {1} instead of {2}",
+                    logger.FatalFormat("Cheat engine detected for player {0},\nInvalid InvSwap. {1} instead of {2}",
                             client.Player.Name, item1.ObjectId, client.Manager.GameData.Items[packet.SlotObject2.ObjectType].ObjectId);
                     foreach (Player player in client.Player.Owner.Players.Values)
                         if (player.Client.Account.Rank >= 2)

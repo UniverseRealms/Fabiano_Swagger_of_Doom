@@ -12,7 +12,7 @@ namespace wServer.realm.worlds
 {
     internal class GameWorld : World
     {
-        private static new readonly ILog log = LogManager.GetLogger(typeof(GameWorld));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(GameWorld));
 
         private readonly int mapId;
         private readonly bool oryxPresent;
@@ -33,14 +33,14 @@ namespace wServer.realm.worlds
 
         protected override void Init()
         {
-            log.InfoFormat("Initializing Game World {0}({1}) from map {2}...", Id, Name, mapId);
+            logger.InfoFormat("Initializing Game World {0}({1}) from map {2}...", Id, Name, mapId);
             LoadMap("wServer.realm.worlds.maps.world" + mapId + ".wmap", MapType.Wmap);
             SetPieces.ApplySetPieces(this);
             if (oryxPresent)
                 Overseer = new Oryx(this);
             else
                 Overseer = null;
-            log.Info("Game World initalized.");
+            logger.Info("Game World initalized.");
         }
 
         public static GameWorld AutoName(int mapId, bool oryxPresent)

@@ -38,7 +38,7 @@ namespace wServer.networking.handlers
 
                 if (client.Player.SlotTypes[stype] != item.SlotType && client.Account.Rank < 2)
                 {
-                    log.FatalFormat("{0} is trying to cheat (Weapon doesnt match the slot type)", client.Player.Name);
+                    logger.FatalFormat("{0} is trying to cheat (Weapon doesnt match the slot type)", client.Player.Name);
                     client.Player.SendError("This cheating attempt has beed logged and a message was send to all online admins.");
                     client.Disconnect();
                     foreach (Player player in client.Player.Owner.Players.Values)

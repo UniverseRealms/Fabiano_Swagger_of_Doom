@@ -100,8 +100,8 @@ namespace wServer.networking.handlers
                     }
                     catch (Exception ex)
                     {
-                        log.Error(ex);
-                        log.InfoFormat(client.Player.Name + " just attempted to dupe.");
+                        logger.Error(ex);
+                        logger.InfoFormat(client.Player.Name + " just attempted to dupe.");
                     }
                 }
             }, PendingPriority.Networking);

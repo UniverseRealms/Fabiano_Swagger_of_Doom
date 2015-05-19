@@ -20,7 +20,7 @@ namespace wServer.realm
     {
         private static readonly ConcurrentQueue<Work> pendings = new ConcurrentQueue<Work>();
         private static SpinWait loopLock = new SpinWait();
-        private readonly ILog log = LogManager.GetLogger(typeof(NetworkTicker));
+        private readonly ILog logger = LogManager.GetLogger(typeof(NetworkTicker));
 
         public NetworkTicker(RealmManager manager)
         {
@@ -36,7 +36,7 @@ namespace wServer.realm
 
         public void TickLoop()
         {
-            log.Info("Network loop started.");
+            logger.Info("Network loop started.");
             Work work;
             while (true)
             {
@@ -61,12 +61,12 @@ namespace wServer.realm
                             }
                             catch (Exception ex)
                             {
-                                log.Error(ex);
+                                logger.Error(ex);
                             }
                         }
                         catch (Exception ex)
                         {
-                            log.Error(ex);
+                            logger.Error(ex);
                         }
                     }
                     while (pendings.Count == 0 && !Manager.Terminating)
@@ -74,10 +74,10 @@ namespace wServer.realm
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
             }
-            log.Info("Network loop stopped.");
+            logger.Info("Network loop stopped.");
         }
     }
 }

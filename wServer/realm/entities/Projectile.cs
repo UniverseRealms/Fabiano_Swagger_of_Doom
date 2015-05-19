@@ -28,7 +28,7 @@ namespace wServer.realm.entities
 
         public IProjectileOwner ProjectileOwner { get; set; }
 
-        public byte ProjectileId { get; set; }
+        public new byte ProjectileId { get; set; }
 
         public short Container { get; set; }
 

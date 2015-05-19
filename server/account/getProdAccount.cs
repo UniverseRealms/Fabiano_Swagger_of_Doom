@@ -52,7 +52,7 @@ namespace server.account
                         }
                         catch (Exception e)
                         {
-                            Program.Logger.Error(e);
+                            Program.logger.Error(e);
                         }
                     }
                     else

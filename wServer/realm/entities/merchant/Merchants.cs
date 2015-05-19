@@ -18,7 +18,7 @@ namespace wServer.realm.entities.merchant
         private const int BUY_NO_FAME = 6;
         private const int BUY_NO_FORTUNETOKENS = 9;
         private const int MERCHANT_SIZE = 100;
-        private static readonly new ILog log = LogManager.GetLogger(typeof(Merchants));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Merchants));
 
         private readonly Dictionary<int, Tuple<int, CurrencyType>> prices = MerchantLists.MerchantPrices;
 
@@ -138,7 +138,7 @@ namespace wServer.realm.entities.merchant
                             }
                             catch (Exception e)
                             {
-                                log.Error(e);
+                                logger.Error(e);
                             }
                         }
                         player.Client.SendPacket(new BuyResultPacket
@@ -246,7 +246,7 @@ namespace wServer.realm.entities.merchant
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
             }
         }
 
@@ -262,7 +262,7 @@ namespace wServer.realm.entities.merchant
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 

@@ -26,7 +26,7 @@ namespace wServer
 
         internal static SimpleSettings Settings;
 
-        private static readonly ILog log = LogManager.GetLogger("Server");
+        private static readonly ILog logger = LogManager.GetLogger("Server");
         private static RealmManager manager;
 
         public static DateTime WhiteListTurnOff { get; private set; }
@@ -68,8 +68,8 @@ namespace wServer
                 policy.Start();
                 server.Start();
                 if (Settings.GetValue<bool>("broadcastNews", "false") && File.Exists("news.txt"))
-                    new Thread(autoBroadcastNews).Start();
-                log.Info("Server initialized.");
+                    new Thread(AutoBroadcaster).Start();
+                logger.Info("Server initialized.");
 
                 uint key = 0;
                 while ((key = (uint)Console.ReadKey(true).Key) != (uint)ConsoleKey.Escape)
@@ -78,15 +78,15 @@ namespace wServer
                         Settings.Reload();
                 }
 
-                log.Info("Terminating...");
+                logger.Info("Terminating...");
                 server.Stop();
                 policy.Stop();
                 manager.Stop();
-                log.Info("Server terminated.");
+                logger.Info("Server terminated.");
             }
             catch (Exception e)
             {
-                log.Fatal(e);
+                logger.Fatal(e);
 
                 foreach (var c in manager.Clients)
                 {
@@ -113,7 +113,7 @@ namespace wServer
             client.Send(message);
         }
 
-        private static void autoBroadcastNews()
+        private static void AutoBroadcaster()
         {
             var news = File.ReadAllLines("news.txt");
             do
@@ -121,7 +121,7 @@ namespace wServer
                 ChatManager chat = new ChatManager(manager);
                 string text = news[new Random().Next(news.Length)];
                 if (text.StartsWith("$"))
-                    chat.Announce(text);
+                    chat.Announce(text.Replace("$", string.Empty));
                 else chat.News(text);
                 Thread.Sleep(300000); // 5 Minutes
             }

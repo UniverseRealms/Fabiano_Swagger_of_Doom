@@ -139,7 +139,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
             }
             return ret;
         }
@@ -254,7 +254,7 @@ namespace wServer.realm.entities.player
                     }
                     catch (Exception ex)
                     {
-                        log.Error(ex);
+                        logger.Error(ex);
                     }
                 }
             }

@@ -35,7 +35,7 @@ namespace wServer.realm
         public const int PETYARD_ID = -12;
         public const int DAILY_QUEST_ID = -13;
         public const int GUILD_ID = -14;
-        protected static readonly ILog Log = LogManager.GetLogger(typeof(World));
+        protected static readonly ILog logger = LogManager.GetLogger(typeof(World));
         public string ExtraVar = "Default";
         private int entityInc;
         private RealmManager manager;
@@ -210,7 +210,7 @@ namespace wServer.realm
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex);
+                        logger.Error(ex);
                     }
                 }
             EnemiesCollision = new CollisionMap<Entity>(0, w, h);
@@ -266,7 +266,7 @@ namespace wServer.realm
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    logger.Error(e);
                 }
             }
             else
@@ -312,12 +312,12 @@ namespace wServer.realm
                                 pet.Id = GetNextEntityId();
                                 pet.Init(this);
                                 if (!Pets.TryAdd(pet.Id, pet))
-                                    Log.Error("Failed to add pet!");
+                                    logger.Error("Failed to add pet!");
 
                                 PlayersCollision.Insert(pet);
                             }
                             else
-                                Log.WarnFormat("This is not a real pet! {0}", pet.Name);
+                                logger.WarnFormat("This is not a real pet! {0}", pet.Name);
                         }
                     }
                 }
@@ -331,7 +331,7 @@ namespace wServer.realm
             {
                 Player dummy;
                 if (!Players.TryRemove(entity.Id, out dummy))
-                    Log.WarnFormat("Could not remove {0} from world {1}", entity.Name, Name);
+                    logger.WarnFormat("Could not remove {0} from world {1}", entity.Name, Name);
                 PlayersCollision.Remove(entity);
             }
             else if (entity is Enemy)
@@ -469,7 +469,7 @@ namespace wServer.realm
             }
             catch (Exception e)
             {
-                Log.Error("World: " + Name + "\n" + e);
+                logger.Error("World: " + Name + "\n" + e);
             }
         }
 

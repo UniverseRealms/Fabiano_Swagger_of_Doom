@@ -11,7 +11,7 @@ namespace wServer.realm.setpieces
 {
     internal class SetPieces
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SetPieces));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(SetPieces));
 
         private static readonly List<Tuple<ISetPiece, int, int, WmapTerrain[]>> setPieces = new List
             <Tuple<ISetPiece, int, int, WmapTerrain[]>>
@@ -79,7 +79,7 @@ namespace wServer.realm.setpieces
 
         public static void ApplySetPieces(World world)
         {
-            log.InfoFormat("Applying set pieces to world {0}({1}).", world.Id, world.Name);
+            logger.InfoFormat("Applying set pieces to world {0}({1}).", world.Id, world.Name);
 
             Wmap map = world.Map;
             int w = map.Width, h = map.Height;
@@ -111,7 +111,7 @@ namespace wServer.realm.setpieces
                 }
             }
 
-            log.Info("Set pieces applied.");
+            logger.Info("Set pieces applied.");
         }
 
         private struct Rect

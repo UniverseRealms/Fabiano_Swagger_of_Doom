@@ -15,7 +15,7 @@ namespace wServer.realm
 {
     public class LogicTicker
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(LogicTicker));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(LogicTicker));
         public static RealmTime CurrentTime;
         private readonly ConcurrentQueue<Action<RealmTime>>[] pendings;
 
@@ -47,7 +47,7 @@ namespace wServer.realm
 
         public void TickLoop()
         {
-            log.Info("Logic loop started.");
+            logger.Info("Logic loop started.");
             Stopwatch watch = new Stopwatch();
             long dt = 0;
             long count = 0;
@@ -66,7 +66,7 @@ namespace wServer.realm
 
                 count += times;
                 if (times > 3)
-                    log.Warn("LAGGED!| time:" + times + " dt:" + dt + " count:" + count + " time:" + b + " tps:" +
+                    logger.Warn("LAGGED!| time:" + times + " dt:" + dt + " count:" + count + " time:" + b + " tps:" +
                              count / (b / 1000.0));
 
                 t.tickTimes = b;
@@ -85,7 +85,7 @@ namespace wServer.realm
                         }
                         catch (Exception ex)
                         {
-                            log.Error(ex);
+                            logger.Error(ex);
                         }
                     }
                 }
@@ -128,13 +128,13 @@ namespace wServer.realm
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
 
                 Thread.Sleep(MsPT);
                 dt += Math.Max(0, watch.ElapsedMilliseconds - b - MsPT);
             } while (true);
-            log.Info("Logic loop stopped.");
+            logger.Info("Logic loop stopped.");
         }
 
         private void TickWorlds1(RealmTime t) //Continous simulation

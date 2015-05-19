@@ -18,7 +18,7 @@ namespace wServer.logic
     public partial class BehaviorDb
     {
         private static wRandom rand = new wRandom();
-        private static readonly ILog log = LogManager.GetLogger(typeof(BehaviorDb));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(BehaviorDb));
 
         private static int initializing;
         internal static BehaviorDb InitDb;
@@ -40,7 +40,7 @@ namespace wServer.logic
 
         public BehaviorDb(RealmManager manager)
         {
-            log.Info("Initializing Behavior Database...");
+            logger.Info("Initializing Behavior Database...");
 
             Manager = manager;
 
@@ -48,7 +48,7 @@ namespace wServer.logic
 
             if (Interlocked.Exchange(ref initializing, 1) == 1)
             {
-                log.Error("Attempted to initialize multiple BehaviorDb at the same time.");
+                logger.Error("Attempted to initialize multiple BehaviorDb at the same time.");
                 throw new InvalidOperationException("Attempted to initialize multiple BehaviorDb at the same time.");
             }
             InitDb = this;
@@ -60,7 +60,7 @@ namespace wServer.logic
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                log.InfoFormat("Loading behavior for '{0}'({1}/{2})...", field.Name, i + 1, fields.Length);
+                logger.InfoFormat("Loading behavior for '{0}'({1}/{2})...", field.Name, i + 1, fields.Length);
                 ((_)field.GetValue(this))();
                 field.SetValue(this, null);
             }
@@ -68,7 +68,7 @@ namespace wServer.logic
             InitDb = null;
             initializing = 0;
 
-            log.Info("Behavior Database initialized...");
+            logger.Info("Behavior Database initialized...");
         }
 
         public RealmManager Manager { get; private set; }

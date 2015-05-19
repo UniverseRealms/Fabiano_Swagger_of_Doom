@@ -42,12 +42,12 @@ namespace wServer.networking.handlers
             {
                 if ((client.Account = db.Verify(packet.GUID, packet.Password, Manager.GameData)) == null)
                 {
-                    log.Info(@"Account not verified.");
+                    logger.Info(@"Account not verified.");
                     client.Account = Database.CreateGuestAccount(packet.GUID);
 
                     if (client.Account == null)
                     {
-                        log.Info(@"Account is null!");
+                        logger.Info(@"Account is null!");
                         client.SendPacket(new FailurePacket
                         {
                             ErrorDescription = "Invalid account."
@@ -95,7 +95,7 @@ namespace wServer.networking.handlers
                         return;
                     }
                 }
-                log.Info(@"Client trying to connect!");
+                logger.Info(@"Client trying to connect!");
                 client.ConnectedBuild = packet.BuildVersion;
                 if (!client.Manager.TryConnect(client))
                 {
@@ -105,11 +105,11 @@ namespace wServer.networking.handlers
                         ErrorDescription = "Failed to connect."
                     });
                     client.Disconnect();
-                    log.Warn(@"Failed to connect.");
+                    logger.Warn(@"Failed to connect.");
                 }
                 else
                 {
-                    log.Info(@"Client loading world");
+                    logger.Info(@"Client loading world");
                     if (packet.GameId == World.NEXUS_LIMBO) packet.GameId = World.NEXUS_ID;
                     World world = client.Manager.GetWorld(packet.GameId);
                     if (world == null && packet.GameId == World.TUT_ID) world = client.Manager.AddWorld(new Tutorial(false));
@@ -146,7 +146,7 @@ namespace wServer.networking.handlers
                             return;
                         }
                     }
-                    log.Info(@"Client joined world " + world.Id);
+                    logger.Info(@"Client joined world " + world.Id);
                     if (packet.MapInfo.Length > 0) //Test World
                         (world as Test).LoadJson(Encoding.Default.GetString(packet.MapInfo));
 

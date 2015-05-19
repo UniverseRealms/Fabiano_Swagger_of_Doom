@@ -28,14 +28,14 @@
                     Cookies.set("serverPassword", password, { expires: 50000000000 });
                 }
             }
-            
+
             function GetCookie() {
                 var e = Cookies.get("serverEmail");
                 var p = Cookies.get("serverPassword");
                 if (!isUndefinedNullOrEmpty(e) && !isUndefinedNullOrEmpty(p))
                     window.location.href = "/muledump.html?email=" + e + "&password=" + p;
             }
-            
+
             function isUndefinedNullOrEmpty(s) {
                 return (s === undefined || s === null || s === "");
             }
@@ -202,7 +202,7 @@
                     <input type="text" name="email" value="" placeholder="Email">
                     <label for="pass">Password</label>
                     <input type="password" name="password" value="" placeholder="Password">
-                    <input type="submit" value="Login" onclick="SetCookie(this.form.email.value, this.form.password.value);"/>
+                    <input type="submit" value="Login" onclick="SetCookie(this.form.email.value, this.form.password.value);" />
                 </form>
             </div>
         </div>

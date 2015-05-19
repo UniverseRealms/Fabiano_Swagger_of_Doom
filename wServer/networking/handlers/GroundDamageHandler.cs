@@ -42,7 +42,7 @@ namespace wServer.networking.handlers
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
             }, PendingPriority.Networking);
         }

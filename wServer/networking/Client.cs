@@ -29,7 +29,7 @@ namespace wServer.networking
         public const string SERVER_VERSION = "27.3.1";
         private bool disposed;
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(Client));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Client));
 
         public uint UpdateAckCount = 0;
 
@@ -71,7 +71,7 @@ namespace wServer.networking
 
         public void BeginProcess()
         {
-            log.InfoFormat($"Received client @ {Socket.RemoteEndPoint}.");
+            logger.InfoFormat($"Received client @ {Socket.RemoteEndPoint}.");
             handler = new NetworkHandler(this, Socket);
             handler.BeginHandling();
         }
@@ -97,18 +97,18 @@ namespace wServer.networking
         {
             try
             {
-                log.Logger.Log(typeof(Client), Level.Verbose,
+                logger.Logger.Log(typeof(Client), Level.Verbose,
                    $"Handling packet '{pkt.ID}'...", null);
                 if (pkt.ID == (PacketID)255) return;
                 IPacketHandler handler;
                 if (!PacketHandlers.Handlers.TryGetValue(pkt.ID, out handler))
-                    log.Warn($"Unhandled packet '{pkt.ID}'.");
+                    logger.Warn($"Unhandled packet '{pkt.ID}'.");
                 else
                     handler.Handle(this, (ClientPacket)pkt);
             }
             catch (Exception e)
             {
-                log.Error($"Error when handling packet '{pkt}'...", e);
+                logger.Error($"Error when handling packet '{pkt}'...", e);
                 Disconnect();
             }
         }
@@ -126,7 +126,7 @@ namespace wServer.networking
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 
@@ -157,7 +157,7 @@ namespace wServer.networking
                 }
                 catch (Exception ex)
                 {
-                    log.Fatal("SaveException", ex);
+                    logger.Fatal("SaveException", ex);
                 }
             });
         }
@@ -183,7 +183,6 @@ namespace wServer.networking
 
         public void GiftCodeReceived(string type)
         {
-            var x = 1;
             //Use later
             switch (type)
             {

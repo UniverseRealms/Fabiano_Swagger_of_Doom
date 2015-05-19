@@ -9,7 +9,7 @@ namespace wServer.realm
 {
     public class DatabaseTicker
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(DatabaseTicker));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(DatabaseTicker));
 
         private readonly DatabaseCollection databases;
 
@@ -29,7 +29,7 @@ namespace wServer.realm
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
                 finally
                 {
@@ -89,7 +89,7 @@ namespace wServer.realm
 //{
 //    public class DatabaseTicker
 //    {
-//        private static readonly ILog log = LogManager.GetLogger(typeof(DatabaseTicker));
+//        private static readonly ILog logger = LogManager.GetLogger(typeof(DatabaseTicker));
 //        private readonly BlockingCollection<Action<Database>> pendings;
 //
 //        public DatabaseTicker(RealmManager manager)

@@ -63,7 +63,7 @@ namespace wServer.logic.behaviors
                           }
                           catch (Exception ex)
                           {
-                              log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                              logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                           }
                       }));
                 }

@@ -28,7 +28,7 @@ namespace wServer.realm.entities.player
 
         private IEnumerable<Entity> GetNewEntities()
         {
-            foreach (var i in Owner.Players.Where(i => clientEntities.Add(i.Value)).Where(i => i.Value == this))
+            foreach (var i in Owner.Players.Where(i => clientEntities.Add(i.Value)))
                 yield return i.Value;
 
             foreach (var i in Owner.PlayersCollision.HitTest(X, Y, SIGHTRADIUS).OfType<Decoy>().Where(i => clientEntities.Add(i)))
@@ -58,9 +58,6 @@ namespace wServer.realm.entities.player
 
         private IEnumerable<int> GetRemovedEntities()
         {
-            foreach (var i in clientEntities.Where(i => i is Player).Where(i => i != this))
-                yield return i.Id;
-
             foreach (var i in clientEntities.Where(i => !(i is Player) || i.Owner == null))
             {
                 if (MathsUtils.DistSqr(i.X, i.Y, X, Y) > SIGHTRADIUS * SIGHTRADIUS &&
@@ -206,7 +203,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
             if (Quest != null &&
                 (!lastUpdate.ContainsKey(Quest) || Quest.UpdateCount > lastUpdate[Quest]))

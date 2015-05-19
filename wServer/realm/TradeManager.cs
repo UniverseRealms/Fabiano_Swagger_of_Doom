@@ -11,7 +11,7 @@ namespace wServer.realm
 {
     public class TradeManager
     {
-        private readonly static ILog log = LogManager.GetLogger(typeof(TradeManager));
+        private readonly static ILog logger = LogManager.GetLogger(typeof(TradeManager));
 
         public static List<KeyValuePair<Player, Player>> CurrentRequests { get; }
 
@@ -180,7 +180,7 @@ namespace wServer.realm
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
             }
         }
 

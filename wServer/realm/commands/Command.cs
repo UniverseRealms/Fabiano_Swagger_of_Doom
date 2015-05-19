@@ -11,7 +11,7 @@ namespace wServer.realm.commands
 {
     public abstract class Command
     {
-        protected static readonly ILog log = LogManager.GetLogger(typeof(Command));
+        protected static readonly ILog logger = LogManager.GetLogger(typeof(Command));
 
         public Command(string name, int permLevel = 0)
         {
@@ -54,7 +54,7 @@ namespace wServer.realm.commands
             }
             catch (Exception ex)
             {
-                log.Error("Error when executing the command.", ex);
+                logger.Error("Error when executing the command.", ex);
                 player.SendError("Error when executing the command.");
                 return false;
             }
@@ -63,7 +63,7 @@ namespace wServer.realm.commands
 
     public class CommandManager
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(CommandManager));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(CommandManager));
 
         private readonly Dictionary<string, Command> cmds;
 
@@ -99,7 +99,7 @@ namespace wServer.realm.commands
                 player.SendError("Unknown command!");
                 return false;
             }
-            log.InfoFormat("[Command] <{0}> {1}", player.Name, text);
+            logger.InfoFormat("[Command] <{0}> {1}", player.Name, text);
             return command.Execute(player, time, args);
         }
     }

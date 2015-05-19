@@ -11,7 +11,7 @@ namespace db
 {
     public class SimpleSettings : IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SimpleSettings));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(SimpleSettings));
 
         private readonly string cfgFile;
         private readonly string id;
@@ -19,7 +19,7 @@ namespace db
 
         public SimpleSettings(string id)
         {
-            log.InfoFormat("Loading settings for '{0}'...", id);
+            logger.InfoFormat("Loading settings for '{0}'...", id);
 
             values = new Dictionary<string, string>();
             this.id = id;
@@ -35,7 +35,7 @@ namespace db
                         int i = line.IndexOf(":");
                         if (i == -1)
                         {
-                            log.InfoFormat("Invalid settings at line {0}.", lineNum);
+                            logger.InfoFormat("Invalid settings at line {0}.", lineNum);
                             throw new ArgumentException("Invalid settings.");
                         }
                         string val = line.Substring(i + 1);
@@ -44,15 +44,15 @@ namespace db
                             val.Equals("null", StringComparison.InvariantCultureIgnoreCase) ? null : val);
                         lineNum++;
                     }
-                    log.InfoFormat("Settings loaded.");
+                    logger.InfoFormat("Settings loaded.");
                 }
             else
-                log.Info("Settings not found.");
+                logger.Info("Settings not found.");
         }
 
         public void Reload()
         {
-            log.InfoFormat("Reloading settings for '{0}'...", id);
+            logger.InfoFormat("Reloading settings for '{0}'...", id);
             values.Clear();
             if (File.Exists(cfgFile))
                 using (StreamReader rdr = new StreamReader(File.OpenRead(cfgFile)))
@@ -65,7 +65,7 @@ namespace db
                         int i = line.IndexOf(":");
                         if (i == -1)
                         {
-                            log.InfoFormat("Invalid settings at line {0}.", lineNum);
+                            logger.InfoFormat("Invalid settings at line {0}.", lineNum);
                             throw new ArgumentException("Invalid settings.");
                         }
                         string val = line.Substring(i + 1);
@@ -74,24 +74,24 @@ namespace db
                             val.Equals("null", StringComparison.InvariantCultureIgnoreCase) ? null : val);
                         lineNum++;
                     }
-                    log.InfoFormat("Settings loaded.");
+                    logger.InfoFormat("Settings loaded.");
                 }
             else
-                log.Info("Settings not found.");
+                logger.Info("Settings not found.");
         }
 
         public void Dispose()
         {
             try
             {
-                log.InfoFormat("Saving settings for '{0}'...", id);
+                logger.InfoFormat("Saving settings for '{0}'...", id);
                 using (StreamWriter writer = new StreamWriter(File.OpenWrite(cfgFile)))
                     foreach (KeyValuePair<string, string> i in values)
                         writer.WriteLine("{0}:{1}", i.Key, i.Value == null ? "null" : i.Value);
             }
             catch (Exception e)
             {
-                log.Error("Error when saving settings.", e);
+                logger.Error("Error when saving settings.", e);
             }
         }
 
@@ -102,7 +102,7 @@ namespace db
             {
                 if (def == null)
                 {
-                    log.ErrorFormat("Attempt to access nonexistant settings '{0}'.", key);
+                    logger.ErrorFormat("Attempt to access nonexistant settings '{0}'.", key);
                     throw new ArgumentException(string.Format("'{0}' does not exist in settings.", key));
                 }
                 ret = values[key] = def;
@@ -117,7 +117,7 @@ namespace db
             {
                 if (def == null)
                 {
-                    log.ErrorFormat("Attempt to access nonexistant settings '{0}'.", key);
+                    logger.ErrorFormat("Attempt to access nonexistant settings '{0}'.", key);
                     throw new ArgumentException(string.Format("'{0}' does not exist in settings.", key));
                 }
                 ret = values[key] = def;

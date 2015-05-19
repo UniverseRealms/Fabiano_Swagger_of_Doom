@@ -182,7 +182,7 @@ namespace wServer.realm
 
     public class Wmap : IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Wmap));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Wmap));
 
         private readonly XmlData data;
         private Tuple<IntPoint, ushort, string>[] entities;
@@ -323,7 +323,7 @@ namespace wServer.realm
                 {
                     tile.ObjType = string.IsNullOrEmpty(obj) ? (ushort)0 : data.IdToObjectType[obj];
                 }
-                catch (Exception ex) { log.Error(ex); }
+                catch (Exception ex) { logger.Error(ex); }
                 tile.Name = reader.ReadString();
                 tile.Terrain = (WmapTerrain)reader.ReadByte();
                 tile.Region = (TileRegion)reader.ReadByte();
