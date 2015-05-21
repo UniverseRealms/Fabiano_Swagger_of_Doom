@@ -22,7 +22,7 @@ namespace server.account
                     {
                         foreach (var item in rdr)
                         {
-                            status += $"{rdr.GetString("code")} <a href='{Program.ServerDomain}:{Program.ServerPort}/account/checkGiftCode?code={rdr.GetString("code")}' style='color: red'>Check contents</a>";
+                            status += $"{rdr.GetString("code")} <a href='{Program.ServerDomain}:{Program.ServerPort}/account/checkGiftCode?code={rdr.GetString("code")}' style='color: red'>Check contents</a></br>";
                         }
                     }
                 }

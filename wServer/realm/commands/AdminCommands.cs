@@ -55,9 +55,17 @@ namespace wServer.realm.commands
                 if (!String.IsNullOrWhiteSpace(args[0]))
                     player.Manager.FindPlayer(args[0])?.Client.GiftCodeReceived("LevelUp");
                 else
-                    player.Client.GiftCodeReceived("LevelUp");
+                    player.Manager.FindPlayer(args[0])?.Client.GiftCodeReceived("Pong");
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                player.SendInfo("An error occurred");
+            }
+            finally
+            {
+                player.SendInfo("Success");
+            }
             return true;
         }
     }
@@ -622,16 +630,41 @@ namespace wServer.realm.commands
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            foreach (KeyValuePair<int, Player> i in player.Owner.Players)
+            foreach (KeyValuePair<string, Client> i in player.Manager.Clients)
             {
-                if (i.Value.Name.EqualsIgnoreCase(args[0]))
+                if (i.Value.Player.Name.EqualsIgnoreCase(args[0]))
                 {
-                    i.Value.Move(player.X, player.Y);
-                    player.SendInfo("Player summoned!");
+                    Packet pkt;
+                    if (i.Value.Player.Owner == player.Owner)
+                    {
+                        i.Value.Player.Move(player.X, player.Y);
+                        pkt = new GotoPacket
+                        {
+                            ObjectId = i.Value.Player.Id,
+                            Position = new Position(player.X, player.Y)
+                        };
+                        i.Value.Player.UpdateCount++;
+                        player.SendInfo("Summoned player");
+                    }
+                    else
+                    {
+                        pkt = new ReconnectPacket
+                        {
+                            GameId = player.Owner.Id,
+                            Host = "",
+                            IsFromArena = false,
+                            Key = player.Owner.PortalKey,
+                            KeyTime = -1,
+                            Name = player.Owner.Name,
+                            Port = -1
+                        };
+                        player.SendInfo("Connecting player");
+                    }
+                    i.Value.SendPacket(pkt);
                     return true;
                 }
             }
-            player.SendError(string.Format("Player '{0}' could not be found!", args));
+            player.SendInfo($"Player '{args} not found'");
             return false;
         }
     }

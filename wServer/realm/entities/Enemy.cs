@@ -1,11 +1,7 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using wServer.logic;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
-
-#endregion
 
 namespace wServer.realm.entities
 {
@@ -45,13 +41,6 @@ namespace wServer.realm.entities
         {
             stats[StatsType.AltTextureIndex] = AltTextureIndex;
             base.ExportStats(stats);
-        }
-
-        protected override void ImportStats(StatsType stats, object val)
-        {
-            if (stats == StatsType.AltTextureIndex)
-                AltTextureIndex = (int)val;
-            base.ImportStats(stats, val);
         }
 
         public override void Init(World owner)

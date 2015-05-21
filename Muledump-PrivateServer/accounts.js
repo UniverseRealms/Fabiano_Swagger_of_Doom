@@ -1,4 +1,4 @@
-var email = prompt("Please enter your email", "");
+var email = "shadowrealmrotmg@gmail.com";//prompt("Please enter your email", "");
 var password = prompt("Please enter your password", "");
 accounts = { }
 
@@ -7,6 +7,7 @@ console.log(accounts)
 
 // change to 1 to switch to testing
 //testing = 0
+
 
 // change to 1 to enable price display in tooltips
 //prices = 1

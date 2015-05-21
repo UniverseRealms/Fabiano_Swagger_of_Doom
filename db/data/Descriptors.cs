@@ -81,7 +81,16 @@ public enum ConditionEffects
     Hexed = 1 << 27,
     AnotherSpeedy = 1 << 28,
     Unstable = 1 << 29,
-    Darkness = 1 << 30
+    Darkness = 1 << 30,
+    Curse = 1 << 38,
+    HpBoost = 1 << 40,
+    MpBoost = 1 << 41,
+    AttBoost = 1 << 42,
+    DefBoost = 1 << 43,
+    SpdBoost = 1 << 44,
+    VitBoost = 1 << 45,
+    WisBoost = 1 << 46,
+    DexBoost = 1 << 47
 }
 
 public enum ConditionEffectIndex
@@ -117,7 +126,15 @@ public enum ConditionEffectIndex
     AnotherSpeedy = 28,
     Unstable = 29,
     Darkness = 30,
-    Curse = 31
+    Curse = 38,
+    HpBoost = 40,
+    MpBoost = 41,
+    AttBoost = 42,
+    DefBoost = 43,
+    SpdBoost = 44,
+    VitBoost = 45,
+    WisBoost = 46,
+    DexBoost = 47
 }
 
 public class PetStruct
@@ -375,6 +392,13 @@ public class ActivateEffect
 
         if (elem.Attribute("color") != null)
             Color = uint.Parse(elem.Attribute("color").Value.Substring(2), NumberStyles.AllowHexSpecifier);
+        if (elem.Attribute("target") != null)
+            Target = elem.Attribute("target").Value;
+        UseWisMod = elem.Attribute("useWisMod") != null;
+        if (elem.Attribute("visualEffect") != null)
+            VisualEffect = float.Parse(elem.Attribute("visualEffect").Value, NumberStyles.Any, ci);
+        if (elem.Attribute("center") != null)
+            Center = elem.Attribute("center").Value;
     }
 
     public ActivateEffects Effect { get; private set; }
@@ -412,6 +436,14 @@ public class ActivateEffect
     public string DungeonName { get; private set; }
 
     public string LockedName { get; private set; }
+
+    public string Target { get; private set; }
+
+    public string Center { get; private set; }
+
+    public bool UseWisMod { get; private set; }
+
+    public float VisualEffect { get; private set; }
 
     public uint? Color { get; private set; }
 }

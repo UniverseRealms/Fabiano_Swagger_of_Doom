@@ -249,7 +249,7 @@ namespace wServer.realm.entities.player
                         i.Experience += i.XpBoosted ? exp * 2 : exp;
                         i.UpdateCount++;
                         i.CheckLevelUp();
-                        if (Random.Next(1, 100000) <= 50)
+                        if (Random.Next(1, 100000) <= 5000)
                             Client.GiftCodeReceived("LevelUp");
                     }
                     catch (Exception ex)

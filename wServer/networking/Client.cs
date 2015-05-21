@@ -183,17 +183,20 @@ namespace wServer.networking
 
         public void GiftCodeReceived(string type)
         {
-            //Use later
             switch (type)
             {
                 case "Pong":
+                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 500, minFame: 500, minCharSlots: 2, minVaultChests: 2, maxItemStack: 5, maxItemTypes: 3));
                     break;
 
                 case "LevelUp":
+                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 300, minFame: 300, minCharSlots: 1, minVaultChests: 1, maxItemStack: 3, maxItemTypes: 2));
+                    break;
+
+                default:
+                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData));
                     break;
             }
-
-            AddGiftCode(GiftCode.GenerateRandom(Manager.GameData));
         }
 
         private void AddGiftCode(GiftCode code)
