@@ -186,11 +186,11 @@ namespace wServer.networking
             switch (type)
             {
                 case "Pong":
-                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 500, minFame: 500, minCharSlots: 2, minVaultChests: 2, maxItemStack: 5, maxItemTypes: 3));
+                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 500, minFame: 500, minCharSlots: 2, minVaultChests: 2, maxItemStack: 5, maxItemTypes: 3), type);
                     break;
 
                 case "LevelUp":
-                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 300, minFame: 300, minCharSlots: 1, minVaultChests: 1, maxItemStack: 3, maxItemTypes: 2));
+                    AddGiftCode(GiftCode.GenerateRandom(Manager.GameData, 300, minFame: 300, minCharSlots: 1, minVaultChests: 1, maxItemStack: 3, maxItemTypes: 2), type);
                     break;
 
                 default:
@@ -199,22 +199,12 @@ namespace wServer.networking
             }
         }
 
-        private void AddGiftCode(GiftCode code)
+        private void AddGiftCode(GiftCode code, string type = "random")
         {
             Manager.Database.DoActionAsync(db =>
             {
                 var key = db.GenerateGiftcode(code.ToJson());
-
-                //var message = new MailMessage();
-                //message.To.Add(Account.Email);
-                //message.IsBodyHtml = true;
-                //message.Subject = "You received a new GiftCode";
-                //message.From = new MailAddress(Program.Settings.GetValue<string>("serverEmail", ""));
-                //message.Body = "<center>Your giftcode is: " + code + "</br> Check the items in your giftcode <a href=\"" + Program.Settings.GetValue<string>("serverDomain", "localhost") + "/CheckGiftCode.html\" target=\"_blank\">here</a> or redeem the code <a href=\"" + Program.Settings.GetValue<string>("serverDomain", "localhost") + "/RedeemGiftCode.html\" target=\"_blank\">here</a></center>";
-
-                //Program.SendEmail(message);
-
-                Player.SendInfo($"You have received a new GiftCode: {key}\nRedeem it at: {Program.Settings.GetValue("serverDomain")}/GiftCode.html");
+                Player.SendInfo($"You received a {type} Giftcode: {key}. You can redeem it at:\n{Program.ServerDomain}/GiftCode.html");
             });
         }
 

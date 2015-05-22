@@ -29,6 +29,8 @@ namespace wServer
         private static readonly ILog logger = LogManager.GetLogger("Server");
         private static RealmManager manager;
 
+        public static string ServerDomain { get; private set; }
+
         public static DateTime WhiteListTurnOff { get; private set; }
 
         private static void Main(string[] args)
@@ -52,6 +54,7 @@ namespace wServer
                     Settings.GetValue<int>("maxClients", "100"),
                     Settings.GetValue<int>("tps", "20"));
 
+                ServerDomain = Settings.GetValue("serverDomain", "127.0.0.1");
                 WhiteList = Settings.GetValue<bool>("whiteList", "false");
                 Verify = Settings.GetValue<bool>("verifyEmail", "false");
                 TestingMerchants = Settings.GetValue<bool>("testingMerchants", "false");

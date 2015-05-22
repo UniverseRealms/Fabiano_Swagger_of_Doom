@@ -20,7 +20,7 @@ namespace Client_Updater
 
         private void c453_btn_Click(object sender, EventArgs e)
         {
-            updater = new ClientUpdater("25.108.113.162", label1);
+            updater = new ClientUpdater("25.103.138.168:8080", label1);
             updater.UpdateClient();
         }
 

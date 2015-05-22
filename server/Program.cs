@@ -36,7 +36,9 @@ namespace server
         internal static ILog logger { get; } = LogManager.GetLogger("Server");
 
         internal static string InstanceId { get; set; }
+
         public static string ServerDomain { get; private set; }
+
         public static int ServerPort { get; private set; }
 
         private static void Main(string[] args)

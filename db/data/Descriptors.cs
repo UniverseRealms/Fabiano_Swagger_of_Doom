@@ -347,16 +347,24 @@ public class ActivateEffect
 
         if (elem.Attribute("range") != null)
             Range = float.Parse(elem.Attribute("range").Value, NumberStyles.Any, ci);
+
         if (elem.Attribute("duration") != null)
-            DurationMS = (int)(float.Parse(elem.Attribute("duration").Value, NumberStyles.Any, ci) * 1000);
+        {
+            DurationSec = float.Parse(elem.Attribute("duration").Value, NumberStyles.Any, ci);
+            DurationMS = (int)(DurationSec * 1000);
+        }
+
         if (elem.Attribute("duration2") != null)
             DurationMS2 = (int)(float.Parse(elem.Attribute("duration2").Value, NumberStyles.Any, ci) * 1000);
+
         if (elem.Attribute("effect") != null)
             ConditionEffect =
                 (ConditionEffectIndex)Enum.Parse(typeof(ConditionEffectIndex), elem.Attribute("effect").Value);
+
         if (elem.Attribute("condEffect") != null)
             ConditionEffect =
                 (ConditionEffectIndex)Enum.Parse(typeof(ConditionEffectIndex), elem.Attribute("condEffect").Value);
+
         if (elem.Attribute("condDuration") != null)
             EffectDuration = float.Parse(elem.Attribute("condDuration").Value, NumberStyles.Any, ci);
 
@@ -392,11 +400,15 @@ public class ActivateEffect
 
         if (elem.Attribute("color") != null)
             Color = uint.Parse(elem.Attribute("color").Value.Substring(2), NumberStyles.AllowHexSpecifier);
+
         if (elem.Attribute("target") != null)
             Target = elem.Attribute("target").Value;
+
         UseWisMod = elem.Attribute("useWisMod") != null;
+
         if (elem.Attribute("visualEffect") != null)
             VisualEffect = float.Parse(elem.Attribute("visualEffect").Value, NumberStyles.Any, ci);
+
         if (elem.Attribute("center") != null)
             Center = elem.Attribute("center").Value;
     }
@@ -408,6 +420,8 @@ public class ActivateEffect
     public int Amount { get; private set; }
 
     public float Range { get; private set; }
+
+    public float DurationSec { get; private set; }
 
     public int DurationMS { get; private set; }
 

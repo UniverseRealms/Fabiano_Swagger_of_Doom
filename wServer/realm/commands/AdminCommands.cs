@@ -25,18 +25,11 @@ namespace wServer.realm.commands
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            Entity en = Entity.Resolve(player.Manager, "Zombie Wizard");
-            en.Move(player.X, player.Y);
-            player.Owner.EnterWorld(en);
+            Entity entity = Entity.Resolve(player.Manager, "Zombie Wizard");
+            entity.Move(player.X, player.Y);
+            player.Owner.EnterWorld(entity);
+            player.SendInfo("Success");
             player.UpdateCount++;
-            //player.Client.SendPacket(new DeathPacket
-            //{
-            //    AccountId = player.AccountId,
-            //    CharId = player.Client.Character.CharacterId,
-            //    Killer = "mountains.beholder",
-            //    obf0 = 10000,
-            //    obf1 = 10000
-            //});
             return true;
         }
     }
@@ -55,12 +48,13 @@ namespace wServer.realm.commands
                 if (!String.IsNullOrWhiteSpace(args[0]))
                     player.Manager.FindPlayer(args[0])?.Client.GiftCodeReceived("LevelUp");
                 else
-                    player.Manager.FindPlayer(args[0])?.Client.GiftCodeReceived("Pong");
+                    player.Client.GiftCodeReceived("LevelUp");
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 player.SendInfo("An error occurred");
+                return false;
             }
             finally
             {
