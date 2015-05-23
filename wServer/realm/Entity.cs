@@ -129,7 +129,6 @@ namespace wServer.realm
 
         private void GoDeeeeeeeep()
         {
-            //always the first deepest sub-state
             if (CurrentState == null) return;
             while (CurrentState.States.Count > 0)
                 CurrentState = CurrentState = CurrentState.States[0];
@@ -478,7 +477,9 @@ namespace wServer.realm
 
         public bool HasConditionEffect(ConditionEffects eff)
         {
-            return (ConditionEffects & eff) != 0;
+            if ((int)eff < 31)
+                return (ConditionEffects & eff) != 0;
+            return (ConditionEffects2 & eff) != 0;
         }
 
         public void ApplyConditionEffect(params ConditionEffect[] effs)

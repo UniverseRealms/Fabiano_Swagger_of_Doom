@@ -1,0 +1,34 @@
+<MiniGames version="1432394643.652780">
+    <MysteryBox id="84" title="The Skuld Jackpot Box" weight="0">
+        <Description />
+        <Contents>8608,8609,8610,8611,8608,8609,8610,8611,3180,4639,4622,4399</Contents>
+        <Price amount="60" currency="0" />
+        <Image>http://rotmg.kabamcdn.com/Skuld-Jackpot-Set.png</Image>
+        <Icon />
+        <StartTime>2015-04-22 14:34:51</StartTime>
+    </MysteryBox>
+    <MysteryBox id="68" title="The Ambrosia Jackpot Box" weight="0">
+        <Description />
+        <Contents>3276,3276,3276,3276,3276,3276,3276,3272,3269,3275</Contents>
+        <Price amount="60" currency="0" />
+        <Image>http://rotmg.kabamcdn.com/JackpotAmbroBox3.png</Image>
+        <Icon />
+        <StartTime>2014-11-05 13:17:59</StartTime>
+    </MysteryBox>
+    <MysteryBox id="66" title="The Triple Weapon Box" weight="1">
+        <Description />
+        <Contents>2691,2692,2631,2827,2693,2694,2695,2806,2720,2721,2722,2824,2699,2700,2701,2818,2696,2697,2698,2815,3149,3150,3151,3152;2691,2692,2631,2827,2693,2694,2695,2806,2720,2721,2722,2824,2699,2700,2701,2818,2696,2697,2698,2815,3149,3150,3151,3152;2691,2692,2631,2827,2693,2694,2695,2806,2720,2721,2722,2824,2699,2700,2701,2818,2696,2697,2698,2815,3149,3150,3151,3152</Contents>
+        <Price amount="200" currency="0" />
+        <Image>http://rotmg.kabamcdn.com/3xWeaponStashMbox.png</Image>
+        <Icon />
+        <StartTime>2014-11-05 11:35:51</StartTime>
+    </MysteryBox>
+    <MysteryBox id="76" title="The Super Jackpot Skin Box" weight="1">
+        <Description />
+        <Contents>8781,8812,8851,8983,9074,9075,8981,8980,8982,8985,8783,8796,8995,12290,4127,4103,4143,4645,4622,4634,4613,8781,8812,8851,8983,9074,9075,8981,8980,8982,8985,8783,8796,8995</Contents>
+        <Price amount="51" currency="0" />
+        <Image>http://rotmg.kabamcdn.com/SuperJackpotSkinBox.png</Image>
+        <Icon />
+        <StartTime>2015-02-03 12:54:52</StartTime>
+    </MysteryBox>
+</MiniGames>

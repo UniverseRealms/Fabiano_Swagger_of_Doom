@@ -19,64 +19,71 @@ namespace wServer.realm.entities
 
         public static Dictionary<int, Tuple<int, CurrencyType>> MerchantPrices = new Dictionary<int, Tuple<int, CurrencyType>>
         {
-            // UTs
-            {0xb41, new Tuple<int, CurrencyType>(0, CurrencyType.Fame)}, // (UT) Tablet of the King's Avatar
-            {0xbab, new Tuple<int, CurrencyType>(0, CurrencyType.Fame)}, // (UT) The Forgotten Crown
-            {0xbad, new Tuple<int, CurrencyType>(0, CurrencyType.Fame)}, // (UT) Bracer of the Guardian
+            #region UTs
+            {0xb41, new Tuple<int, CurrencyType>(1, CurrencyType.Fame)}, // (UT) Tablet of the King's Avatar
+            {0xbab, new Tuple<int, CurrencyType>(1, CurrencyType.Fame)}, // (UT) The Forgotten Crown
+            {0xbad, new Tuple<int, CurrencyType>(1, CurrencyType.Fame)}, // (UT) Bracer of the Guardian
+            #endregion
 
-            // Weapons
+            #region Weapons
             {0xa07, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Wand of Death - 51 Gold
             {0xa85, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Wand of Deep Sorcery - 150 Gold
             {0xa86, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Wand of Shadow - 225 Gold
             {0xa87, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Wand of Ancient Warning - 450 Gold
             {0xaf6, new Tuple<int, CurrencyType>(TM ? 1 : 550, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Wand of Recompense - 550 Gold
 
-            {0xa1e, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // Golden Bow - T8
-            {0xa8b, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // Verdant Bow - T9
-            {0xa8c, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // Bow of Fey Magic - T10
-            {0xa8d, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // Bow of Innocent Blood - T11
-            {0xb02, new Tuple<int, CurrencyType>(TM ? 1 : 600, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // Bow of Covert Havens - T12
+            {0xa1e, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Golden Bow - 51 Gold
+            {0xa8b, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Verdant Bow - 150 Gold
+            {0xa8c, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Bow of Fey Magic - 225 Gold
+            {0xa8d, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Bow of Innocent Blood - 450 Gold
+            {0xb02, new Tuple<int, CurrencyType>(TM ? 1 : 600, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Bow of Covert Havens - 600 Gold
 
-            {0xa19, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa47, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa82, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa83, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa84, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa88, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa89, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa8a, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xa9f, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xaa0, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xaa1, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xaa2, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xaff, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xb08, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xb0b, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xc4c, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xc4d, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xc4e, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xc4f, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xc50, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)},
+            {0xa19, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Fire Dagger - 51 Gold
+            {0xa88, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Ragetalon Dagger - 150 Gold
+            {0xa89, new Tuple<int, CurrencyType>(TM ? 1 : 255, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Emeraldshard Dagger - 225 Gold
+            {0xa8a, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Agateclaw Dagger - 450 Gold
+            {0xaff, new Tuple<int, CurrencyType>(TM ? 1 : 650, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Dagger of Foul Malevolence - 650 Gold
 
-            //Rings
-            {0xabf, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac0, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac1, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac2, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac3, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac4, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac5, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac6, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac7, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac8, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xac9, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xaca, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xacb, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xacc, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xacd, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
-            {0xace, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
+            {0xa82, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Ravenheart Sword - 51 Gold
+            {0xa83, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Dragonsoul Sword - 150 Gold
+            {0xa84, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Archon Sword - 225 Gold
+            {0xa47, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Skysplitter Sword - 450 Gold
+            {0xb0b, new Tuple<int, CurrencyType>(TM ? 1 : 900, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Sword of Acclaim - 900 Gold
 
-            //ARMORS
+            {0xa9f, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Staff of Horror - 51 Gold
+            {0xaa0, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Staff of Necrotic Arcana - 150 Gold
+            {0xaa1, new Tuple<int, CurrencyType>(TM ? 1 : 255, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Staff of Diabolic Secrets - 225 Gold
+            {0xaa2, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Staff of Astral Knowledge - 450 Gold
+            {0xb08, new Tuple<int, CurrencyType>(TM ? 1 : 900, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Staff of the Cosmic Whole - 900 Gold
+
+            {0xc4c, new Tuple<int, CurrencyType>(TM ? 1 : 51, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T8) Demon Edge - 51 Gold
+            {0xc4d, new Tuple<int, CurrencyType>(TM ? 1 : 150, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T9) Jewel Eye Katana - 150 Gold
+            {0xc4e, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T10) Ichimonji - 225 Gold
+            {0xc4f, new Tuple<int, CurrencyType>(TM ? 1 : 450, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T11) Muramasa - 450 Gold
+            {0xc50, new Tuple<int, CurrencyType>(TM ? 1 : 700, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T12) Masamune - 700 Gold
+            #endregion
+
+            #region Rings
+            {0xabf, new Tuple<int, CurrencyType>(TM ? 1 : 90, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T4) Ring of Paramount Attack - 90 Gold
+            {0xac0, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T4) Ring of Paramount Defense - 225 Gold
+            {0xac1, new Tuple<int, CurrencyType>(TM ? 1 : 90, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T4) Ring of Paramount Speed - 90 Gold
+            {0xac2, new Tuple<int, CurrencyType>(TM ? 1 : 90, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T4) Ring of Paramount Vitality - 90 Gold
+            {0xac3, new Tuple<int, CurrencyType>(TM ? 1 : 90, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T4) Ring of Paramount Wisdom - 90 Gold
+            {0xac4, new Tuple<int, CurrencyType>(TM ? 1 : 90, TM ? CurrencyType.Fame : CurrencyType.Gold)},  // (T4) Ring of Paramount Dexterity - 90 Gold
+            {0xac5, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T4) Ring of Paramount Health - 225 Gold
+            {0xac6, new Tuple<int, CurrencyType>(TM ? 1 : 225, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T4) Ring of Paramount Magic - 225 Gold
+
+            {0xac7, new Tuple<int, CurrencyType>(TM ? 1 : 180, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Attack - 180 Gold
+            {0xac8, new Tuple<int, CurrencyType>(TM ? 1 : 360, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Defense - 360 Gold
+            {0xac9, new Tuple<int, CurrencyType>(TM ? 1 : 180, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Speed - 180 Gold
+            {0xaca, new Tuple<int, CurrencyType>(TM ? 1 : 180, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Vitality - 180 Gold
+            {0xacb, new Tuple<int, CurrencyType>(TM ? 1 : 180, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Wisdom - 180 Gold
+            {0xacc, new Tuple<int, CurrencyType>(TM ? 1 : 180, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Dexterity - 180 Gold
+            {0xacd, new Tuple<int, CurrencyType>(TM ? 1 : 360, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Health - 360 Gold
+            {0xace, new Tuple<int, CurrencyType>(TM ? 1 : 360, TM ? CurrencyType.Fame : CurrencyType.Gold)}, // (T5) Ring of Exalted Magic - 360 Gold
+            #endregion
+
+            #region Armor
             {0xa13, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xa60, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xa8e, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
@@ -92,8 +99,9 @@ namespace wServer.realm.entities
             {0xaf9, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xafc, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xb05, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
+            #endregion
 
-            //ABILITIES
+            #region ABILITIES
             {0xa0c, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xa30, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xa46, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
@@ -122,8 +130,9 @@ namespace wServer.realm.entities
             {0xb33, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xc58, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xc59, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)},
+            #endregion
 
-            //PET FOOD
+            #region Pet food
             {0xcc4, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xcc5, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xcc6, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
@@ -133,8 +142,9 @@ namespace wServer.realm.entities
             {0xcca, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xccb, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)},
             {0xccc, new Tuple<int, CurrencyType>(TM ? 1 : 5, TM ? CurrencyType.Fame : CurrencyType.Gold)},
+            #endregion
 
-            //EGGS
+            #region Eggs
             {0xc86, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //uncommon feline egg
             {0xc87, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //rare feline egg
             {0xc8a, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //uncommon canine egg
@@ -165,8 +175,9 @@ namespace wServer.realm.entities
             {0xcbb, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //rare automaton egg
             {0xcbe, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //uncommon mystery egg
             {0xcbf, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //rare mystery egg
+            #endregion
 
-            //KEYS
+            #region Keys
             {0x2290, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //Bella's Key - just temponary for testing
             {0x701, new Tuple<int, CurrencyType>(TM ? 1 : 2, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //Undead lair key
             {0x705, new Tuple<int, CurrencyType>(TM ? 1 : 1, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //Pirate cave key
@@ -183,6 +194,7 @@ namespace wServer.realm.entities
             {0xccf, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //Woodland Labyrinth Key
             {0xcda, new Tuple<int, CurrencyType>(TM ? 1 : 4, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //The crawling depths key
             {0xcdd, new Tuple<int, CurrencyType>(TM ? 1 : 3, TM ? CurrencyType.Fame : CurrencyType.Gold)}, //Shatters key
+            #endregion
         };
 
         // Keys

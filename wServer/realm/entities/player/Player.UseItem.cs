@@ -406,29 +406,30 @@ namespace wServer.realm.entities.player
                             if (eff.Stats == StatsType.Dexterity) idx = 7;
 
                             int bit = idx + 40;
-                            var sbaAmount = eff.Amount;
-                            var sbaDuration = eff.DurationMS;
-                            var sbaRange = eff.Range;
 
+                            var amountSBA = eff.Amount;
+                            var durationSBA = eff.DurationMS;
+                            var rangeSBA = eff.Range;
                             if (eff.UseWisMod)
                             {
-                                sbaAmount = (int)UseWisMod(eff.Amount, 0);
-                                sbaDuration = (int)(UseWisMod(eff.DurationSec) * 1000);
-                                sbaRange = UseWisMod(eff.Range);
+                                amountSBA = (int)UseWisMod(eff.Amount, 0);
+                                durationSBA = (int)(UseWisMod(eff.DurationSec) * 1000);
+                                rangeSBA = UseWisMod(eff.Range);
                             }
 
-                            this.Aoe(sbaRange, true, player =>
+                            this.Aoe(rangeSBA, true, player =>
                             {
+                                // TODO support for noStack StatBoostAura attribute (paladin total hp increase / insta heal)
                                 ApplyConditionEffect(new ConditionEffect
                                 {
-                                    DurationMS = eff.DurationMS,
+                                    DurationMS = durationSBA,
                                     Effect = (ConditionEffectIndex)bit
                                 });
-                                (player as Player).Boost[idx] += sbaAmount;
+                                (player as Player).Boost[idx] += amountSBA;
                                 player.UpdateCount++;
-                                Owner.Timers.Add(new WorldTimer(eff.DurationMS, (world, t) =>
+                                Owner.Timers.Add(new WorldTimer(durationSBA, (world, t) =>
                                 {
-                                    (player as Player).Boost[idx] -= sbaAmount;
+                                    (player as Player).Boost[idx] -= amountSBA;
                                     player.UpdateCount++;
                                 }));
                             });
@@ -437,21 +438,21 @@ namespace wServer.realm.entities.player
                                 EffectType = EffectType.AreaBlast,
                                 TargetId = Id,
                                 Color = new ARGB(0xffffffff),
-                                PosA = new Position() { X = sbaRange }
+                                PosA = new Position() { X = rangeSBA }
                             }, p => this.Dist(p) < 25);
                         }
                         break;
 
                     case ActivateEffects.ConditionEffectSelf:
                         {
-                            var cesDuration = eff.DurationMS;
+                            var durationCES = eff.DurationMS;
                             if (eff.UseWisMod)
-                                cesDuration = (int)(UseWisMod(eff.DurationSec) * 1000);
+                                durationCES = (int)(UseWisMod(eff.DurationSec) * 1000);
 
                             ApplyConditionEffect(new ConditionEffect
                             {
                                 Effect = eff.ConditionEffect.Value,
-                                DurationMS = cesDuration
+                                DurationMS = durationCES
                             });
                             Owner.BroadcastPacket(new ShowEffectPacket
                             {
@@ -465,20 +466,20 @@ namespace wServer.realm.entities.player
 
                     case ActivateEffects.ConditionEffectAura:
                         {
-                            var ceaDuration = eff.DurationMS;
-                            var ceaRange = eff.Range;
+                            var durationCEA = eff.DurationMS;
+                            var rangeCEA = eff.Range;
                             if (eff.UseWisMod)
                             {
-                                ceaDuration = (int)(UseWisMod(eff.DurationSec) * 1000);
-                                ceaRange = UseWisMod(eff.Range);
+                                durationCEA = (int)(UseWisMod(eff.DurationSec) * 1000);
+                                rangeCEA = UseWisMod(eff.Range);
                             }
 
-                            this.Aoe(ceaRange, true, player =>
+                            this.Aoe(rangeCEA, true, player =>
                             {
                                 player.ApplyConditionEffect(new ConditionEffect
                                 {
                                     Effect = eff.ConditionEffect.Value,
-                                    DurationMS = ceaDuration
+                                    DurationMS = durationCEA
                                 });
                             });
                             uint color = 0xffffffff;
@@ -489,7 +490,7 @@ namespace wServer.realm.entities.player
                                 EffectType = EffectType.AreaBlast,
                                 TargetId = Id,
                                 Color = new ARGB(color),
-                                PosA = new Position { X = ceaRange }
+                                PosA = new Position { X = rangeCEA }
                             }, p => this.Dist(p) < 25);
                         }
                         break;
@@ -504,22 +505,22 @@ namespace wServer.realm.entities.player
 
                     case ActivateEffects.HealNova:
                         {
-                            var hnAmount = eff.Amount;
-                            var hnRange = eff.Range;
+                            var amountHN = eff.Amount;
+                            var rangeHN = eff.Range;
                             if (eff.UseWisMod)
                             {
-                                hnAmount = (int)UseWisMod(eff.Amount, 0);
-                                hnRange = UseWisMod(eff.Range);
+                                amountHN = (int)UseWisMod(eff.Amount, 0);
+                                rangeHN = UseWisMod(eff.Range);
                             }
 
                             List<Packet> pkts = new List<Packet>();
-                            this.Aoe(hnRange, true, player => { ActivateHealHp(player as Player, hnAmount, pkts); });
+                            this.Aoe(rangeHN, true, player => { ActivateHealHp(player as Player, amountHN, pkts); });
                             pkts.Add(new ShowEffectPacket
                             {
                                 EffectType = EffectType.AreaBlast,
                                 TargetId = Id,
                                 Color = new ARGB(0xffffffff),
-                                PosA = new Position { X = hnRange }
+                                PosA = new Position { X = rangeHN }
                             });
                             BroadcastSync(pkts, p => this.Dist(p) < 25);
                         }
@@ -962,17 +963,17 @@ namespace wServer.realm.entities.player
                                     }, null);
                                     w.Timers.Add(new WorldTimer(TimeoutTime * 1000,
                                         (world, t) => //default portal close time * 1000
+                                    {
+                                        try
                                         {
-                                            try
-                                            {
-                                                w.LeaveWorld(entity);
-                                            }
-                                            catch (Exception ex)
-                                            //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                            {
-                                                logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
-                                            }
-                                        }));
+                                            w.LeaveWorld(entity);
+                                        }
+                                        catch (Exception ex)
+                                        //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
+                                        {
+                                            logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                        }
+                                    }));
                                 }
                             }
                             else
@@ -998,17 +999,17 @@ namespace wServer.realm.entities.player
                                 }, null);
                                 w.Timers.Add(new WorldTimer(TimeoutTime * 1000,
                                     (world, t) => //default portal close time * 1000
+                                {
+                                    try
                                     {
-                                        try
-                                        {
-                                            w.LeaveWorld(entity);
-                                        }
-                                        catch (Exception ex)
-                                        //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                        {
-                                            logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
-                                        }
-                                    }));
+                                        w.LeaveWorld(entity);
+                                    }
+                                    catch (Exception ex)
+                                    //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
+                                    {
+                                        logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                    }
+                                }));
                             }
                         }
                         break;
@@ -1182,8 +1183,12 @@ namespace wServer.realm.entities.player
                     case ActivateEffects.GenericActivate:
                         var targetPlayer = eff.Target.Equals("player");
                         var centerPlayer = eff.Target.Equals("player");
-                        var gaDuration = (eff.UseWisMod) ? (int)(UseWisMod(eff.DurationSec) * 1000) : eff.DurationMS;
-                        var range = (eff.UseWisMod) ? UseWisMod(eff.Range) : eff.Range;
+                        var duration = (eff.UseWisMod) ?
+                            (int)(UseWisMod(eff.DurationSec) * 1000) :
+                            eff.DurationMS;
+                        var range = (eff.UseWisMod)
+                            ? UseWisMod(eff.Range)
+                            : eff.Range;
 
                         Owner.Aoe((eff.Center.Equals("mouse")) ? target : new Position { X = X, Y = Y }, range, targetPlayer, entity =>
                         {
@@ -1194,11 +1199,12 @@ namespace wServer.realm.entities.player
                                 new ConditionEffect()
                                 {
                                     Effect = eff.ConditionEffect.Value,
-                                    DurationMS = gaDuration
+                                    DurationMS = duration
                                 });
                             }
                         });
 
+                        // replaced this last bit with what I had, never noticed any issue with it. Perhaps I'm wrong?
                         BroadcastSync(new ShowEffectPacket()
                         {
                             EffectType = (EffectType)eff.VisualEffect,
@@ -1206,6 +1212,23 @@ namespace wServer.realm.entities.player
                             Color = new ARGB(eff.Color ?? 0xffffffff),
                             PosA = (centerPlayer) ? new Position() { X = range } : target
                         }, p => this.DistSqr(p) < 25);
+                        /*if (eff.VisualEffect > 0)
+                        {
+                            Placeholder x = null;
+                            if (eff.Center == "mouse")
+                            {
+                                x = new Placeholder(Manager, 1500);
+                                x.Move(pkt.ItemUsePos.X, pkt.ItemUsePos.Y);
+                                Owner.EnterWorld(x);
+                            }
+                            BroadcastSync(new ShowEffectPacket
+                            {
+                                EffectType = EffectType.AreaBlast,
+                                TargetId = x?.Id ?? Id,
+                                Color = new ARGB(eff.Color ?? 0xffffffff),
+                                PosA = new Position {X = eff.VisualEffect/2},
+                            }, p => this.Dist(p) < 25);
+                        }*/
                         break;
                 }
             }

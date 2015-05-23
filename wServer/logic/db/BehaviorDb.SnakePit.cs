@@ -262,7 +262,7 @@ namespace wServer.logic
                         )
                     )
                 ),
-                new Threshold(0.32,
+                new MostDamagers(3,
                     new ItemLoot("Potion of Speed", 1)
                 ),
                 new Threshold(0.1,
@@ -278,11 +278,10 @@ namespace wServer.logic
                     new TierLoot(10, ItemType.Armor, 0.1)
                 ),
                 new Threshold(0.2,
-                    new EggLoot(EggRarity.Common, 0.1),
-                    new EggLoot(EggRarity.Uncommon, 0.1),
-                    new EggLoot(EggRarity.Rare, 0.02),
-                    new EggLoot(EggRarity.Legendary, 0.002)
-                )
+                    new OnlyOne(
+                        LootTemplates.DefaultEggLoot(EggRarity.Legendary)
+                    )
+                 )
             )
             .Init("Stheno Swarm",
                 new State(
