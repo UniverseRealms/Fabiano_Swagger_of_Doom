@@ -1,6 +1,5 @@
 ﻿using db;
 using MySql.Data.MySqlClient;
-using System;
 using System.Linq;
 using wServer.networking.cliPackets;
 using wServer.realm;

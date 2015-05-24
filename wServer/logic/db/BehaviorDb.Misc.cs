@@ -13,7 +13,7 @@ namespace wServer.logic
             .Init("White Fountain",
                 new State(
                     new NexusHealHp(5, 100, 1000)))
-           .Init("Winter Fountain Frozen", 
+           .Init("Winter Fountain Frozen",
                new State(
                    new NexusHealHp(5, 100, 1000)))
             .Init("Sheep",

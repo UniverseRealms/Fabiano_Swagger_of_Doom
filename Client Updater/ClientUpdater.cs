@@ -421,9 +421,11 @@ namespace wServer
                             case 0:
                                 objectxml += xml;
                                 break;
+
                             case 1:
                                 groundxml += xml;
                                 break;
+
                             case 2:
                                 equipentsetsxml += xml;
                                 break;
@@ -460,7 +462,6 @@ namespace wServer
 
                     return input;
                 }
-
                 else if (input.Contains("<GroundTypes>"))
                 {
                     input = input.Replace("<GroundTypes>", "");

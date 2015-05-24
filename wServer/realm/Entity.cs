@@ -16,7 +16,7 @@ namespace wServer.realm
 {
     public class Entity : IProjectileOwner, ICollidable<Entity>, IDisposable
     {
-        private const int EFFECT_COUNT = 32 * 2;
+        private const int EFFECT_COUNT = 32 * 2; //64 should be enough for now :P
         protected static readonly ILog logger = LogManager.GetLogger(typeof(Entity));
         private readonly ObjectDesc desc;
         private readonly int[] effects;
@@ -129,6 +129,7 @@ namespace wServer.realm
 
         private void GoDeeeeeeeep()
         {
+            //always the first deepest sub-state
             if (CurrentState == null) return;
             while (CurrentState.States.Count > 0)
                 CurrentState = CurrentState = CurrentState.States[0];
