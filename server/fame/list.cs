@@ -54,7 +54,7 @@ namespace server.fame
                 {
                     MySqlCommand cmd = db.CreateQuery();
                     cmd.CommandText = @"SELECT * FROM death WHERE " + span + @" OR " + ac +
-                                      @" ORDER BY totalFame DESC LIMIT 10;";
+                                      @" ORDER BY totalFame DESC LIMIT 20;";
                     if (Query["accountId"] != null)
                     {
                         cmd.Parameters.AddWithValue("@accId", Query["accountId"]);
