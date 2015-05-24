@@ -36,7 +36,7 @@ namespace wServer.logic.behaviors
 
             Status = CycleStatus.NotStarted;
 
-            if (host.HasConditionEffect(ConditionEffects.Paralyzed)) return;
+            if (host.HasConditionEffect(ConditionEffectIndex.Paralyzed)) return;
 
             Entity en = host.GetNearestEntity(acquireRange, null);
             if (!(en is Player)) return; //It returned me a enemy, thats why we check for a player here

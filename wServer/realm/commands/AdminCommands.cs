@@ -1169,7 +1169,7 @@ namespace wServer.realm.commands
 
     //    protected override bool Process(Player player, RealmTime time, string[] args)
     //    {
-    //        if (player.HasConditionEffect(ConditionEffects.Invincible))
+    //        if (player.HasConditionEffect(ConditionEffectIndex.Invincible))
     //        {
     //            player.ApplyConditionEffect(new ConditionEffect()
     //            {

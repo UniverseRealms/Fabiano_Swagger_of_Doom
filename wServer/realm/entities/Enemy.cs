@@ -71,10 +71,10 @@ namespace wServer.realm.entities
         public int Damage(Player from, RealmTime time, int dmg, bool noDef, params ConditionEffect[] effs)
         {
             if (stat) return 0;
-            if (HasConditionEffect(ConditionEffects.Invincible))
+            if (HasConditionEffect(ConditionEffectIndex.Invincible))
                 return 0;
-            if (!HasConditionEffect(ConditionEffects.Paused) &&
-                !HasConditionEffect(ConditionEffects.Stasis))
+            if (!HasConditionEffect(ConditionEffectIndex.Paused) &&
+                !HasConditionEffect(ConditionEffectIndex.Stasis))
             {
                 int def = ObjectDesc.Defense;
                 if (noDef)
@@ -83,7 +83,7 @@ namespace wServer.realm.entities
                 int effDmg = dmg;
                 if (effDmg > HP)
                     effDmg = HP;
-                if (!HasConditionEffect(ConditionEffects.Invulnerable))
+                if (!HasConditionEffect(ConditionEffectIndex.Invulnerable))
                     HP -= dmg;
                 ApplyConditionEffect(effs);
                 if (from != null)
@@ -127,17 +127,17 @@ namespace wServer.realm.entities
         public override bool HitByProjectile(Projectile projectile, RealmTime time)
         {
             if (stat) return false;
-            if (HasConditionEffect(ConditionEffects.Invincible))
+            if (HasConditionEffect(ConditionEffectIndex.Invincible))
                 return false;
             if (projectile.ProjectileOwner is Player &&
-                !HasConditionEffect(ConditionEffects.Paused) &&
-                !HasConditionEffect(ConditionEffects.Stasis))
+                !HasConditionEffect(ConditionEffectIndex.Paused) &&
+                !HasConditionEffect(ConditionEffectIndex.Stasis))
             {
                 int def = ObjectDesc.Defense;
                 if (projectile.Descriptor.ArmorPiercing)
                     def = 0;
                 int dmg = (int)StatsManager.GetDefenseDamage(this, projectile.Damage, def);
-                if (!HasConditionEffect(ConditionEffects.Invulnerable))
+                if (!HasConditionEffect(ConditionEffectIndex.Invulnerable))
                     HP -= dmg;
                 foreach (ConditionEffect effect in projectile.Descriptor.Effects)
                 {
@@ -174,7 +174,7 @@ namespace wServer.realm.entities
             if (pos == null)
                 pos = new Position { X = X, Y = Y };
 
-            if (!stat && HasConditionEffect(ConditionEffects.Bleeding))
+            if (!stat && HasConditionEffect(ConditionEffectIndex.Bleeding))
             {
                 if (bleeding > 1)
                 {
