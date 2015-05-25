@@ -4,6 +4,7 @@ using db.data;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -339,7 +340,7 @@ namespace wServer.realm.entities
             List<int> accessoryClothList = new List<int>();
             List<int> clothingClothList = new List<int>();
 
-            foreach (KeyValuePair<ushort, Item> item in data.Items)
+            foreach (KeyValuePair<ushort, Item> item in data.Items.Where(_ => ExcludedCloths.All(i => i != _.Value.ObjectId)))
             {
                 if (item.Value.Texture1 != 0 && item.Value.ObjectId.Contains("Clothing") && item.Value.Class == "Dye")
                 {
@@ -374,5 +375,20 @@ namespace wServer.realm.entities
             AccessoryDyeList = accessoryDyeList.ToArray();
             logger.Info("MerchantLists added");
         }
+
+        private static readonly string[] ExcludedCloths =
+        {
+            "Large Ivory Dragon Scale Cloth", "Small Ivory Dragon Scale Cloth",
+            "Large Green Dragon Scale Cloth", "Small Green Dragon Scale Cloth",
+            "Large Midnight Dragon Scale Cloth", "Small Midnight Dragon Scale Cloth",
+            "Large Blue Dragon Scale Cloth", "Small Blue Dragon Scale Cloth",
+            "Large Red Dragon Scale Cloth", "Small Red Dragon Scale Cloth",
+            "Large Jester Argyle Cloth", "Small Jester Argyle Cloth",
+            "Large Alchemist Cloth", "Small Alchemist Cloth",
+            "Large Mosaic Cloth", "Small Mosaic Cloth",
+            "Large Spooky Cloth", "Small Spooky Cloth",
+            "Large Flame Cloth", "Small Flame Cloth",
+            "Large Heavy Chainmail Cloth", "Small Heavy Chainmail Cloth",
+        };
     }
 }

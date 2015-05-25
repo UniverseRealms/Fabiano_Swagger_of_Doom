@@ -87,8 +87,10 @@ namespace server.account
                         }
                     }
 
-                    MysteryBoxResult res = new MysteryBoxResult();
-                    res.Awards = Utils.GetCommaSepString(GetAwards(box.Contents));
+                    MysteryBoxResult res = new MysteryBoxResult
+                    {
+                        Awards = Utils.GetCommaSepString(GetAwards(box.Contents))
+                    };
                     if (box.Sale != null && DateTime.UtcNow <= box.Sale.SaleEnd)
                         res.GoldLeft = box.Sale.Currency == 0
                             ? db.UpdateCredit(acc, -box.Sale.Price)
@@ -126,9 +128,8 @@ namespace server.account
         private int[] GetAwards(string items)
         {
             int[] ret = new int[items.Split(';').Length];
-            int item = Utils.FromString(items.Split(';')[0].Split(',')[rand.Next(items.Split(';')[0].Split(',').Length)]);
             for (int i = 0; i < ret.Length; i++)
-                ret[i] = item;
+                ret[i] = Utils.FromString(items.Split(';')[0].Split(',')[rand.Next(items.Split(';')[0].Split(',').Length)]);
             return ret.ToArray();
         }
 
@@ -139,7 +140,7 @@ namespace server.account
             doc.AppendChild(success);
 
             XmlNode awards = doc.CreateElement("Awards");
-            awards.InnerText = res.Awards;
+            awards.InnerText = res.Awards.Replace(" ", String.Empty);
             success.AppendChild(awards);
 
             XmlNode goldLeft = doc.CreateElement(res.Currency == 0 ? "Gold" : "Fame");

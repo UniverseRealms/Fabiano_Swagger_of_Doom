@@ -689,7 +689,7 @@ namespace wServer.realm.entities.player
                             });
                             Owner.Aoe(target, 3, false, enemy =>
                             {
-                                if (enemy.ObjectType == 0x750d || enemy.ObjectType == 0x750e) return;
+                                if (IsSpecial(enemy.ObjectType)) return;
                                 if (enemy.HasConditionEffect(ConditionEffectIndex.StasisImmune))
                                 {
                                     if (!enemy.HasConditionEffect(ConditionEffectIndex.Invincible))
@@ -1223,8 +1223,7 @@ namespace wServer.realm.entities.player
 
                         Owner.Aoe((eff.Center.Equals("mouse")) ? target : new Position { X = X, Y = Y }, range, targetPlayer, entity =>
                         {
-                            if (entity.ObjectType == 0x750d || entity.ObjectType == 0x750e)
-                                return;
+                            if (IsSpecial(entity.ObjectType)) return;
                             if (!entity.HasConditionEffect(ConditionEffectIndex.Stasis) &&
                                 !entity.HasConditionEffect(ConditionEffectIndex.Invincible))
                             {
@@ -1286,6 +1285,11 @@ namespace wServer.realm.entities.player
             }
 
             return (int)n;
+        }
+
+        private static bool IsSpecial(ushort objType)
+        {
+            return objType == 0x750d || objType == 0x750e || objType == 0x222c || objType == 0x222d;
         }
     }
 }
