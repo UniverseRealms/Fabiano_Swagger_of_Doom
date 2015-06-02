@@ -64,7 +64,7 @@ namespace wServer.logic.behaviors.PetBehaviors
                         TargetId = host.Id,
                     }, null);
 
-                    e.Damage(null, time, GetElectricDamage(host as Pet, level), true, new ConditionEffect
+                    e.Damage(null, time, GetElectricDamage(host as Pet, level), false, new ConditionEffect
                     {
                         DurationMS = (int)(0.5 + level.Level * 0.035) * 1000,
                         Effect = ConditionEffectIndex.Paralyzed

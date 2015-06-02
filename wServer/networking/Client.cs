@@ -69,6 +69,8 @@ namespace wServer.networking
 
         public int TargetWorld { get; internal set; }
 
+        public uint Seed { get; set; }
+
         public void BeginProcess()
         {
             logger.InfoFormat($"Received client @ {Socket.RemoteEndPoint}.");

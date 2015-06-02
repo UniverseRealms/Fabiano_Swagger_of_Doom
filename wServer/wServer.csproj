@@ -149,6 +149,7 @@
     <Compile Include="logic\behaviors\PentaractStar.cs" />
     <Compile Include="logic\behaviors\PetBehaviors\PetShoot.cs" />
     <Compile Include="logic\behaviors\RemoveEntity.cs" />
+    <Compile Include="logic\db\BehaviorDb.Abyss.cs" />
     <Compile Include="logic\db\BehaviorDb.CandyLand.cs" />
     <Compile Include="logic\db\BehaviorDb.Draconis.cs" />
     <Compile Include="logic\db\BehaviorDb.Drakes.cs" />
@@ -163,7 +164,6 @@
     <Compile Include="logic\behaviors\InvisiToss.cs" />
     <Compile Include="logic\behaviors\MoveTo.cs" />
     <Compile Include="logic\behaviors\NexusHealHp.cs" />
-    <Compile Include="logic\behaviors\PetBehaviors\PetAttack.cs" />
     <Compile Include="logic\behaviors\PetBehaviors\PetElectric.cs" />
     <Compile Include="logic\behaviors\PetBehaviors\PetFollow.cs" />
     <Compile Include="logic\behaviors\PetBehaviors\PetHealHP.cs" />
@@ -388,7 +388,6 @@
     <Compile Include="realm\entities\SellableObject.cs" />
     <Compile Include="realm\entities\Sign.cs" />
     <Compile Include="realm\entities\StaticObject.cs" />
-    <Compile Include="realm\entities\Tinker.cs" />
     <Compile Include="realm\entities\Trap.cs" />
     <Compile Include="realm\entities\Wall.cs" />
     <Compile Include="realm\Entity.cs" />

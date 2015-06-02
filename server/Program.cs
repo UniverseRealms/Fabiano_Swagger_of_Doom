@@ -9,6 +9,8 @@ using MimeKit;
 using server.sfx;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -128,9 +130,15 @@ namespace server
                 {
                     using (var wtr = new StreamWriter(context.Response.OutputStream))
                     {
-                        var file = "game" + (context.Request.RawUrl == "/" ? "/index.html" : context.Request.RawUrl);
+                        var file = "game" + (context.Request.RawUrl == "/" ? "/index.php" : context.Request.RawUrl);
                         if (file.Contains("?"))
                             file = file.Remove(file.IndexOf('?'));
+                        var info = new FileInfo(file);
+                        if (info.Attributes == FileAttributes.Directory)
+                        {
+                            string[] files = Directory.GetFiles(file, "*", SearchOption.TopDirectoryOnly);
+                            file = (from f in files let inf = new FileInfo(f) where inf.Name.Replace(inf.Extension, string.Empty).Equals("index", StringComparison.OrdinalIgnoreCase) select f).FirstOrDefault();
+                        }
                         if (File.Exists(file))
                         {
                             if (file.StartsWith("game/Testing.html"))
@@ -141,6 +149,7 @@ namespace server
                             SendFile("game/404.html", context);
                     }
                 }
+
                 else
                 {
                     handler = Activator.CreateInstance(t, null, null);
@@ -155,6 +164,7 @@ namespace server
                     }
                     else
                         (handler as RequestHandler).HandleRequest(context);
+
                 }
             }
             catch (Exception e)
@@ -178,7 +188,11 @@ namespace server
 
         public static void SendFile(string path, HttpListenerContext context)
         {
-            context.Response.ContentType = getContentType(new FileInfo(path).Extension);
+            var ext = new FileInfo(path).Extension;
+
+            if (ext.StartsWith("."))
+                ext = ext.Remove(0, 1);
+            context.Response.ContentType = getContentType(ext);
             byte[] buffer;
 
             if (context.Response.ContentType == "text/html" || context.Response.ContentType == "text/javascript" || context.Response.ContentType == "text/css")
@@ -186,6 +200,20 @@ namespace server
                 using (var rdr = File.OpenText(path))
                 {
                     var send = rdr.ReadToEnd();
+
+                    if (ext == "php")
+                    {
+                        Process p = new Process();
+                        p.StartInfo = new ProcessStartInfo("php\\php.exe", "-f " + path)
+                        {
+                            UseShellExecute = false,
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        };
+                        p.Start();
+                        send = p.StandardOutput.ReadToEnd();
+                    }
                     foreach (var toReplace in replaceVars)
                     {
                         var tmp = String.Empty;
@@ -223,18 +251,24 @@ namespace server
             context.Response.OutputStream.Write(buffer, 0, buffer.Length);
         }
 
+        private static string GetPhpArgumentQuery(NameValueCollection query)
+        {
+            var sb = new StringBuilder();
+            foreach (string q in query.Keys)
+                sb.Append(q + "=" + query[q]);
+            return sb.ToString();
+        }
+
         private static string getContentType(string fileExtention)
         {
-            var plain = fileExtention;
-            if (fileExtention.StartsWith("."))
-                plain = fileExtention.Remove(0, 1);
             var ret = "text/html";
 
-            switch (plain)
+            switch (fileExtention)
             {
                 case "html":
                 case "shtml":
                 case "htm":
+                case "php":
                     ret = "text/html";
                     break;
 

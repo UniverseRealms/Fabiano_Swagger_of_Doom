@@ -14,7 +14,7 @@ namespace Client_Updater
 
         private void localhost_btn_Click(object sender, EventArgs e)
         {
-            updater = new ClientUpdater("127.0.0.1", label1);
+            updater = new ClientUpdater("127.0.0.1:8080", label1);
             updater.UpdateClient();
         }
 

@@ -21,7 +21,8 @@ namespace wServer.logic
                         ),
                         new PetHealHP(),
                         new PetHealMP(),
-                        new PetElectric()
+                        new PetElectric(),
+                        new PetShoot()
                     )
                 );
             }

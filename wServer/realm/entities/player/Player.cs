@@ -30,7 +30,7 @@ namespace wServer.realm.entities.player
 
     public partial class Player : Character, IContainer, IPlayer
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(Player));
+        private static readonly ILog log = LogManager.GetLogger(typeof(Player));
 
         private bool dying;
 
@@ -51,7 +51,7 @@ namespace wServer.realm.entities.player
             {
                 Client = psr;
                 Manager = psr.Manager;
-                StatsManager = new StatsManager(this);
+                StatsManager = new StatsManager(this, psr.Seed);
                 Name = psr.Account.Name;
                 AccountId = psr.Account.AccountId;
                 FameCounter = new FameCounter(this);
@@ -104,7 +104,7 @@ namespace wServer.realm.entities.player
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    log.Error(ex);
                 }
 
                 if (HasBackpack == 1)
@@ -174,7 +174,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                log.Error(e);
             }
         }
 
@@ -320,7 +320,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error("Error while processing playerDamage: ", e);
+                log.Error("Error while processing playerDamage: ", e);
             }
         }
 
@@ -532,7 +532,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                log.Error(e);
             }
         }
 
@@ -653,12 +653,12 @@ namespace wServer.realm.entities.player
             switch (Inventory.Length)
             {
                 case 12:
-                    chr.Equipment = Inventory.Select(_ => _?.ObjectType ?? (short)-1).ToArray();
+                    chr.Equipment = Inventory.Select(_ => _?.ObjectType ?? -1).ToArray();
                     break;
 
                 case 20:
-                    var equip = Inventory.Select(_ => _?.ObjectType ?? (short)-1).ToArray();
-                    var backpack = new short[8];
+                    var equip = Inventory.Select(_ => _?.ObjectType ?? -1).ToArray();
+                    var backpack = new int[8];
                     Array.Copy(equip, 12, backpack, 0, 8);
                     Array.Resize(ref equip, 12);
                     chr.Equipment = equip;
@@ -730,7 +730,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                log.Error(ex);
                 SendError("player.cannotTeleportTo");
                 return;
             }
@@ -781,7 +781,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                log.Error(e);
             }
 
             if (Stats != null && Boost != null)
@@ -826,14 +826,14 @@ namespace wServer.realm.entities.player
                     SendUpdate(time);
                     if (!Owner.IsPassable((int)X, (int)Y) && Client.Account.Rank < 2)
                     {
-                        logger.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
+                        log.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
                         Client.Disconnect();
                     }
                 }
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                log.Error(e);
             }
             try
             {
@@ -841,7 +841,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                log.Error(e);
             }
 
             if (HP < 0 && !dying)

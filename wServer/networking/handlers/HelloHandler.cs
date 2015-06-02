@@ -155,19 +155,20 @@ namespace wServer.networking.handlers
                     uint seed = (uint)((long)Environment.TickCount * packet.GUID.GetHashCode()) % uint.MaxValue;
                     client.Random = new wRandom(seed);
                     client.TargetWorld = world.Id;
+                    client.Seed = seed;
                     client.SendPacket(new MapInfoPacket
                     {
                         Width = world.Map.Width,
                         Height = world.Map.Height,
                         Name = world.Name,
-                        Fp = 0,
+                        Seed = seed,
                         ClientWorldName = world.ClientWorldName,
                         Difficulty = world.Difficulty,
                         Background = world.Background,
                         AllowTeleport = world.AllowTeleport,
                         ShowDisplays = world.ShowDisplays,
                         ClientXML = world.ClientXml,
-                        ExtraXML = world.ExtraXml
+                        ExtraXML = Manager.GameData.AdditionXml
                     });
                     client.Stage = ProtocalStage.Handshaked;
                 }

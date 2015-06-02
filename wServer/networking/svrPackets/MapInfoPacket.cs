@@ -12,7 +12,7 @@
 
         public int Difficulty { get; set; }
 
-        public uint Fp { get; set; }
+        public uint Seed { get; set; }
 
         public int Background { get; set; }
 
@@ -40,7 +40,7 @@
             Height = rdr.ReadInt32();
             Name = rdr.ReadUTF();
             ClientWorldName = rdr.ReadUTF();
-            Fp = rdr.ReadUInt32();
+            Seed = rdr.ReadUInt32();
             Background = rdr.ReadInt32();
             Difficulty = rdr.ReadInt32();
             AllowTeleport = rdr.ReadBoolean();
@@ -61,7 +61,7 @@
             wtr.Write(Height);
             wtr.WriteUTF(Name);
             wtr.WriteUTF(ClientWorldName);
-            wtr.Write(Fp);
+            wtr.Write(Seed);
             wtr.Write(Background);
             wtr.Write(Difficulty);
             wtr.Write(AllowTeleport);

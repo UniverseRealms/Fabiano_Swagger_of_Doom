@@ -386,10 +386,8 @@ namespace wServer.realm
                 case "FortuneTeller":
                 case "YardUpgrader":
                 case "FortuneGround":
-                    return new StaticObject(manager, id, null, true, false, false);
-
                 case "QuestRewards":
-                    return new Tinker(manager, id, null, false);
+                    return new StaticObject(manager, id, null, true, false, false);
 
                 case "Pet":
                     throw new Exception("Pets should not instantiated using Entity.Resolve");
@@ -399,14 +397,14 @@ namespace wServer.realm
             }
         }
 
-        public Projectile CreateProjectile(ProjectileDesc desc, short container, int dmg, long time, Position pos,
+        public Projectile CreateProjectile(ProjectileDesc desc, ushort container, int dmg, long time, Position pos,
             float angle)
         {
             var ret = new Projectile(Manager, desc) //Assume only one
             {
                 ProjectileOwner = this,
                 ProjectileId = ProjectileId++,
-                Container = container,
+                Container = (short)container,
                 Damage = dmg,
                 BeginTime = time,
                 BeginPos = pos,
