@@ -74,6 +74,7 @@ namespace wServer.realm
             {
                 manager = value;
                 if (manager == null) return;
+                Seed = manager.Random.NextUInt32();
                 Init();
                 PortalKey = Utils.RandomBytes(NeedsPortalKey ? 16 : 0);
             }
@@ -90,6 +91,8 @@ namespace wServer.realm
         public byte[] PortalKey { get; private set; }
 
         public bool PortalKeyExpired { get; private set; }
+
+        public uint Seed { get; private set; }
 
         public virtual bool NeedsPortalKey => false;
 

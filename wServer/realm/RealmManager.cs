@@ -1,6 +1,4 @@
-﻿#region
-
-using db;
+﻿using db;
 using db.data;
 using log4net;
 using System;
@@ -16,8 +14,6 @@ using wServer.realm.commands;
 using wServer.realm.entities;
 using wServer.realm.entities.player;
 using wServer.realm.worlds;
-
-#endregion
 
 namespace wServer.realm
 {
@@ -106,6 +102,8 @@ namespace wServer.realm
 
         private ConcurrentDictionary<string, Vault> vaults;
 
+        public Random Random { get; }
+
         private Thread logic;
         private Thread network;
         private int nextClientId;
@@ -121,6 +119,7 @@ namespace wServer.realm
             GuildHalls = new ConcurrentDictionary<string, GuildHall>();
             LastWorld = new ConcurrentDictionary<string, World>();
             vaults = new ConcurrentDictionary<string, Vault>();
+            Random = new Random();
         }
 
         public BehaviorDb Behaviors { get; private set; }

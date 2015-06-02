@@ -36,6 +36,7 @@
             Position = Position.Read(psr, rdr);
             Angle = rdr.ReadSingle();
             Damage = rdr.ReadInt16();
+            if (rdr.BaseStream.Length - rdr.BaseStream.Position <= 0) return;
             NumShots = rdr.ReadByte();
             AngleInc = rdr.ReadSingle();
         }
@@ -48,6 +49,7 @@
             Position.Write(psr, wtr);
             wtr.Write(Angle);
             wtr.Write(Damage);
+            if (NumShots == 1 || AngleInc == 0) return;
             wtr.Write(NumShots);
             wtr.Write(AngleInc);
         }

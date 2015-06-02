@@ -2,10 +2,12 @@
 {
     public class Constans
     {
-        protected const string PRODAPPSPOT_DOMAIN_WWW = "www.realmofthemadgodhrd.appspot.com";
+        protected const string PRODAPPSPOTHRD_DOMAIN_WWW = "www.realmofthemadgodhrd.appspot.com";
+        protected const string PRODAPPSPOT_DOMAIN_WWW = "www.realmofthemadgod.appspot.com";
         protected const string PROD_DOMAIN_WWW = "www.realmofthemadgod.com";
 
-        protected const string PRODAPPSPOT_DOMAIN = "realmofthemadgodhrd.appspot.com";
+        protected const string PRODAPPSPOTHRD_DOMAIN = "realmofthemadgodhrd.appspot.com";
+        protected const string PRODAPPSPOT_DOMAIN = "realmofthemadgod.appspot.com";
         protected const string PROD_DOMAIN = "realmofthemadgod.com";
 
         protected const string ROTMG_VERSION_TEXT = "RotMG #{VERSION}.{MINOR}";

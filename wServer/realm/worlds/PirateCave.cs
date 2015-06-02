@@ -1,4 +1,7 @@
-﻿namespace wServer.realm.worlds
+﻿using wServer.generator;
+using wServer.generator.templates.pirateCave;
+
+namespace wServer.realm.worlds
 {
     public class PirateCave : World
     {
@@ -13,7 +16,9 @@
 
         protected override void Init()
         {
-            LoadMap("wServer.realm.worlds.maps.pcave.wmap", MapType.Wmap);
+            var gen = new DungeonGenerator(Seed, new PirateCaveTemplate());
+            gen.Generate();
+            LoadMap(gen.ExportToJson());
         }
     }
 }

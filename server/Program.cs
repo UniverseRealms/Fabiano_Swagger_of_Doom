@@ -69,7 +69,6 @@ namespace server
             {
                 listener = new HttpListener();
                 listener.Prefixes.Add($"http://*:{port}/");
-                listener.Prefixes.Add("https://*:8443/");
                 listener.Start();
 
                 listener.BeginGetContext(ListenerCallback, null);
@@ -149,7 +148,6 @@ namespace server
                             SendFile("game/404.html", context);
                     }
                 }
-
                 else
                 {
                     handler = Activator.CreateInstance(t, null, null);
@@ -164,7 +162,6 @@ namespace server
                     }
                     else
                         (handler as RequestHandler).HandleRequest(context);
-
                 }
             }
             catch (Exception e)

@@ -1,15 +1,17 @@
-##License or Disclaimer, however you wanna call it. :D
-You are free to use this source as long as u credit this guys:
+#Build Status: [![Build status](https://img.shields.io/appveyor/ci/ossimc82/fabiano-swagger-of-doom/master.svg)](https://ci.appveyor.com/project/ossimc82/fabiano-swagger-of-doom)
 
-- ossimc82/Fabian Fischer
-- C453
-- Trapped
-- Donran
-- creepylava
-- Krazyshank
-- Barm
-- Kieron for making 1 behavior
-- everyone else that have contributed to this project on mpgh or any other site
+##Additional License Information
 
-You are allowed to modify it or do whatever you want with it but not to sell it
-Whatever you are doing with it, you need to give credits to the guys shown at the top.
+You can use this source as long as you credit the following people:
+
+- [ossimc82](https://github.com/ossimc82) - Fabian Fischer
+- [C453](https://github.com/C453)
+- @C453
+- @trapped
+- @Donran
+- @creepylava
+- @TheKronks
+- @cp-nilly
+- BARm
+- Kierze
+- Anyone else that has contributed to this project/repository.

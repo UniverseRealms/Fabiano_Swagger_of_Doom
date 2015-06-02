@@ -1,12 +1,8 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-
-#endregion
 
 public enum Rarity : uint
 {
@@ -49,7 +45,7 @@ public enum Ability : uint
 }
 
 [Flags]
-public enum ConditionEffects
+public enum ConditionEffects : ulong
 {
     Dead = 1 << 0,
     Quiet = 1 << 1,
@@ -67,7 +63,7 @@ public enum ConditionEffects
     Paralyzed = 1 << 13,
     Speedy = 1 << 14,
     Bleeding = 1 << 15,
-    NotUsed = 1 << 16,
+    ArmorBreakImmune = 1 << 16,
     Healing = 1 << 17,
     Damaging = 1 << 18,
     Berserk = 1 << 19,
@@ -79,18 +75,25 @@ public enum ConditionEffects
     Armored = 1 << 25,
     ArmorBroken = 1 << 26,
     Hexed = 1 << 27,
-    AnotherSpeedy = 1 << 28,
+    NinjaSpeedy = 1 << 28,
     Unstable = 1 << 29,
     Darkness = 1 << 30,
-    Curse = 1 << 38,
-    HpBoost = 1 << 40,
-    MpBoost = 1 << 41,
-    AttBoost = 1 << 42,
-    DefBoost = 1 << 43,
-    SpdBoost = 1 << 44,
-    VitBoost = 1 << 45,
-    WisBoost = 1 << 46,
-    DexBoost = 1 << 47
+    SlowedImmune = (ulong)1 << 31,
+    DazedImmune = (ulong)1 << 32,
+    ParalyzeImmune = (ulong)1 << 33,
+    Petrify = (ulong)1 << 34,
+    PetrifyImmune = (ulong)1 << 35,
+    PetDisable = (ulong)1 << 36,
+    Curse = (ulong)1 << 37,
+    CurseImmune = (ulong)1 << 38,
+    HPBoost = (ulong)1 << 39,
+    MPBoost = (ulong)1 << 40,
+    AttBoost = (ulong)1 << 41,
+    DefBoost = (ulong)1 << 42,
+    SpdBoost = (ulong)1 << 43,
+    VitBoost = (ulong)1 << 44,
+    WisBoost = (ulong)1 << 45,
+    DexBoost = (ulong)1 << 46
 }
 
 public enum ConditionEffectIndex
@@ -106,12 +109,12 @@ public enum ConditionEffectIndex
     Hallucinating = 8,
     Drunk = 9,
     Confused = 10,
-    StunImmume = 11,
+    StunImmune = 11,
     Invisible = 12,
     Paralyzed = 13,
     Speedy = 14,
     Bleeding = 15,
-    NotUsed = 16,
+    ArmorBreakImmune = 16,
     Healing = 17,
     Damaging = 18,
     Berserk = 19,
@@ -123,18 +126,25 @@ public enum ConditionEffectIndex
     Armored = 25,
     ArmorBroken = 26,
     Hexed = 27,
-    AnotherSpeedy = 28,
+    NinjaSpeedy = 28,
     Unstable = 29,
     Darkness = 30,
-    Curse = 38,
-    HpBoost = 40,
-    MpBoost = 41,
-    AttBoost = 42,
-    DefBoost = 43,
-    SpdBoost = 44,
-    VitBoost = 45,
-    WisBoost = 46,
-    DexBoost = 47
+    SlowedImmune = 31,
+    DazedImmune = 32,
+    ParalyzeImmune = 33,
+    Petrify = 34,
+    PetrifyImmune = 35,
+    PetDisable = 36,
+    Curse = 37,
+    CurseImmune = 38,
+    HPBoost = 39,
+    MPBoost = 40,
+    AttBoost = 41,
+    DefBoost = 42,
+    SpdBoost = 43,
+    VitBoost = 44,
+    WisBoost = 45,
+    DexBoost = 46
 }
 
 public class PetStruct
