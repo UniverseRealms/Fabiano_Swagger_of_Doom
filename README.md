@@ -6,12 +6,11 @@ You can use this source as long as you credit the following people:
 
 - [ossimc82](https://github.com/ossimc82) - Fabian Fischer
 - [C453](https://github.com/C453)
-- @C453
-- @trapped
-- @Donran
-- @creepylava
-- @TheKronks
-- @cp-nilly
+- [Tarp](https://github.com/trapped)
+- [Donran](https://github.com/Donran)
+- [Creepylava](https://github.com/creepylava)
+- [KrazyShank](https://github.com/TheKronks)
+- [Nilly](https://github.com/cp-nilly)
 - BARm
 - Kierze
 - Anyone else that has contributed to this project/repository.
