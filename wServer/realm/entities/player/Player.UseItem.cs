@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using wServer.networking;
 using wServer.networking.cliPackets;
 using wServer.networking.svrPackets;
@@ -904,24 +903,7 @@ namespace wServer.realm.entities.player
                         };
                         if (portal == null) break;
 
-                        string wineCellarDesc =
-@"<Object type=""0x0717"" id=""Wine Cellar Portal"">
-  <Class>Portal</Class>
-  <IntergamePortal/>
-  <Texture>
-     <File>lofiEnvironment</File>
-     <Index>0x7c</Index>
-  </Texture>
-  <DungeonName>Wine Cellar</DungeonName>
-  <DisplayId>{objects.Wine_Cellar}</DisplayId>
-</Object>";
-
-                        portal.Unlock(new PortalDesc(0x0717, XElement.Parse(wineCellarDesc)));
-
-                        //Entity targetPortal = Entity.Resolve(Manager, eff.DungeonName + " Portal");
-                        //targetPortal.Move(portal.X, portal.Y);
-                        //Owner.LeaveWorld(portal);
-                        //Owner.EnterWorld(targetPortal);
+                        portal.Unlock(eff.DungeonName);
 
                         packets[1] = new NotificationPacket
                         {
@@ -957,88 +939,38 @@ namespace wServer.realm.entities.player
 
                             ARGB c = new ARGB(0x00FF00);
 
-                            if (eff.Id == "Wine Cellar Portal") //wine cellar incantation
+                            entity.Move(X, Y);
+                            w.EnterWorld(entity);
+
+                            w.BroadcastPacket(new NotificationPacket
                             {
-                                bool opened = false;
-                                foreach (KeyValuePair<int, StaticObject> i in w.StaticObjects)
-                                {
-                                    if (i.Value.ObjectType == 0x0721) //locked wine cellar portal
-                                    {
-                                        opened = true;
-                                        entity.Move(i.Value.X, i.Value.Y);
-                                        w.EnterWorld(entity);
-                                        w.LeaveWorld(i.Value);
-                                        UpdateCount++;
-                                    }
-                                }
-                                if (opened)
-                                {
-                                    Client.SendPacket(new NotificationPacket
-                                    {
-                                        Color = c,
-                                        Text =
-                                        "{\"key\":\"blank\",\"tokens\":{\"data\":\"" + DungName + " opened by " +
-                                        Client.Account.Name + "\"}}",
-                                        ObjectId = Client.Player.Id
-                                    });
+                                Color = c,
+                                Text =
+                                    "{\"key\":\"blank\",\"tokens\":{\"data\":\"" + DungName + " opened by " +
+                                    Client.Account.Name + "\"}}",
+                                ObjectId = Client.Player.Id
+                            }, null);
 
-                                    w.BroadcastPacket(new TextPacket
-                                    {
-                                        BubbleTime = 0,
-                                        Stars = -1,
-                                        Name = "",
-                                        Text = DungName + " opened by " + Client.Account.Name
-                                    }, null);
-                                    w.Timers.Add(new WorldTimer(TimeoutTime * 1000,
-                                        (world, t) => //default portal close time * 1000
-                                    {
-                                        try
-                                        {
-                                            w.LeaveWorld(entity);
-                                        }
-                                        catch (Exception ex)
-                                        //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                        {
-                                            logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
-                                        }
-                                    }));
-                                }
-                            }
-                            else
+                            w.BroadcastPacket(new TextPacket
                             {
-                                entity.Move(X, Y);
-                                w.EnterWorld(entity);
-
-                                w.BroadcastPacket(new NotificationPacket
+                                BubbleTime = 0,
+                                Stars = -1,
+                                Name = "",
+                                Text = DungName + " opened by " + Client.Account.Name
+                            }, null);
+                            w.Timers.Add(new WorldTimer(TimeoutTime * 1000,
+                                (world, t) => //default portal close time * 1000
+                            {
+                                try
                                 {
-                                    Color = c,
-                                    Text =
-                                        "{\"key\":\"blank\",\"tokens\":{\"data\":\"" + DungName + " opened by " +
-                                        Client.Account.Name + "\"}}",
-                                    ObjectId = Client.Player.Id
-                                }, null);
-
-                                w.BroadcastPacket(new TextPacket
+                                    w.LeaveWorld(entity);
+                                }
+                                catch (Exception ex)
+                                //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
                                 {
-                                    BubbleTime = 0,
-                                    Stars = -1,
-                                    Name = "",
-                                    Text = DungName + " opened by " + Client.Account.Name
-                                }, null);
-                                w.Timers.Add(new WorldTimer(TimeoutTime * 1000,
-                                    (world, t) => //default portal close time * 1000
-                                {
-                                    try
-                                    {
-                                        w.LeaveWorld(entity);
-                                    }
-                                    catch (Exception ex)
-                                    //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
-                                    {
-                                        logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
-                                    }
-                                }));
-                            }
+                                    log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                }
+                            }));
                         }
                         break;
 

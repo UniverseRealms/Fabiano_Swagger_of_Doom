@@ -411,5 +411,15 @@ namespace wServer.realm.entities
             if (HasConditionEffect(global::ConditionEffectIndex.Stasis)) return false;
             return true;
         }
+
+        public PetLevel[] GetLevels()
+        {
+            return new[]
+            {
+                FirstPetLevel,
+                SecondPetLevel,
+                ThirdPetLevel
+            };
+        }
     }
 }
