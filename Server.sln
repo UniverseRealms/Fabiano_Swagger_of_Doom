@@ -23,6 +23,40 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client Updater", "Client Updater\Client Updater.csproj", "{88F0DFA4-FF63-4F2A-8B75-20D9A468E2E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MiniGames", "MiniGames", "{3A30273E-2EBD-464E-A261-989133A36AF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MiniGames", "MiniGames", "{004BCB5C-54E2-448E-BE6D-2FA5A963FFCA}"
+	ProjectSection(SolutionItems) = preProject
+		MiniGames\MiniGames\5-23-2015.xml = MiniGames\MiniGames\5-23-2015.xml
+		MiniGames\MiniGames\6-2-2015.xml = MiniGames\MiniGames\6-2-2015.xml
+		MiniGames\MiniGames\Template.png = MiniGames\MiniGames\Template.png
+		MiniGames\MiniGames\The Jackpot Ambrosia Box.png = MiniGames\MiniGames\The Jackpot Ambrosia Box.png
+		MiniGames\MiniGames\The Skuld Set Jackpot Box.png = MiniGames\MiniGames\The Skuld Set Jackpot Box.png
+		MiniGames\MiniGames\The Specialized UT Box.png = MiniGames\MiniGames\The Specialized UT Box.png
+		MiniGames\MiniGames\The Super Jackpot Skin Box.png = MiniGames\MiniGames\The Super Jackpot Skin Box.png
+		MiniGames\MiniGames\The Swoll Set Super Box.png = MiniGames\MiniGames\The Swoll Set Super Box.png
+		MiniGames\MiniGames\The Triple Weapon Box.png = MiniGames\MiniGames\The Triple Weapon Box.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{44E47305-E87E-4B05-AF61-8C2AAE45E75F}"
+	ProjectSection(SolutionItems) = preProject
+		MiniGames\Package\5-23-2015.json = MiniGames\Package\5-23-2015.json
+		MiniGames\Package\5-23-2015.xml = MiniGames\Package\5-23-2015.xml
+		MiniGames\Package\6-2-2015.json = MiniGames\Package\6-2-2015.json
+		MiniGames\Package\6-2-2015.xml = MiniGames\Package\6-2-2015.xml
+		MiniGames\Package\Big Bag of Keys Small Modal.png = MiniGames\Package\Big Bag of Keys Small Modal.png
+		MiniGames\Package\Big Bag of Keys.png = MiniGames\Package\Big Bag of Keys.png
+		MiniGames\Package\Candy Land Small Modal.png = MiniGames\Package\Candy Land Small Modal.png
+		MiniGames\Package\Candy Land.png = MiniGames\Package\Candy Land.png
+		MiniGames\Package\Double Up Small Modal.png = MiniGames\Package\Double Up Small Modal.png
+		MiniGames\Package\Play More.png = MiniGames\Package\Play More.png
+		MiniGames\Package\Rare Humanoid Large Modal.png = MiniGames\Package\Rare Humanoid Large Modal.png
+		MiniGames\Package\Storage Wars Small Modal.png = MiniGames\Package\Storage Wars Small Modal.png
+		MiniGames\Package\Super Ambrosia Large Modal.png = MiniGames\Package\Super Ambrosia Large Modal.png
+		MiniGames\Package\Super Ambrosia.png = MiniGames\Package\Super Ambrosia.png
+		MiniGames\Package\Template.png = MiniGames\Package\Template.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,5 +175,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{004BCB5C-54E2-448E-BE6D-2FA5A963FFCA} = {3A30273E-2EBD-464E-A261-989133A36AF8}
+		{44E47305-E87E-4B05-AF61-8C2AAE45E75F} = {3A30273E-2EBD-464E-A261-989133A36AF8}
 	EndGlobalSection
 EndGlobal

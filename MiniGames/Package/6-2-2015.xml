@@ -1,0 +1,31 @@
+<PackageResponse>
+    <Packages>
+        <Package id="539">
+            <Name>Super Dungeon Pack</Name>
+            <Price>2100</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>-1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://rotmg.kabamcdn.com/SuperDungeonPackPackage.png</BgURL>
+            <EndDate>06/04/2015 01:00:00 GMT-0800</EndDate>
+        </Package>
+        <Package id="540">
+            <Name>Double Up Pack</Name>
+            <Price>1500</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>-1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://i.imgur.com/d8hh4HT.png</BgURL>
+            <EndDate>06/04/2015 23:59:00 GMT-0800</EndDate>
+        </Package>
+        <Package id="538">
+            <Name>Super Ambrosia Pack</Name>
+            <Price>7000</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>-1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://i.imgur.com/3NFqdr1.png</BgURL>
+            <EndDate>06/05/2015 01:00:00 GMT-0800</EndDate>
+        </Package>
+    </Packages>
+</PackageResponse>

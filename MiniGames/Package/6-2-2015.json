@@ -1,0 +1,35 @@
+[
+    {
+        "slot": 1,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1432774800000,
+        "title": "Super Ambrosia Pack",
+        "image": "http://rotmg.kabamcdn.com/Super%20Ambrosia%20Large%20News.png",
+        "endTime": 1433466000000,
+        "linkDetail": "538",
+        "priority": 876
+    },
+    {
+        "slot": 3,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1432774800000,
+        "title": "Super Dungeon Pack",
+        "image": "http://rotmg.kabamcdn.com/BigBagOfKeysModal.png",
+        "endTime": 1433466000000,
+        "linkDetail": "539",
+        "priority": 877
+    },
+    {
+        "slot": 2,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1432774800000,
+        "title": "Double Up Pack",
+        "image": "http://rotmg.kabamcdn.com/DoubleUpNewsModal.png",
+        "endTime": 1433466000000,
+        "linkDetail": "540",
+        "priority": 878
+    }
+]

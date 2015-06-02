@@ -1,0 +1,35 @@
+[
+    {
+        "slot": 2,
+        "linkType": 2,
+        "title": "Storage Wars",
+        "image": "http://i.imgur.com/UxoYB60.png",
+        "priority": 804,
+        "linkDetail": "472",
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1420625497000,
+        "endTime": 1421193540000
+    },
+    {
+        "slot": 1,
+        "linkType": 2,
+        "title": "Rare Humanoid Pack",
+        "image": "http://rotmg.kabamcdn.com/RareHumanoidLargeNewsModal.png",
+        "priority": 805,
+        "linkDetail": "474",
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1420628323000,
+        "endTime": 1421193540000
+    },
+    {
+        "slot": 3,
+        "linkType": 2,
+        "title": "Candyland Pack",
+        "image": "http://rotmg.kabamcdn.com/CandyLandNews.png",
+        "priority": 806,
+        "linkDetail": "473",
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1420628543000,
+        "endTime": 1421193540000
+    }
+]
