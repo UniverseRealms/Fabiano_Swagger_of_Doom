@@ -1,8 +1,4 @@
-﻿#region
-
-using wServer.networking;
-
-#endregion
+﻿using wServer.networking;
 
 namespace wServer.realm.worlds
 {
@@ -18,7 +14,12 @@ namespace wServer.realm.worlds
         }
 
         public override bool NeedsPortalKey => true;
-        protected override void Init() => LoadMap("wServer.realm.worlds.maps.abyss.wmap", MapType.Wmap);
+
+        protected override void Init()
+        {
+            LoadMap(GeneratorCache.NextAbyss(Seed));
+        }
+
         public override World GetInstance(Client psr) => Manager.AddWorld(new AbyssofDemons());
     }
 }

@@ -51,17 +51,11 @@
             }
             wtr.Write((short)NewObjects.Length);
             foreach (ObjectDef i in NewObjects)
-            {
                 i.Write(psr, wtr);
-                //Console.WriteLine(i.ObjectType);
-            }
 
             wtr.Write((short)RemovedObjectIds.Length);
             foreach (int i in RemovedObjectIds)
-            {
                 wtr.Write(i);
-            }
-            //Console.WriteLine("UpdatePacket send");
         }
 
         public struct TileData

@@ -75,8 +75,8 @@ namespace wServer.realm
                 manager = value;
                 if (manager == null) return;
                 Seed = manager.Random.NextUInt32();
-                Init();
                 PortalKey = Utils.RandomBytes(NeedsPortalKey ? 16 : 0);
+                Init();
             }
         }
 

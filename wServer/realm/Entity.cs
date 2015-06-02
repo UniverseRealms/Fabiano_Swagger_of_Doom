@@ -439,6 +439,11 @@ namespace wServer.realm
         {
         }
 
+        public bool IsOneHit(int dmg, int hpBeforeHit)
+        {
+            return ObjectDesc.MaxHP == hpBeforeHit && ObjectDesc.MaxHP <= dmg;
+        }
+
         private void ProcessConditionEffects(RealmTime time)
         {
             if (effects == null || !tickingEffects) return;
