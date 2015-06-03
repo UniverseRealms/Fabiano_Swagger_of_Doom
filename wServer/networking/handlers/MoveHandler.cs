@@ -18,7 +18,7 @@ namespace wServer.networking.handlers
         {
             client.Manager.Logic.AddPendingAction(t =>
             {
-                if (client.Player == null || client.Player.Owner == null) return;
+                if (client.Player?.Owner == null) return;
 
                 client.Player.Flush();
 
@@ -38,30 +38,40 @@ namespace wServer.networking.handlers
                     newY = packet.Position.Y;
                     client.Player.UpdateCount++;
                 }
-                if ((int)packet.Position.X == 38 & (int)packet.Position.Y == 61)
-                {
-                    client.Player.SendEnemy("Mysterious ossi", "Player1: VGFibGV0IFdpemFyZA==");
-                }
-                if ((int)packet.Position.X == 36 & (int)packet.Position.Y == 61)
-                {
-                    client.Player.SendEnemy("Mysterious ossi", "Player2: VGFibGV0IFdpemFyZA==");
-                }
-                if ((int)packet.Position.X == 35 & (int)packet.Position.Y == 59)
-                {
-                    client.Player.SendEnemy("Mysterious ossi", "Player3: RWxlIFdpemFyZA==");
-                }
-                if ((int)packet.Position.X == 39 & (int)packet.Position.Y == 59)
-                {
-                    client.Player.SendEnemy("Mysterious ossi", "Player4: RWxlIFdpemFyZA==");
-                }
-                if ((int)packet.Position.X == 37 & (int)packet.Position.Y == 57)
-                {
-                    client.Player.SendEnemy("Mysterious ossi", "Player5: VDAgU3BlbGwgV2l6YXJk");
-                }
+                CheckLabConditions(client.Player, packet);
                 client.Player.Move((float)newX, (float)newY);
-
                 client.Player.ClientTick(t, packet);
             }, PendingPriority.Networking);
+        }
+
+        private static void CheckLabConditions(Entity player, MovePacket packet)
+        {
+            var tile = player.Owner.Map[(int)packet.Position.X, (int)packet.Position.Y];
+            switch (tile.TileId)
+            {
+                #region Green Water
+                case 0xa9:
+                case 0x82:
+                    if (tile.ObjId != 0) return;
+                    if (!player.HasConditionEffect(ConditionEffectIndex.Hexed) || !player.HasConditionEffect(ConditionEffectIndex.Stunned))
+                    {
+                        player.ApplyConditionEffect(ConditionEffectIndex.Hexed);
+                        player.ApplyConditionEffect(ConditionEffectIndex.Stunned);
+                    }
+                    break;
+                #endregion
+                #region Blue water
+                case 0xa7:
+                case 0x83:
+                    if (tile.ObjId != 0) return;
+                    if (player.HasConditionEffect(ConditionEffectIndex.Hexed) || player.HasConditionEffect(ConditionEffectIndex.Stunned))
+                    {
+                        player.ApplyConditionEffect(ConditionEffectIndex.Hexed, 0);
+                        player.ApplyConditionEffect(ConditionEffectIndex.Stunned, 0);
+                    }
+                    break;
+                    #endregion
+            }
         }
     }
 }
