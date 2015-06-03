@@ -2,6 +2,7 @@
 using DungeonGenerator.Templates;
 using DungeonGenerator.Templates.Abyss;
 using DungeonGenerator.Templates.PirateCave;
+using DungeonGenerator.Templates.MadLab;
 using log4net;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,11 +19,14 @@ namespace wServer
             cachedMaps = new Dictionary<string, List<string>>();
             createCache("Abyss of Demons", new AbyssTemplate());
             createCache("Pirate Cave", new PirateCaveTemplate());
+            createCache("Mad Lab", new MadLabTemplate());
         }
 
         public static string NextAbyss(uint seed) => nextMap(seed, "Abyss of Demons");
 
         public static string NextPirateCave(uint seed) => nextMap(seed, "Pirate Cave");
+
+        public static string NextMadLab(uint seed) => nextMap(seed, "Mad Lab");
 
         private static string nextMap(uint seed, string key)
         {
