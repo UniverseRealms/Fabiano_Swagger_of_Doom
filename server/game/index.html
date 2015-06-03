@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fabiano Swagger of Doom</title>
+    <link href="css/realmofthemadgod.css" rel="stylesheet" />
+    <script src="js/AC_OETags.js" language="javascript"></script>
+    <script src="js/jquery-2.1.4.min.js" language="javascript"></script>
+    <script src="js/rotmg.UrlLib.js" language="javascript"></script>
+    <script src="js/rotmg.KabamPayment.js" language="javascript"></script>
+    <script src="js/rotmg.Marketing.js" language="javascript"></script>
+    <script src="js/rotmg.SalesForce.js" language="javascript"></script>
+</head>
+<body>
+    <script language="JavaScript" type="text/javascript">
+        var g_cacheBuster = "__rotmg_cb=1403286969";
+    </script>
+    <script type="text/javascript">
+        var client_version;
+        var client_swf;
+
+        $.get('version.txt', function (data) {
+            alert(data);
+            client_version = data;
+            client_swf = client_version + '.swf';
+        }, 'text')
+        alert('Version' + client_version);
+        alert('SWF' + client_swf);
+
+        var requiredMajorVersion = 11;
+        var requiredMinorVersion = 2;
+        var requiredRevision = 0;
+    </script>
+    <script type="text/javascript">
+        rotmg.Marketing.track("landing");
+        var hasProductInstall = DetectFlashVer(6, 0, 65);
+        var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
+        if (hasProductInstall && !hasRequestedVersion) {
+            var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
+            var MMredirectURL = window.location;
+            var MMdoctitle = document.title;
+            AC_FL_RunContent(
+                "src", "playerProductInstall",
+                "FlashVars", "MMredirectURL=" + MMredirectURL + '&MMplayerType=' + MMPlayerType + '&MMdoctitle=' + MMdoctitle + "" + '&version_timestamp=1403286969',
+                "width", "800",
+                "height", "600",
+                "align", "middle",
+                "id", client_version,
+                "class", "game_swf",
+                "quality", "high",
+                "bgcolor", "#000000",
+                "name", "client",
+                "allowScriptAccess", "sameDomain",
+                "type", "application/x-shockwave-flash",
+                "pluginspage", "http://www.adobe.com/go/getflashplayer"
+            );
+        } else if (hasRequestedVersion) {
+            AC_FL_RunContent(
+                    "src", client_swf,
+                    "FlashVars", rotmg.UrlLib.getProtocolString() + '&version_timestamp=1403286969',
+                    "width", "800",
+                    "height", "600",
+                    "align", "middle",
+                    "id", client_version,
+                    "class", "game_swf",
+                    "quality", "low",
+                    "bgcolor", "#000000",
+                    "name", "client",
+                    "allowScriptAccess", "sameDomain",
+                    "type", "application/x-shockwave-flash",
+                    "wmode", "direct",
+                    "pluginspage", "http://www.adobe.com/go/getflashplayer",
+                    "style", "outline:none"
+            );
+        } else {
+            var alternateContent = 'Playing Fabiano Swagger of Doom requires Flash. <a href=http://www.adobe.com/go/getflash />Get Flash</a>';
+            document.write(alternateContent);
+        }
+    </script>
+    <p>Thanks for playing Fabiano Swagger of Doom!<br />Check out our <a href="http://aceticsoft.info/" target="_blank">forums</a> and <a href="http://www.realmeye.com/wiki/realm-of-the-mad-god" target="_blank">wiki</a>.</p>
+</body>
+</html>
