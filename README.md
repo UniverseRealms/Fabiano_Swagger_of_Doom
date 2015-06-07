@@ -4,14 +4,14 @@
 
 You can use this source as long as you credit the following people:
 
-- [ossimc82](https://github.com/ossimc82) - Fabian Fischer
+- BARm
+- [BlackRayquaza](https://github.com/BlackRayquaza) - Mark Bakker
 - [C453](https://github.com/C453)
-- [Tarp](https://github.com/trapped)
-- [Donran](https://github.com/Donran)
 - [Creepylava](https://github.com/creepylava)
+- [Donran](https://github.com/Donran)
+- Kierze
 - [KrazyShank](https://github.com/TheKronks)
 - [Nilly](https://github.com/cp-nilly)
-- [BlackRayquaza / Lithium](https://github.com/BlackRayquaza) - Mark Bakker
-- BARm
-- Kierze
+- [ossimc82](https://github.com/ossimc82) - Fabian Fischer
+- [Tarp](https://github.com/trapped)
 - Anyone else that has contributed to this project/repository.
