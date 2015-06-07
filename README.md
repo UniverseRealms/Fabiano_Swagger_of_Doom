@@ -11,6 +11,7 @@ You can use this source as long as you credit the following people:
 - [Creepylava](https://github.com/creepylava)
 - [KrazyShank](https://github.com/TheKronks)
 - [Nilly](https://github.com/cp-nilly)
+- [BlackRayquaza / Lithium](https://github.com/BlackRayquaza) - Mark Bakker
 - BARm
 - Kierze
 - Anyone else that has contributed to this project/repository.
