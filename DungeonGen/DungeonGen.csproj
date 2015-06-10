@@ -65,7 +65,7 @@
     <Compile Include="Templates\DungeonTemplate.cs" />
     <Compile Include="Templates\MadLab\BossRoom.cs" />
     <Compile Include="Templates\MadLab\Corridor.cs" />
-    <Compile Include="Templates\MadLab\MadLabTemplate.cs" />
+    <Compile Include="Templates\MadLab\LabTemplate.cs" />
     <Compile Include="Templates\MadLab\NormalRoom.cs" />
     <Compile Include="Templates\MadLab\Overlay.cs" />
     <Compile Include="Templates\MadLab\StartRoom.cs" />
