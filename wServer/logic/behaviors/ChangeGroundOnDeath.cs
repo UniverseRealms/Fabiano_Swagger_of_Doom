@@ -6,7 +6,7 @@ using wServer.realm;
 
 namespace wServer.logic.behaviors
 {
-    internal class ChangeGroundOnDeath : Behavior
+    public class ChangeGroundOnDeath : Behavior
     {
         private readonly int dist;
         private readonly string[] groundToChange;

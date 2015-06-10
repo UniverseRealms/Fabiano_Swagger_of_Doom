@@ -3,7 +3,7 @@ using wServer.realm.entities;
 
 namespace wServer.logic.transitions
 {
-    internal class DamageTakenTransition : Transition
+    public class DamageTakenTransition : Transition
     {
         //State storage: none
 

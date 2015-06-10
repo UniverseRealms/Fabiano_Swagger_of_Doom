@@ -5,7 +5,7 @@ using wServer.realm.entities.player;
 
 namespace wServer.logic.behaviors
 {
-    internal class PlaySound : Behavior
+    public class PlaySound : Behavior
     {
         private readonly int soundId;
 

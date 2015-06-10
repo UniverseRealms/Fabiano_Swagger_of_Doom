@@ -2,7 +2,7 @@
 
 namespace wServer.logic.transitions
 {
-    internal class EntityExistsTransition : Transition
+    public class EntityExistsTransition : Transition
     {
         //State storage: none
 

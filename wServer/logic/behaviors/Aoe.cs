@@ -5,7 +5,7 @@ using wServer.realm.entities;
 
 namespace wServer.logic.behaviors
 {
-    internal class Aoe : Behavior
+    public class Aoe : Behavior
     {
         //State storage: nothing
 

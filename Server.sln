@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{44
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonGen", "DungeonGen\DungeonGen.csproj", "{E3061024-61ED-46AA-8A0D-CD9747E7BFAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BehaviorConverter", "BehaviorConverter\BehaviorConverter.csproj", "{2D2430CF-A459-48AE-8F10-DE66B0889048}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,11 +200,28 @@ Global
 		{E3061024-61ED-46AA-8A0D-CD9747E7BFAE}.Release|x64.Build.0 = Release|Any CPU
 		{E3061024-61ED-46AA-8A0D-CD9747E7BFAE}.Release|x86.ActiveCfg = Release|Any CPU
 		{E3061024-61ED-46AA-8A0D-CD9747E7BFAE}.Release|x86.Build.0 = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|x64.Build.0 = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|x64.Build.0 = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D2430CF-A459-48AE-8F10-DE66B0889048}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{3A30273E-2EBD-464E-A261-989133A36AF8} = {E00ABBB9-9692-4DAF-8A9E-E563E54D71A4}
 		{004BCB5C-54E2-448E-BE6D-2FA5A963FFCA} = {3A30273E-2EBD-464E-A261-989133A36AF8}
 		{44E47305-E87E-4B05-AF61-8C2AAE45E75F} = {3A30273E-2EBD-464E-A261-989133A36AF8}
 	EndGlobalSection
