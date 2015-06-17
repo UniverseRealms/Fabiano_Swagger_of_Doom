@@ -180,6 +180,9 @@ public class Account
         set { _Admin = value ? "True" : null; }
     }
 
+    [XmlElement]
+    public int Warnings { get; set; }
+
     [XmlElement("Banned")]
     public string _Banned { get; set; }
 

@@ -30,7 +30,7 @@ namespace wServer.realm.entities.player
 
     public partial class Player : Character, IContainer, IPlayer
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Player));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Player));
 
         private bool dying;
 
@@ -96,15 +96,15 @@ namespace wServer.realm.entities.player
                 {
                     Manager.Database.DoActionAsync(db =>
                     {
-                        Locked = db.GetLockeds(AccountId);
-                        Ignored = db.GetIgnoreds(AccountId);
+                        Locked = db.GetStarredPlayers(AccountId);
+                        Ignored = db.GetIgnoredPlayers(AccountId);
                         Muted = db.IsMuted(AccountId);
                         DailyQuest = psr.Account.DailyQuest;
                     });
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    logger.Error(ex);
                 }
 
                 if (HasBackpack == 1)
@@ -174,7 +174,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 
@@ -320,7 +320,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error("Error while processing playerDamage: ", e);
+                logger.Error("Error while processing playerDamage: ", e);
             }
         }
 
@@ -532,18 +532,15 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
         }
 
         public void GivePet(PetItem petInfo)
         {
-            //if (Name == "ossimc82" || Name == "C453")
-            //{
             Pet = new Pet(Manager, petInfo, this);
             Pet.Move(X, Y);
             Owner.EnterWorld(Pet);
-            //}
         }
 
         public override bool HitByProjectile(Projectile projectile, RealmTime time)
@@ -730,7 +727,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                logger.Error(ex);
                 SendError("player.cannotTeleportTo");
                 return;
             }
@@ -781,7 +778,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
 
             if (Stats != null && Boost != null)
@@ -803,21 +800,7 @@ namespace wServer.realm.entities.player
 
             FameCounter.Tick(time);
 
-            //if(pingSerial > 5)
-            //    if (!Enumerable.Range(UpdatesSend, 5000).Contains(UpdatesReceived))
-            //        Client.Disconnect();
-
             if (Mp < 0) Mp = 0;
-
-            /* try
-                * {
-                *     psr.Database.SaveCharacter(psr.Account, psr.Character);
-                *     UpdateCount++;
-                * }
-                * catch (ex)
-                * {
-                * }
-            */
 
             try
             {
@@ -826,14 +809,14 @@ namespace wServer.realm.entities.player
                     SendUpdate(time);
                     if (!Owner.IsPassable((int)X, (int)Y) && Client.Account.Rank < 2)
                     {
-                        log.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
+                        logger.Fatal($"Player {Name} No-Cliped at position: {X}, {Y}");
                         Client.Disconnect();
                     }
                 }
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
             try
             {
@@ -841,7 +824,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                log.Error(e);
+                logger.Error(e);
             }
 
             if (HP < 0 && !dying)
@@ -850,7 +833,100 @@ namespace wServer.realm.entities.player
                 return;
             }
 
+            #region Ban manager
+            if (Client?.Account.Credits >= Program.MaxAllowedCredit && Client.Account.Rank != 3)
+            {
+                Client?.Disconnect();
+                logger.Info($"{Name} has been kicked.");
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "update accounts set warnings = warnings + 1 where id=@AccountId";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.ExecuteNonQuery();
+                });
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "insert into warnings (accId, warning) values (@AccountId, @Warning)";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.Parameters.AddWithValue("@Warning", $"Credits was greater then {Program.MaxAllowedCredit}");
+                    cmd.ExecuteNonQuery();
+                });
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "update stats set credits = -1 where accId=@AccountId";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.ExecuteNonQuery();
+                });
+            }
+            if (Client?.Account.Stats.Fame >= Program.MaxAllowedFame && Client.Account.Rank != 3)
+            {
+                Client?.Disconnect();
+                logger.Info($"{Name} has been kicked.");
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "update accounts set warnings = warnings + 1 where id=@AccountId";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.ExecuteNonQuery();
+                });
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "insert into warnings (accId, warning) values (@AccountId, @Warning)";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.Parameters.AddWithValue("@Warning", $"Fame was greater then {Program.MaxAllowedFame}");
+                    cmd.ExecuteNonQuery();
+                });
+                Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "update stats set fame = -1 where accId=@AccountId";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.ExecuteNonQuery();
+                });
+            }
+
+            if (Client?.Account.Warnings >= 3)
+                BanManager_Ban();
+            #endregion
+
             base.Tick(time);
+        }
+
+        private void BanManager_Ban()
+        {
+            Manager.Database.DoActionAsync(db =>
+            {
+                var cmd = db.CreateQuery();
+                cmd.CommandText = "UPDATE accounts SET banned=1 WHERE id=@AccountId;";
+                cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                cmd.ExecuteNonQuery();
+            });
+            Manager.Database.DoActionAsync(db =>
+            {
+                var cmd = db.CreateQuery();
+                cmd.CommandText = "update accounts set warnings=0 where id=@AccountId;";
+                cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                cmd.ExecuteNonQuery();
+            });
+            logger.Info($"{Name} has been banned.");
+            foreach (Client i in Manager.Clients.Values)
+            {
+                if (i.Account.Rank == 3)
+                {
+                    i.SendPacket(new TextPacket
+                    {
+                        BubbleTime = 0,
+                        Stars = -1,
+                        Name = "@BanManager",
+                        Text = $"{Name} has been banned."
+                    });
+                }
+            }
+            Client?.Disconnect();
         }
 
         private bool CheckResurrection()

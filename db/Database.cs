@@ -160,6 +160,7 @@ AND characters.charId=death.chrId;";
                 Name = Names[(uint)uuid.GetHashCode() % Names.Length],
                 AccountId = "0",
                 Admin = false,
+                Warnings = 0,
                 Banned = false,
                 Rank = 0,
                 BeginnerPackageTimeLeft = 0,
@@ -278,7 +279,7 @@ AND characters.charId=death.chrId;";
 
             cmd = CreateQuery();
             cmd.CommandText =
-                "INSERT INTO accounts(uuid, password, name, rank, namechosen, verified, guild, guildRank, guildFame, vaultCount, maxCharSlot, regTime, guest, banned, locked, ignored, gifts, isAgeVerified, authToken) VALUES(@uuid, SHA1(@password), @randomName, @rank, 0, 0, 0, 0, 0, 1, 2, @regTime, @guest, 0, @empty, @empty, @empty, 1, @authToken);";
+                "INSERT INTO accounts(uuid, password, name, rank, namechosen, verified, guild, guildRank, guildFame, vaultCount, maxCharSlot, regTime, guest, warnings, banned, locked, ignored, gifts, isAgeVerified, authToken) VALUES(@uuid, SHA1(@password), @randomName, @rank, 0, 0, 0, 0, 0, 1, 2, @regTime, @guest, 0, 0, @empty, @empty, @empty, 1, @authToken);";
             cmd.Parameters.AddWithValue("@uuid", uuid);
             cmd.Parameters.AddWithValue("@randomName", Names[new Random().Next(0, Names.Length)]);
             cmd.Parameters.AddWithValue("@password", password);
@@ -415,6 +416,7 @@ AND characters.charId=death.chrId;";
                     Password = password,
                     VisibleMuledump = rdr.GetInt32("publicMuledump") == 1,
                     Rank = rdr.GetInt32("rank"),
+                    Warnings = rdr.GetInt32("warnings"),
                     Banned = rdr.GetBoolean("banned"),
                     BeginnerPackageTimeLeft = 0,
                     PetYardType = rdr.GetInt32("petYardType"),
@@ -1136,7 +1138,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             return guildrankings.ToArray();
         }
 
-        public List<string> GetLockeds(string accId)
+        public List<string> GetStarredPlayers(string accId)
         {
             List<string> ret = new List<string>();
             MySqlCommand cmd = CreateQuery();
@@ -1157,7 +1159,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             }
         }
 
-        public List<string> GetIgnoreds(string accId)
+        public List<string> GetIgnoredPlayers(string accId)
         {
             List<string> ret = new List<string>();
             MySqlCommand cmd = CreateQuery();
@@ -1180,7 +1182,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public bool AddLock(string accId, string lockId)
         {
-            List<string> x = GetLockeds(accId);
+            List<string> x = GetStarredPlayers(accId);
             x.Add(lockId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
             MySqlCommand cmd = CreateQuery();
@@ -1194,7 +1196,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public bool RemoveLock(string accId, string lockId)
         {
-            List<string> x = GetLockeds(accId);
+            List<string> x = GetStarredPlayers(accId);
             x.Remove(lockId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
             MySqlCommand cmd = CreateQuery();
@@ -1208,7 +1210,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public bool AddIgnore(string accId, string ignoreId)
         {
-            List<string> x = GetIgnoreds(accId);
+            List<string> x = GetIgnoredPlayers(accId);
             x.Add(ignoreId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
             MySqlCommand cmd = CreateQuery();
@@ -1222,7 +1224,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public bool RemoveIgnore(string accId, string ignoreId)
         {
-            List<string> x = GetIgnoreds(accId);
+            List<string> x = GetIgnoredPlayers(accId);
             x.Remove(ignoreId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
             MySqlCommand cmd = CreateQuery();
@@ -1497,6 +1499,14 @@ bestFame = GREATEST(bestFame, @bestFame);";
             cmd.CommandText = "UPDATE accounts SET gifts=@newGifts WHERE id=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@newGifts", Utils.GetCommaSepString(tmpGifts.ToArray()));
+            cmd.ExecuteNonQuery();
+        }
+
+        public void AddWarning(int id)
+        {
+            var cmd = CreateQuery();
+            cmd.CommandText = "update accounts set warnings = warnings + 1 where id=@AccountId;";
+            cmd.Parameters.AddWithValue("@AccountId", id);
             cmd.ExecuteNonQuery();
         }
     }
