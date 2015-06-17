@@ -8,8 +8,6 @@ namespace wServer.logic
     {
         private _ Events = () => Behav()
 
-        #region Skull Shrine
-
             .Init("Skull Shrine",
                 new State(
                     new Shoot(25, 9, 10, predictive: 1),
@@ -57,10 +55,6 @@ namespace wServer.logic
                     new Shoot(15, 2, 5, 0, predictive: 1, coolDown: 750)
                     )
             )
-
-        #endregion Skull Shrine
-
-        #region Hermit God
 
             .Init("Hermit God",
                 new State(
@@ -185,10 +179,6 @@ namespace wServer.logic
                 )
             )
 
-        #endregion Hermit God
-
-        #region Ghost Ship
-
             .Init("Ghost Ship",
                 new State(
                     new State("idle",
@@ -201,7 +191,5 @@ namespace wServer.logic
                         )
                     )
             );
-
-        #endregion Ghost Ship
     }
 }

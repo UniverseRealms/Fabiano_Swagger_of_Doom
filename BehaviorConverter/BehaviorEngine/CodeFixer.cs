@@ -1,10 +1,8 @@
-﻿using System;
+﻿using BehaviorConverter.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using BehaviorConverter.Exceptions;
 
 namespace BehaviorConverter.BehaviorEngine
 {
@@ -13,7 +11,6 @@ namespace BehaviorConverter.BehaviorEngine
         private readonly string baseSource;
         private readonly List<string> lines;
         private readonly string behaviorField;
-
 
         public CodeFixer(string source)
         {

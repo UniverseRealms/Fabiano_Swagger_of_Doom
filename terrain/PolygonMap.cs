@@ -139,24 +139,14 @@ namespace terrain
         //    double dipAngle = rand.NextDouble() * 2 * Math.PI;
         //    double dipWidth = rand.NextDouble() / 2 + 0.2;
 
-        //    waters.Clear();
-        //    foreach (var i in Polygons)
-        //    {
-        //        int total = 0;
-        //        int water = 0;
-        //        foreach (var j in i.Nodes)
-        //        {
-        //            var x = j.X;
-        //            var y = j.Y;
-        //            var angle = Math.Atan2(y, x);
-        //            var length = 0.5 * (Math.Max(Math.Abs(x), Math.Abs(y)) + Math.Sqrt(x * x + y * y));
+        // waters.Clear(); foreach (var i in Polygons) { int total = 0; int water = 0; foreach (var
+        // j in i.Nodes) { var x = j.X; var y = j.Y; var angle = Math.Atan2(y, x); var length = 0.5
+        // * (Math.Max(Math.Abs(x), Math.Abs(y)) + Math.Sqrt(x * x + y * y));
 
-        //            var r1 = 0.5 + 0.40 * Math.Sin(startAngle + bumps * angle + Math.Cos((bumps + 3) * angle));
-        //            var r2 = 0.7 - 0.20 * Math.Sin(startAngle + bumps * angle - Math.Sin((bumps + 2) * angle));
-        //            if (Math.Abs(angle - dipAngle) < dipWidth ||
-        //                Math.Abs(angle - dipAngle + 2 * Math.PI) < dipWidth ||
-        //                Math.Abs(angle - dipAngle - 2 * Math.PI) < dipWidth)
-        //                r1 = r2 = 0.2;
+        // var r1 = 0.5 + 0.40 * Math.Sin(startAngle + bumps * angle + Math.Cos((bumps + 3) *
+        // angle)); var r2 = 0.7 - 0.20 * Math.Sin(startAngle + bumps * angle - Math.Sin((bumps + 2)
+        // * angle)); if (Math.Abs(angle - dipAngle) < dipWidth || Math.Abs(angle - dipAngle + 2 *
+        // Math.PI) < dipWidth || Math.Abs(angle - dipAngle - 2 * Math.PI) < dipWidth) r1 = r2 = 0.2;
 
         //            if (!(length < r1 || (length > r1 * 0.5 && length < r2)))
         //            {

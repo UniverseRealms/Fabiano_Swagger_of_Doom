@@ -30,10 +30,8 @@ public class WeakReference<T> : WeakReference where T : class
     }
 }
 
-// Provides a weak reference to a null target object, which, unlike
-// other weak references, is always considered to be alive. This
-// facilitates handling null dictionary values, which are perfectly
-// legal.
+// Provides a weak reference to a null target object, which, unlike other weak references, is always
+// considered to be alive. This facilitates handling null dictionary values, which are perfectly legal.
 internal class WeakNullReference<T> : WeakReference<T> where T : class
 {
     public static readonly WeakNullReference<T> Singleton = new WeakNullReference<T>();
@@ -48,8 +46,8 @@ internal class WeakNullReference<T> : WeakReference<T> where T : class
     }
 }
 
-// Provides a weak reference to an object of the given type to be used in
-// a WeakDictionary along with the given comparer.
+// Provides a weak reference to an object of the given type to be used in a WeakDictionary along
+// with the given comparer.
 internal sealed class WeakKeyReference<T> : WeakReference<T> where T : class
 {
     public readonly int HashCode;
@@ -57,19 +55,16 @@ internal sealed class WeakKeyReference<T> : WeakReference<T> where T : class
     public WeakKeyReference(T key, WeakKeyComparer<T> comparer)
         : base(key)
     {
-        // retain the object's hash code immediately so that even
-        // if the target is GC'ed we will be able to find and
-        // remove the dead weak reference.
+        // retain the object's hash code immediately so that even if the target is GC'ed we will be
+        // able to find and remove the dead weak reference.
         HashCode = comparer.GetHashCode(key);
     }
 }
 
-// Compares objects of the given type or WeakKeyReferences to them
-// for equality based on the given comparer. Note that we can only
-// implement IEqualityComparer<T> for T = object as there is no
-// other common base between T and WeakKeyReference<T>. We need a
-// single comparer to handle both types because we don't want to
-// allocate a new weak reference for every lookup.
+// Compares objects of the given type or WeakKeyReferences to them for equality based on the given
+// comparer. Note that we can only implement IEqualityComparer<T> for T = object as there is no
+// other common base between T and WeakKeyReference<T>. We need a single comparer to handle both
+// types because we don't want to allocate a new weak reference for every lookup.
 internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
     where T : class
 {
@@ -90,24 +85,12 @@ internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
         return comparer.GetHashCode((T)obj);
     }
 
-    // Note: There are actually 9 cases to handle here.
-    //
-    //  Let Wa = Alive Weak Reference
-    //  Let Wd = Dead Weak Reference
-    //  Let S  = Strong Reference
-    //
-    //  x  | y  | Equals(x,y)
-    // -------------------------------------------------
-    //  Wa | Wa | comparer.Equals(x.Target, y.Target)
-    //  Wa | Wd | false
-    //  Wa | S  | comparer.Equals(x.Target, y)
-    //  Wd | Wa | false
-    //  Wd | Wd | x == y
-    //  Wd | S  | false
-    //  S  | Wa | comparer.Equals(x, y.Target)
-    //  S  | Wd | false
-    //  S  | S  | comparer.Equals(x, y)
-    // -------------------------------------------------
+    // Note: There are actually 9 cases to handle here. // Let Wa = Alive Weak Reference Let Wd =
+    //       Dead Weak Reference Let S = Strong Reference // x | y | Equals(x,y)
+    // ------------------------------------------------- Wa | Wa | comparer.Equals(x.Target,
+    // y.Target) Wa | Wd | false Wa | S | comparer.Equals(x.Target, y) Wd | Wa | false Wd | Wd | x
+    // == y Wd | S | false S | Wa | comparer.Equals(x, y.Target) S | Wd | false S | S |
+    // comparer.Equals(x, y) -------------------------------------------------
     public new bool Equals(object x, object y)
     {
         bool xIsDead, yIsDead;
@@ -138,16 +121,9 @@ internal sealed class WeakKeyComparer<T> : IEqualityComparer<object>
     }
 }
 
-/// <summary>
-///     Represents a dictionary mapping keys to values.
-/// </summary>
-/// <remarks>
-///     Provides the plumbing for the portions of IDictionary
-///     <TKey,
-///         TValue>
-///         which can reasonably be implemented without any
-///         dependency on the underlying representation of the dictionary.
-/// </remarks>
+/// <summary> Represents a dictionary mapping keys to values. </summary> <remarks> Provides the
+/// plumbing for the portions of IDictionary <TKey, TValue> which can reasonably be implemented
+/// without any dependency on the underlying representation of the dictionary. </remarks>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(PREFIX + "DictionaryDebugView`2" + SUFFIX)]
 public abstract class BaseDictionary<TKey, TValue> : IDictionary<TKey, TValue>
@@ -369,10 +345,9 @@ public sealed class WeakDictionary<TKey, TValue> : BaseDictionary<TKey, TValue>
         dictionary = new Dictionary<object, TValue>(capacity, this.comparer);
     }
 
-    // WARNING: The count returned here may include entries for which
-    // either the key or value objects have already been garbage
-    // collected. Call RemoveCollectedEntries to weed out collected
-    // entries and update the count accordingly.
+    // WARNING: The count returned here may include entries for which either the key or value
+    // objects have already been garbage collected. Call RemoveCollectedEntries to weed out
+    // collected entries and update the count accordingly.
     public override int Count
     {
         get { return dictionary.Count; }
@@ -428,10 +403,9 @@ public sealed class WeakDictionary<TKey, TValue> : BaseDictionary<TKey, TValue>
                 select new KeyValuePair<TKey, TValue>(key, value)).GetEnumerator();
     }
 
-    // Removes the left-over weak references for entries in the dictionary
-    // whose key or value has already been reclaimed by the garbage
-    // collector. This will reduce the dictionary's Count by the number
-    // of dead key-value pairs that were eliminated.
+    // Removes the left-over weak references for entries in the dictionary whose key or value has
+    // already been reclaimed by the garbage collector. This will reduce the dictionary's Count by
+    // the number of dead key-value pairs that were eliminated.
     public void RemoveCollectedEntries()
     {
         List<object> toRemove = null;

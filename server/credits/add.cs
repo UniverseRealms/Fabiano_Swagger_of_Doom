@@ -15,10 +15,8 @@ namespace server.credits
             //{
             //    NameValueCollection query = HttpUtility.ParseQueryString(context.Request.Url.Query);
 
-            //    MySqlCommand cmd = db.CreateQuery();
-            //    cmd.CommandText = "SELECT id FROM accounts WHERE uuid=@uuid";
-            //    cmd.Parameters.AddWithValue("@uuid", query["guid"]);
-            //    object id = cmd.ExecuteScalar();
+            // MySqlCommand cmd = db.CreateQuery(); cmd.CommandText = "SELECT id FROM accounts WHERE
+            // uuid=@uuid"; cmd.Parameters.AddWithValue("@uuid", query["guid"]); object id = cmd.ExecuteScalar();
 
             //    if (id != null)
             //    {

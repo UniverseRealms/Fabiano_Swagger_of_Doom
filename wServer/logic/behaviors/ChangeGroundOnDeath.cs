@@ -12,9 +12,7 @@ namespace wServer.logic.behaviors
         private readonly string[] groundToChange;
         private readonly string[] targetType;
 
-        /// <summary>
-        ///     Changes the ground if the monster dies
-        /// </summary>
+        /// <summary>Changes the ground if the monster dies</summary>
         /// <param name="GroundToChange">The tiles you want to change (null for every tile)</param>
         /// <param name="ChangeTo">The tiles who will replace the old once</param>
         /// <param name="dist">The distance around the monster</param>

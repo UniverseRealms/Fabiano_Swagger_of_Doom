@@ -60,8 +60,6 @@ namespace DungeonGenerator.Templates.MadLab
             return new Rect(x, y, x + w, y + h);
         }
 
-        #region Templates
-
         private static readonly RoomTemplate[] roomTemplates = {
             new RoomTemplate(Rect(24, 0, 26, 24),
                 new Range(1, 4), RoomFlags.Conn_Floor,
@@ -193,8 +191,6 @@ namespace DungeonGenerator.Templates.MadLab
                 Tuple.Create(Direction.South, 8)
                 )
         };
-
-        #endregion Templates
 
         private readonly int currentId;
         private RoomTemplate current;

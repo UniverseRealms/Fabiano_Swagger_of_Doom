@@ -82,7 +82,7 @@ namespace server.@char
                     chrs.Account = Database.CreateGuestAccount(Query["guid"] ?? "");
                     chrs.News = db.GetNews(Program.GameData, null);
                 }
-                MapPoint p = GetLatLong(Context.Request.RemoteEndPoint.Address);
+                MapPoint p = null; //GetLatLong(Context.Request.RemoteEndPoint.Address);
                 if (p != null)
                 {
                     chrs.Lat = p.Latitude.ToString().Replace(',', '.');
@@ -99,6 +99,7 @@ namespace server.@char
                 xws.OmitXmlDeclaration = true;
                 xws.Encoding = Encoding.UTF8;
                 xws.Indent = true;
+                xws.IndentChars = "    ";
                 XmlWriter xtw = XmlWriter.Create(Context.Response.OutputStream, xws);
                 serializer.Serialize(xtw, chrs, chrs.Namespaces);
             }
@@ -142,8 +143,8 @@ namespace server.@char
                 ret.Add(new ServerItem()
                 {
                     Name = Program.Settings.GetValue<string>("svr" + i + "Name"),
-                    Lat = p != null ? p.Latitude : 0,
-                    Long = p != null ? p.Longitude : 0,
+                    Lat = p != null ? p.Latitude : 0.0,
+                    Long = p != null ? p.Longitude : 0.0,
                     DNS = Program.Settings.GetValue<string>("svr" + i + "Adr", "127.0.0.1"),
                     Usage = usage,
                     AdminOnly = Program.Settings.GetValue<bool>("svr" + i + "Admin", "false")

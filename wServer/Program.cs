@@ -24,6 +24,10 @@ namespace wServer
 
         public static bool TestingMerchants { get; private set; }
 
+        public static int MaxAllowedCredit { get; private set; }
+
+        public static int MaxAllowedFame { get; private set; }
+
         internal static SimpleSettings Settings;
 
         private static readonly ILog logger = LogManager.GetLogger("Server");
@@ -58,6 +62,8 @@ namespace wServer
                 WhiteList = Settings.GetValue<bool>("whiteList", "false");
                 Verify = Settings.GetValue<bool>("verifyEmail", "false");
                 TestingMerchants = Settings.GetValue<bool>("testingMerchants", "false");
+                MaxAllowedCredit = Settings.GetValue<int>("maxAllowedCredits", "200000");
+                MaxAllowedFame = Settings.GetValue<int>("maxAllowedFame", "750000");
                 WhiteListTurnOff = Settings.GetValue<DateTime>("whitelistTurnOff");
 
                 manager.Initialize();
@@ -119,16 +125,15 @@ namespace wServer
         private static void AutoBroadcaster()
         {
             var news = File.ReadAllLines("news.txt");
-            do
+            while (true)
             {
                 ChatManager chat = new ChatManager(manager);
                 string text = news[new Random().Next(news.Length)];
                 if (text.StartsWith("$"))
                     chat.Announce(text.Replace("$", string.Empty));
                 else chat.News(text);
-                Thread.Sleep(300000); // 5 Minutes
+                Thread.Sleep(5 * 60 * 1000);
             }
-            while (true);
         }
     }
 }

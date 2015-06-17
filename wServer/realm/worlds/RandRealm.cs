@@ -14,10 +14,7 @@ namespace wServer.realm.worlds
     //        IsLimbo = true;
     //    }
 
-    //    public override World GetInstance(Client psr)
-    //    {
-    //        return Manager.Monitor.GetRandomRealm();
-    //    }
+    // public override World GetInstance(Client psr) { return Manager.Monitor.GetRandomRealm(); }
 
     //    protected override void Init() { }
     //}

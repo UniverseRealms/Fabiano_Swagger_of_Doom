@@ -71,15 +71,12 @@ using System.Linq.Expressions;
 using System.Dynamic;
 #endif
 
-// ReSharper disable LoopCanBeConvertedToQuery
-// ReSharper disable RedundantExplicitArrayCreation
+// ReSharper disable LoopCanBeConvertedToQuery ReSharper disable RedundantExplicitArrayCreation
 // ReSharper disable SuggestUseVarKeywordEvident
 
 namespace Json
 {
-    /// <summary>
-    ///     Represents the json array.
-    /// </summary>
+    /// <summary>Represents the json array.</summary>
     [GeneratedCode("simple-json", "1.0.0")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -90,24 +87,18 @@ namespace Json
 #endif
         class JsonArray : List<object>
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JsonArray" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="JsonArray" /> class.</summary>
         public JsonArray()
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JsonArray" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="JsonArray" /> class.</summary>
         /// <param name="capacity">The capacity of the json array.</param>
         public JsonArray(int capacity) : base(capacity)
         {
         }
 
-        /// <summary>
-        ///     The json representation of the array.
-        /// </summary>
+        /// <summary>The json representation of the array.</summary>
         /// <returns>The json representation of the array.</returns>
         public override string ToString()
         {
@@ -115,9 +106,7 @@ namespace Json
         }
     }
 
-    /// <summary>
-    ///     Represents the json object.
-    /// </summary>
+    /// <summary>Represents the json object.</summary>
     [GeneratedCode("simple-json", "1.0.0")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -132,35 +121,27 @@ namespace Json
 #endif
             IDictionary<string, object>
     {
-        /// <summary>
-        ///     The internal member dictionary.
-        /// </summary>
+        /// <summary>The internal member dictionary.</summary>
         private readonly Dictionary<string, object> _members;
 
-        /// <summary>
-        ///     Initializes a new instance of <see cref="JsonObject" />.
-        /// </summary>
+        /// <summary>Initializes a new instance of <see cref="JsonObject" />.</summary>
         public JsonObject()
         {
             _members = new Dictionary<string, object>();
         }
 
-        /// <summary>
-        ///     Initializes a new instance of <see cref="JsonObject" />.
-        /// </summary>
+        /// <summary>Initializes a new instance of <see cref="JsonObject" />.</summary>
         /// <param name="comparer">
-        ///     The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> implementation to use when
-        ///     comparing keys, or null to use the default <see cref="T:System.Collections.Generic.EqualityComparer`1" /> for the
-        ///     type of the key.
+        /// The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> implementation to
+        /// use when comparing keys, or null to use the default
+        /// <see cref="T:System.Collections.Generic.EqualityComparer`1" /> for the type of the key.
         /// </param>
         public JsonObject(IEqualityComparer<string> comparer)
         {
             _members = new Dictionary<string, object>(comparer);
         }
 
-        /// <summary>
-        ///     Gets the <see cref="System.Object" /> at the specified index.
-        /// </summary>
+        /// <summary>Gets the <see cref="System.Object" /> at the specified index.</summary>
         /// <value></value>
         public object this[int index]
         {
@@ -179,9 +160,7 @@ namespace Json
             return null;
         }
 
-        /// <summary>
-        ///     Adds the specified key.
-        /// </summary>
+        /// <summary>Adds the specified key.</summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         public void Add(string key, object value)
@@ -189,30 +168,22 @@ namespace Json
             _members.Add(key, value);
         }
 
-        /// <summary>
-        ///     Determines whether the specified key contains key.
-        /// </summary>
+        /// <summary>Determines whether the specified key contains key.</summary>
         /// <param name="key">The key.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified key contains key; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the specified key contains key; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(string key)
         {
             return _members.ContainsKey(key);
         }
 
-        /// <summary>
-        ///     Gets the keys.
-        /// </summary>
+        /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
         public ICollection<string> Keys
         {
             get { return _members.Keys; }
         }
 
-        /// <summary>
-        ///     Removes the specified key.
-        /// </summary>
+        /// <summary>Removes the specified key.</summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
         public bool Remove(string key)
@@ -220,9 +191,7 @@ namespace Json
             return _members.Remove(key);
         }
 
-        /// <summary>
-        ///     Tries the get value.
-        /// </summary>
+        /// <summary>Tries the get value.</summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
@@ -231,18 +200,14 @@ namespace Json
             return _members.TryGetValue(key, out value);
         }
 
-        /// <summary>
-        ///     Gets the values.
-        /// </summary>
+        /// <summary>Gets the values.</summary>
         /// <value>The values.</value>
         public ICollection<object> Values
         {
             get { return _members.Values; }
         }
 
-        /// <summary>
-        ///     Gets or sets the <see cref="System.Object" /> with the specified key.
-        /// </summary>
+        /// <summary>Gets or sets the <see cref="System.Object" /> with the specified key.</summary>
         /// <value></value>
         public object this[string key]
         {
@@ -250,38 +215,28 @@ namespace Json
             set { _members[key] = value; }
         }
 
-        /// <summary>
-        ///     Adds the specified item.
-        /// </summary>
+        /// <summary>Adds the specified item.</summary>
         /// <param name="item">The item.</param>
         public void Add(KeyValuePair<string, object> item)
         {
             _members.Add(item.Key, item.Value);
         }
 
-        /// <summary>
-        ///     Clears this instance.
-        /// </summary>
+        /// <summary>Clears this instance.</summary>
         public void Clear()
         {
             _members.Clear();
         }
 
-        /// <summary>
-        ///     Determines whether [contains] [the specified item].
-        /// </summary>
+        /// <summary>Determines whether [contains] [the specified item].</summary>
         /// <param name="item">The item.</param>
-        /// <returns>
-        ///     <c>true</c> if [contains] [the specified item]; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if [contains] [the specified item]; otherwise, <c>false</c>.</returns>
         public bool Contains(KeyValuePair<string, object> item)
         {
             return _members.ContainsKey(item.Key) && _members[item.Key] == item.Value;
         }
 
-        /// <summary>
-        ///     Copies to.
-        /// </summary>
+        /// <summary>Copies to.</summary>
         /// <param name="array">The array.</param>
         /// <param name="arrayIndex">Index of the array.</param>
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
@@ -296,29 +251,21 @@ namespace Json
             }
         }
 
-        /// <summary>
-        ///     Gets the count.
-        /// </summary>
+        /// <summary>Gets the count.</summary>
         /// <value>The count.</value>
         public int Count
         {
             get { return _members.Count; }
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is read only.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if this instance is read only; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary>Gets a value indicating whether this instance is read only.</summary>
+        /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
         public bool IsReadOnly
         {
             get { return false; }
         }
 
-        /// <summary>
-        ///     Removes the specified item.
-        /// </summary>
+        /// <summary>Removes the specified item.</summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
         public bool Remove(KeyValuePair<string, object> item)
@@ -326,20 +273,17 @@ namespace Json
             return _members.Remove(item.Key);
         }
 
-        /// <summary>
-        ///     Gets the enumerator.
-        /// </summary>
+        /// <summary>Gets the enumerator.</summary>
         /// <returns></returns>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             return _members.GetEnumerator();
         }
 
-        /// <summary>
-        ///     Returns an enumerator that iterates through a collection.
-        /// </summary>
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
+        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate
+        /// through the collection.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -347,11 +291,9 @@ namespace Json
         }
 
         /// <summary>
-        ///     Returns a json <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
+        /// Returns a json <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
         /// </summary>
-        /// <returns>
-        ///     A json <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
-        /// </returns>
+        /// <returns>A json <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.</returns>
         public override string ToString()
         {
             return SimpleJson.SerializeObject(this);
@@ -359,13 +301,21 @@ namespace Json
 
 #if SIMPLE_JSON_DYNAMIC
 	/// <summary>
-	/// Provides implementation for type conversion operations. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations that convert an object from one type to another.
+	/// Provides implementation for type conversion operations. Classes derived from the
+	/// <see cref="T:System.Dynamic.DynamicObject" /> class can override this method to specify
+	/// dynamic behavior for operations that convert an object from one type to another.
 	/// </summary>
-	/// <param name="binder">Provides information about the conversion operation. The binder.Type property provides the type to which the object must be converted. For example, for the statement (String)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Type returns the <see cref="T:System.String"/> type. The binder.Explicit property provides information about the kind of conversion that occurs. It returns true for explicit conversion and false for implicit conversion.</param>
+	/// <param name="binder">
+	/// Provides information about the conversion operation. The binder.Type property provides the
+	/// type to which the object must be converted. For example, for the statement
+	/// (String)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject
+	/// is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject" />
+	/// class, binder.Type returns the <see cref="T:System.String" /> type. The binder.Explicit
+	/// property provides information about the kind of conversion that occurs. It returns true for
+	/// explicit conversion and false for implicit conversion.
+	/// </param>
 	/// <param name="result">The result of the type conversion operation.</param>
-	/// <returns>
-	/// Alwasy returns true.
-	/// </returns>
+	/// <returns>Alwasy returns true.</returns>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
             // <pex>
@@ -387,12 +337,11 @@ namespace Json
         }
 
         /// <summary>
-        /// Provides the implementation for operations that delete an object member. This method is not intended for use in C# or Visual Basic.
+        /// Provides the implementation for operations that delete an object member. This method is
+        /// not intended for use in C# or Visual Basic.
         /// </summary>
         /// <param name="binder">Provides information about the deletion.</param>
-        /// <returns>
-        /// Alwasy returns true.
-        /// </returns>
+        /// <returns>Alwasy returns true.</returns>
         public override bool TryDeleteMember(DeleteMemberBinder binder)
         {
             // <pex>
@@ -403,14 +352,18 @@ namespace Json
         }
 
         /// <summary>
-        /// Provides the implementation for operations that get a value by index. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for indexing operations.
+        /// Provides the implementation for operations that get a value by index. Classes derived
+        /// from the <see cref="T:System.Dynamic.DynamicObject" /> class can override this method to
+        /// specify dynamic behavior for indexing operations.
         /// </summary>
         /// <param name="binder">Provides information about the operation.</param>
-        /// <param name="indexes">The indexes that are used in the operation. For example, for the sampleObject[3] operation in C# (sampleObject(3) in Visual Basic), where sampleObject is derived from the DynamicObject class, <paramref name="indexes"/> is equal to 3.</param>
+        /// <param name="indexes">
+        /// The indexes that are used in the operation. For example, for the sampleObject[3]
+        /// operation in C# (sampleObject(3) in Visual Basic), where sampleObject is derived from
+        /// the DynamicObject class, <paramref name="indexes" /> is equal to 3.
+        /// </param>
         /// <param name="result">The result of the index operation.</param>
-        /// <returns>
-        /// Alwasy returns true.
-        /// </returns>
+        /// <returns>Alwasy returns true.</returns>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
             if (indexes == null) throw new ArgumentNullException("indexes");
@@ -424,13 +377,23 @@ namespace Json
         }
 
         /// <summary>
-        /// Provides the implementation for operations that get member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as getting a value for a property.
+        /// Provides the implementation for operations that get member values. Classes derived from
+        /// the <see cref="T:System.Dynamic.DynamicObject" /> class can override this method to
+        /// specify dynamic behavior for operations such as getting a value for a property.
         /// </summary>
-        /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member on which the dynamic operation is performed. For example, for the Console.WriteLine(sampleObject.SampleProperty) statement, where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param>
-        /// <param name="result">The result of the get operation. For example, if the method is called for a property, you can assign the property value to <paramref name="result"/>.</param>
-        /// <returns>
-        /// Alwasy returns true.
-        /// </returns>
+        /// <param name="binder">
+        /// Provides information about the object that called the dynamic operation. The binder.Name
+        /// property provides the name of the member on which the dynamic operation is performed.
+        /// For example, for the Console.WriteLine(sampleObject.SampleProperty) statement, where
+        /// sampleObject is an instance of the class derived from the
+        /// <see cref="T:System.Dynamic.DynamicObject" /> class, binder.Name returns
+        /// "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.
+        /// </param>
+        /// <param name="result">
+        /// The result of the get operation. For example, if the method is called for a property,
+        /// you can assign the property value to <paramref name="result" />.
+        /// </param>
+        /// <returns>Alwasy returns true.</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             object value;
@@ -444,13 +407,27 @@ namespace Json
         }
 
         /// <summary>
-        /// Provides the implementation for operations that set a value by index. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations that access objects by a specified index.
+        /// Provides the implementation for operations that set a value by index. Classes derived
+        /// from the <see cref="T:System.Dynamic.DynamicObject" /> class can override this method to
+        /// specify dynamic behavior for operations that access objects by a specified index.
         /// </summary>
         /// <param name="binder">Provides information about the operation.</param>
-        /// <param name="indexes">The indexes that are used in the operation. For example, for the sampleObject[3] = 10 operation in C# (sampleObject(3) = 10 in Visual Basic), where sampleObject is derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, <paramref name="indexes"/> is equal to 3.</param>
-        /// <param name="value">The value to set to the object that has the specified index. For example, for the sampleObject[3] = 10 operation in C# (sampleObject(3) = 10 in Visual Basic), where sampleObject is derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, <paramref name="value"/> is equal to 10.</param>
+        /// <param name="indexes">
+        /// The indexes that are used in the operation. For example, for the sampleObject[3] = 10
+        /// operation in C# (sampleObject(3) = 10 in Visual Basic), where sampleObject is derived
+        /// from the <see cref="T:System.Dynamic.DynamicObject" /> class,
+        /// <paramref name="indexes" /> is equal to 3.
+        /// </param>
+        /// <param name="value">
+        /// The value to set to the object that has the specified index. For example, for the
+        /// sampleObject[3] = 10 operation in C# (sampleObject(3) = 10 in Visual Basic), where
+        /// sampleObject is derived from the <see cref="T:System.Dynamic.DynamicObject" /> class,
+        /// <paramref name="value" /> is equal to 10.
+        /// </param>
         /// <returns>
-        /// true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.
+        /// true if the operation is successful; otherwise, false. If this method returns false, the
+        /// run-time binder of the language determines the behavior. (In most cases, a
+        /// language-specific run-time exception is thrown.
         /// </returns>
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
@@ -464,12 +441,27 @@ namespace Json
         }
 
         /// <summary>
-        /// Provides the implementation for operations that set member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as setting a value for a property.
+        /// Provides the implementation for operations that set member values. Classes derived from
+        /// the <see cref="T:System.Dynamic.DynamicObject" /> class can override this method to
+        /// specify dynamic behavior for operations such as setting a value for a property.
         /// </summary>
-        /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member to which the value is being assigned. For example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param>
-        /// <param name="value">The value to set to the member. For example, for sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, the <paramref name="value"/> is "Test".</param>
+        /// <param name="binder">
+        /// Provides information about the object that called the dynamic operation. The binder.Name
+        /// property provides the name of the member to which the value is being assigned. For
+        /// example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is
+        /// an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject" />
+        /// class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies
+        /// whether the member name is case-sensitive.
+        /// </param>
+        /// <param name="value">
+        /// The value to set to the member. For example, for sampleObject.SampleProperty = "Test",
+        /// where sampleObject is an instance of the class derived from the
+        /// <see cref="T:System.Dynamic.DynamicObject" /> class, the <paramref name="value" /> is "Test".
+        /// </param>
         /// <returns>
-        /// true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)
+        /// true if the operation is successful; otherwise, false. If this method returns false, the
+        /// run-time binder of the language determines the behavior. (In most cases, a
+        /// language-specific run-time exception is thrown.)
         /// </returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
@@ -481,12 +473,8 @@ namespace Json
             return true;
         }
 
-        /// <summary>
-        /// Returns the enumeration of all dynamic member names.
-        /// </summary>
-        /// <returns>
-        /// A sequence that contains dynamic member names.
-        /// </returns>
+        /// <summary>Returns the enumeration of all dynamic member names.</summary>
+        /// <returns>A sequence that contains dynamic member names.</returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             foreach (var key in Keys)
@@ -499,11 +487,10 @@ namespace Json
 namespace Json
 {
     /// <summary>
-    ///     This class encodes and decodes JSON strings.
-    ///     Spec. details, see http://www.json.org/
-    ///     JSON uses Arrays and Objects. These correspond here to the datatypes JsonArray(IList&lt;object>) and
-    ///     JsonObject(IDictionary&lt;string,object>).
-    ///     All numbers are parsed to doubles.
+    /// This class encodes and decodes JSON strings. Spec. details, see http://www.json.org/ JSON
+    /// uses Arrays and Objects. These correspond here to the datatypes
+    /// JsonArray(IList&lt;object&gt;) and JsonObject(IDictionary&lt;string,object&gt;). All numbers
+    /// are parsed to doubles.
     /// </summary>
     [GeneratedCode("simple-json", "1.0.0")]
 #if SIMPLE_JSON_INTERNAL
@@ -543,11 +530,12 @@ namespace Json
             EscapeTable['\t'] = 't';
         }
 
-        /// <summary>
-        ///     Parses the string json into a value
-        /// </summary>
+        /// <summary>Parses the string json into a value</summary>
         /// <param name="json">A JSON string.</param>
-        /// <returns>An IList&lt;object>, a IDictionary&lt;string,object>, a double, a string, null, true, or false</returns>
+        /// <returns>
+        /// An IList&lt;object&gt;, a IDictionary&lt;string,object&gt;, a double, a string, null,
+        /// true, or false
+        /// </returns>
         public static object DeserializeObject(string json)
         {
             object obj;
@@ -556,18 +544,10 @@ namespace Json
             throw new SerializationException("Invalid JSON string");
         }
 
-        /// <summary>
-        ///     Try parsing the json string into a value.
-        /// </summary>
-        /// <param name="json">
-        ///     A JSON string.
-        /// </param>
-        /// <param name="obj">
-        ///     The object.
-        /// </param>
-        /// <returns>
-        ///     Returns true if successfull otherwise false.
-        /// </returns>
+        /// <summary>Try parsing the json string into a value.</summary>
+        /// <param name="json">A JSON string.</param>
+        /// <param name="obj">The object.</param>
+        /// <returns>Returns true if successfull otherwise false.</returns>
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification = "Need to support .NET 2")]
         public static bool TryDeserializeObject(string json, out object obj)
         {
@@ -608,9 +588,9 @@ namespace Json
         }
 
         /// <summary>
-        ///     Converts a IDictionary&lt;string,object> / IList&lt;object> object into a JSON string
+        /// Converts a IDictionary&lt;string,object&gt; / IList&lt;object&gt; object into a JSON string
         /// </summary>
-        /// <param name="json">A IDictionary&lt;string,object> / IList&lt;object></param>
+        /// <param name="json">A IDictionary&lt;string,object&gt; / IList&lt;object&gt;</param>
         /// <param name="jsonSerializerStrategy">Serializer strategy to use</param>
         /// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
         public static string SerializeObject(object json, IJsonSerializerStrategy jsonSerializerStrategy)
@@ -904,7 +884,7 @@ namespace Json
 
         private static string ConvertFromUtf32(int utf32)
         {
-            // http://www.java2s.com/Open-Source/CSharp/2.6.4-mono-.net-core/System/System/Char.cs.htm
+            // http: //www.java2s.com/Open-Source/CSharp/2.6.4-mono-.net-core/System/System/Char.cs.htm
             if (utf32 < 0 || utf32 > 0x10FFFF)
                 throw new ArgumentOutOfRangeException("utf32", "The argument must be from 0 to 0x10FFFF.");
             if (0xD800 <= utf32 && utf32 <= 0xDFFF)
@@ -1145,9 +1125,9 @@ namespace Json
             {
                 char c = charArray[i];
 
-                // Non ascii characters are fine, buffer them up and send them to the builder
-                // in larger chunks if possible. The escape table is a 1:1 translation table
-                // with \0 [default(char)] denoting a safe character.
+                // Non ascii characters are fine, buffer them up and send them to the builder in
+                // larger chunks if possible. The escape table is a 1:1 translation table with \0
+                // [default(char)] denoting a safe character.
                 if (c >= EscapeTable.Length || EscapeTable[c] == default(char))
                 {
                     safeCharacterCount++;
@@ -1194,8 +1174,7 @@ namespace Json
         }
 
         /// <summary>
-        ///     Determines if a given object is numeric in any way
-        ///     (can be integer, double, null, etc).
+        /// Determines if a given object is numeric in any way (can be integer, double, null, etc).
         /// </summary>
         private static bool IsNumeric(object value)
         {
@@ -1642,8 +1621,8 @@ namespace Json
 
     namespace Reflection
     {
-        // This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
-        // that might be in place in the target project.
+        // This class is meant to be copied into other libraries. So we want to exclude it from Code
+        // Analysis rules that might be in place in the target project.
         [GeneratedCode("reflection-utils", "1.0.0")]
 #if SIMPLE_JSON_REFLECTION_UTILS_PUBLIC
         public
@@ -2186,6 +2165,5 @@ namespace Json
     }
 }
 
-// ReSharper restore LoopCanBeConvertedToQuery
-// ReSharper restore RedundantExplicitArrayCreation
+// ReSharper restore LoopCanBeConvertedToQuery ReSharper restore RedundantExplicitArrayCreation
 // ReSharper restore SuggestUseVarKeywordEvident

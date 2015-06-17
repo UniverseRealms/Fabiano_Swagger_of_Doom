@@ -212,8 +212,7 @@ namespace wServer.realm
         {
             // 0 <= u < 2^32
             var u = (uint)(rand.NextDouble() * uint.MaxValue);
-            // The magic number below is 1/(2^32 + 2).
-            // The result is strictly between 0 and 1.
+            // The magic number below is 1/(2^32 + 2). The result is strictly between 0 and 1.
             return (u + 1.0) * 2.328306435454494e-10;
         }
 

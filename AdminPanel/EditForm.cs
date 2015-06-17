@@ -23,9 +23,7 @@ namespace AdminPanel
             this.metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
             this.metroButton1 = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
-            //
-            // metroTextBox1
-            //
+            // // metroTextBox1
             this.metroTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -42,9 +40,7 @@ namespace AdminPanel
             this.metroTextBox1.TabIndex = 0;
             this.metroTextBox1.Text = "metroTextBox1";
             this.metroTextBox1.UseSelectable = true;
-            //
-            // metroButton1
-            //
+            // // metroButton1
             this.metroButton1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.metroButton1.Location = new System.Drawing.Point(23, 434);
@@ -54,9 +50,7 @@ namespace AdminPanel
             this.metroButton1.Text = "Save Settings";
             this.metroButton1.UseSelectable = true;
             this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
-            //
-            // EditForm
-            //
+            // // EditForm
             this.ClientSize = new System.Drawing.Size(500, 494);
             this.Controls.Add(this.metroButton1);
             this.Controls.Add(this.metroTextBox1);

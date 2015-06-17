@@ -140,8 +140,7 @@ namespace terrain
                 double vxi = points[0];
                 double vyi = points[1];
 
-                // Find all intersections
-                // Based on http://alienryderflex.com/polygon_fill/
+                // Find all intersections Based on http://alienryderflex.com/polygon_fill/
                 int intersectionCount = 0;
                 for (int i = 2; i < pn; i += 2)
                 {
@@ -160,8 +159,8 @@ namespace terrain
                     vyi = vyj;
                 }
 
-                // Sort the intersections from left to right using Insertion sort
-                // It's faster than Array.Sort for this small data set
+                // Sort the intersections from left to right using Insertion sort It's faster than
+                // Array.Sort for this small data set
                 double t;
                 int j;
                 for (int i = 1; i < intersectionCount; i++)

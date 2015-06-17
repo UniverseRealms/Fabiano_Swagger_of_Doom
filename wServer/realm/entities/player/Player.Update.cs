@@ -203,7 +203,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception e)
             {
-                logger.Error(e);
+                Entity.logger.Error(e);
             }
             if (Quest != null &&
                 (!lastUpdate.ContainsKey(Quest) || Quest.UpdateCount > lastUpdate[Quest]))

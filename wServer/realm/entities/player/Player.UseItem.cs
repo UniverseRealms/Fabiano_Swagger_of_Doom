@@ -210,7 +210,7 @@ namespace wServer.realm.entities.player
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                Entity.logger.Error(ex);
             }
         }
 
@@ -225,7 +225,7 @@ namespace wServer.realm.entities.player
 
             if (pkt.SlotObject.SlotId != 255 && pkt.SlotObject.SlotId != 254 && con.Inventory[pkt.SlotObject.SlotId] != item)
             {
-                logger.FatalFormat("Cheat engine detected for player {0},\nItem should be {1}, but its {2}.",
+                Entity.logger.FatalFormat("Cheat engine detected for player {0},\nItem should be {1}, but its {2}.",
                     Name, Inventory[pkt.SlotObject.SlotId].ObjectId, item.ObjectId);
                 foreach (Player player in Owner.Players.Values)
                     if (player.Client.Account.Rank >= 2)
@@ -412,7 +412,8 @@ namespace wServer.realm.entities.player
 
                             this.Aoe(rangeSBA, true, player =>
                             {
-                                // TODO support for noStack StatBoostAura attribute (paladin total hp increase / insta heal)
+                                // TODO support for noStack StatBoostAura attribute (paladin total
+                                // hp increase / insta heal)
                                 ApplyConditionEffect(new ConditionEffect
                                 {
                                     DurationMS = durationSBA,
@@ -827,12 +828,12 @@ namespace wServer.realm.entities.player
                                 }
                                 catch (Exception ex)
                                 {
-                                    logger.ErrorFormat("Poison ShowEffect:\n{0}", ex);
+                                    Entity.logger.ErrorFormat("Poison ShowEffect:\n{0}", ex);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                logger.ErrorFormat("Poisons General:\n{0}", ex);
+                                Entity.logger.ErrorFormat("Poisons General:\n{0}", ex);
                             }
                         }
                         break;
@@ -968,7 +969,7 @@ namespace wServer.realm.entities.player
                                 catch (Exception ex)
                                 //couldn't remove portal, Owner became null. Should be fixed with RealmManager implementation
                                 {
-                                    log.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                    logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                                 }
                             }));
                         }
@@ -1135,7 +1136,7 @@ namespace wServer.realm.entities.player
                             }
                             catch (Exception ex)
                             {
-                                logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
+                                Entity.logger.ErrorFormat("Couldn't despawn portal.\n{0}", ex);
                             }
                         }));
                         break;
@@ -1165,7 +1166,8 @@ namespace wServer.realm.entities.player
                             }
                         });
 
-                        // replaced this last bit with what I had, never noticed any issue with it. Perhaps I'm wrong?
+                        // replaced this last bit with what I had, never noticed any issue with it.
+                        // Perhaps I'm wrong?
                         BroadcastSync(new ShowEffectPacket()
                         {
                             EffectType = (EffectType)eff.VisualEffect,

@@ -56,9 +56,7 @@ namespace wServer.realm
             return entity.Owner.GetEntity(entityId);
         }
 
-        /// <summary>
-        /// Only for enemys
-        /// </summary>
+        /// <summary>Only for enemys</summary>
         public static IEnumerable<Entity> GetNearestEntities(this Entity entity, double dist)
         {
             if (entity.Owner == null) yield break;

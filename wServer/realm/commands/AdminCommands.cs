@@ -73,7 +73,7 @@ namespace wServer.realm.commands
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            player.SendInfo("X: " + (int)player.X + " - Y: " + (int)player.Y);
+            player.SendInfo($"({(int)player.X}, {(int)player.Y})");
             return true;
         }
     }
@@ -992,27 +992,12 @@ namespace wServer.realm.commands
     //    public string Command { get { return "unban"; } }
     //    public int RequiredRank { get { return 4; } }
 
-    //    protected override bool Process(Player player, RealmTime time, string[] args)
-    //    {
-    //        if (args.Length == 0)
-    //        {
-    //            player.SendHelp("Usage: /unban <username>");
-    //        }
-    //        try
-    //        {
-    //            using (Database dbx = new Database())
-    //            {
-    //                var cmd = dbx.CreateQuery();
-    //                cmd.CommandText = "UPDATE accounts SET banned=0, rank=1 WHERE name=@name";
-    //                cmd.Parameters.AddWithValue("@name", args[0]);
-    //                if (cmd.ExecuteNonQuery() == 0)
-    //                {
-    //                    player.SendInfo("Could not unban");
-    //                }
-    //                else
-    //                {
-    //                    player.SendInfo("Account successfully Unbanned");
-    //                    log.InfoFormat(args[1] + " was Unbanned.");
+    // protected override bool Process(Player player, RealmTime time, string[] args) { if
+    // (args.Length == 0) { player.SendHelp("Usage: /unban <username>"); } try { using (Database dbx
+    // = new Database()) { var cmd = dbx.CreateQuery(); cmd.CommandText = "UPDATE accounts SET
+    // banned=0, rank=1 WHERE name=@name"; cmd.Parameters.AddWithValue("@name", args[0]); if
+    // (cmd.ExecuteNonQuery() == 0) { player.SendInfo("Could not unban"); } else {
+    // player.SendInfo("Account successfully Unbanned"); log.InfoFormat(args[1] + " was Unbanned.");
 
     //                }
     //            }

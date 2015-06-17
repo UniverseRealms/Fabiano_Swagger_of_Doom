@@ -5,9 +5,7 @@ namespace AdminPanel
 {
     internal static class Program
     {
-        /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
-        /// </summary>
+        /// <summary>Der Haupteinstiegspunkt für die Anwendung.</summary>
         [STAThread]
         private static void Main()
         {

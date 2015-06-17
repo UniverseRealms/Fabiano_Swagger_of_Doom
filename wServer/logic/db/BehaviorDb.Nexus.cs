@@ -23,15 +23,10 @@
 //                    )
 //            );
 
-//        public static string GenerateCode()
-//        {
-//            string contents = String.Empty;
+// public static string GenerateCode() { string contents = String.Empty;
 
-//            for (int i = 0; i < 5; i++)
-//            {
-//                int y = Random.Next(0, stuff.Count);
-//                contents += stuff[y].Key + stuff[y].Value + Environment.NewLine;
-//            }
+// for (int i = 0; i < 5; i++) { int y = Random.Next(0, stuff.Count); contents += stuff[y].Key +
+// stuff[y].Value + Environment.NewLine; }
 
 //            using (var db = new Database())
 //            {
