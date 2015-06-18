@@ -1,0 +1,35 @@
+[
+    {
+        "slot": 2,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1434377423000,
+        "title": "FREE Pet Food!",
+        "image": "http://rotmg.kabamcdn.com/FreePetFoodSmallModal.jpg",
+        "endTime": 1435017540000,
+        "linkDetail": "546",
+        "priority": 885
+    },
+    {
+        "slot": 3,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1434394517000,
+        "title": "Big Bag o' Keys SALE",
+        "image": "http://rotmg.kabamcdn.com/BigBagOfKeysModal.png",
+        "endTime": 1435017540000,
+        "linkDetail": "547",
+        "priority": 886
+    },
+    {
+        "slot": 1,
+        "linkType": 2,
+        "platform": "kabam.com,kongregate,steam,rotmg",
+        "startTime": 1434395452000,
+        "title": "Rare Humanoid Pack",
+        "image": "http://rotmg.kabamcdn.com/RareHumanoidLargeNewsModal.png",
+        "endTime": 1435017540000,
+        "linkDetail": "548",
+        "priority": 887
+    }
+]

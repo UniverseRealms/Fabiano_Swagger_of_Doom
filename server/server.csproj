@@ -197,6 +197,9 @@
     <Content Include="game\fonts\glyphicons-halflings-regular.woff2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="game\getProdStuff.php">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="game\lib\mulelogin.au3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
