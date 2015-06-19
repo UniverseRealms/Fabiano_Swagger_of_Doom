@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageResponse>
+    <Packages>
+        <Package id="547">
+            <Name>Big Bag O' Keys [Limit 1 Per Account]</Name>
+            <Price>3500</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://rotmg.kabamcdn.com/Big-Bag-of-Keys-Modal.png</BgURL>
+            <EndDate>06/22/2015 23:59:00 GMT-0800</EndDate>
+        </Package>
+        <Package id="546">
+            <Name>FREE Pet Food!</Name>
+            <Price>0</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://rotmg.kabamcdn.com/FreePetFoodBigModal.jpg</BgURL>
+            <EndDate>06/22/2015 23:59:00 GMT-0800</EndDate>
+        </Package>
+        <Package id="548">
+            <Name>Rare Humanoid Pack</Name>
+            <Price>8000</Price>
+            <Quantity>-1</Quantity>
+            <MaxPurchase>-1</MaxPurchase>
+            <Weight>0</Weight>
+            <BgURL>http://rotmg.kabamcdn.com/RareHumanoidPackageModal.png</BgURL>
+            <EndDate>06/22/2015 23:59:00 GMT-0800</EndDate>
+        </Package>
+    </Packages>
+</PackageResponse>
