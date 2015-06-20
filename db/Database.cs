@@ -416,6 +416,7 @@ AND characters.charId=death.chrId;";
                     Password = password ?? rdr.GetString("password"),
                     VisibleMuledump = rdr.GetInt32("publicMuledump") == 1,
                     Rank = rdr.GetInt32("rank"),
+                    Warnings = rdr.GetInt32("warnings"),
                     Banned = rdr.GetBoolean("banned"),
                     BeginnerPackageTimeLeft = 0,
                     PetYardType = rdr.GetInt32("petYardType"),
