@@ -10,6 +10,9 @@ namespace wServer.realm.worlds
 {
     public class Nexus : World
     {
+        public const string WINTER_RESOURCE = "wServer.realm.worlds.maps.nexus_winter.jm";
+        public const string SUMMER_RESOURCE = "wServer.realm.worlds.maps.nexus_summer.jm";
+
         public Nexus()
         {
             Id = NEXUS_ID;
@@ -22,7 +25,7 @@ namespace wServer.realm.worlds
 
         protected override void Init()
         {
-            LoadMap("wServer.realm.worlds.maps.nexus_winter.jm", MapType.Json);
+            LoadMap(SUMMER_RESOURCE, MapType.Json);
         }
 
         public override void Tick(RealmTime time)

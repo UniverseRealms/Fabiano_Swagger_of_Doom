@@ -129,7 +129,7 @@ namespace server
                 {
                     using (var wtr = new StreamWriter(context.Response.OutputStream))
                     {
-                        var file = "game" + (context.Request.RawUrl == "/" ? "/index.php" : context.Request.RawUrl);
+                        var file = "www" + (context.Request.RawUrl == "/" ? Settings.GetValue("indexPage", "/index.html") : context.Request.RawUrl);
                         if (file.Contains("?"))
                             file = file.Remove(file.IndexOf('?'));
                         var info = new FileInfo(file);
@@ -140,12 +140,12 @@ namespace server
                         }
                         if (File.Exists(file))
                         {
-                            if (file.StartsWith("game/Testing.html"))
-                                file = Settings.GetValue<bool>("testingOnline", "false") ? "game/Testing.html" : "game/TestingIsOffline.html";
+                            if (file.StartsWith("www/Testing.html"))
+                                file = Settings.GetValue<bool>("testingOnline", "false") ? "www/Testing.html" : "www/TestingIsOffline.html";
                             SendFile(file, context);
                         }
                         else
-                            SendFile("game/404.html", context);
+                            SendFile("www/404.html", context);
                     }
                 }
                 else
@@ -178,8 +178,8 @@ namespace server
         private static readonly Dictionary<string, string> replaceVars = new Dictionary<string, string>()
         {
             {"{URL}", "PROPERTYCALL:RawUrl"},
-            {"{GAMECLIENT}", "PATH:game/version.txt"},
-            {"{TESTINGCLIENT}", "PATH:game/testingVersion.txt"},
+            {"{GAMECLIENT}", "PATH:www/version.txt"},
+            {"{TESTINGCLIENT}", "PATH:www/testingVersion.txt"},
             {"{TRANSFERENGINEVERSION}", account.getProdAccount.TRANSFERENGINEVERSION},
         };
 

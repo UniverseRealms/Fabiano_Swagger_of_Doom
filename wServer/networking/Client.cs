@@ -203,8 +203,8 @@ namespace wServer.networking
         {
             Manager.Database.DoActionAsync(db =>
             {
-                var key = db.GenerateGiftcode(code.ToJson());
-                Player.SendInfo($"You received a {type} Giftcode: {key}. You can redeem it at:\n{Program.ServerDomain}/GiftCode.html");
+                var key = db.GenerateGiftcode(code.ToJson(), Account.AccountId);
+                Player.SendInfo($"You have received a new GiftCode: {key}\nRedeem it at: {Program.Settings.GetValue("serverDomain")}/GiftCode.html or\n type /giftcode to scan it with your mobile via qr code");
             });
         }
 

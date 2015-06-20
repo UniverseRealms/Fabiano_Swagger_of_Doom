@@ -133,7 +133,6 @@
     <Compile Include="account\checkGiftCode.cs" />
     <Compile Include="account\forgotPassword.cs" />
     <Compile Include="account\getProdAccount.cs" />
-    <Compile Include="account\listGiftCodes.cs" />
     <Compile Include="account\playFortuneGame.cs" />
     <Compile Include="account\purchaseCharSlot.cs" />
     <Compile Include="account\purchaseSkin.cs" />
@@ -176,52 +175,49 @@
   <ItemGroup>
     <Compile Include="account\register.cs" />
     <None Include="App.config" />
-    <Content Include="game\CHANGELOG.md">
+    <Content Include="www\AssembleeGameClient1434817396.swf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\client-localhost.swf">
+    <Content Include="www\CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\realmofthemadgod.css">
+    <Content Include="www\css\realmofthemadgod.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\fonts\glyphicons-halflings-regular.eot">
+    <Content Include="www\fonts\glyphicons-halflings-regular.eot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\fonts\glyphicons-halflings-regular.ttf">
+    <Content Include="www\fonts\glyphicons-halflings-regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\fonts\glyphicons-halflings-regular.woff">
+    <Content Include="www\fonts\glyphicons-halflings-regular.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\fonts\glyphicons-halflings-regular.woff2">
+    <Content Include="www\fonts\glyphicons-halflings-regular.woff2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="game\getProdStuff.php">
+    <None Include="www\getProdStuff.php">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="game\lib\mulelogin.au3">
+    <None Include="www\lib\mulelogin.au3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="game\README.md">
+    <Content Include="www\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\sf_code.jsp">
+    <Content Include="www\sf_code.jsp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\sf_main.jsp">
+    <Content Include="www\sf_main.jsp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\sf_preloader.jsp">
+    <Content Include="www\sf_preloader.jsp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="log4net_server.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <Content Include="game\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="php\ext\php_bz2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -312,196 +308,187 @@
     <Content Include="app\Languages\en.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\404.html">
+    <Content Include="www\404.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\client-release.swf">
+    <Content Include="www\cookielib.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\cookielib.js">
+    <Content Include="www\css\bootstrap-theme.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\bootstrap-theme.min.css">
+    <Content Include="www\css\bootstrap.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\bootstrap.min.css">
+    <Content Include="www\fonts\glyphicons-halflings-regular.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\fonts\glyphicons-halflings-regular.svg">
+    <Content Include="www\GiftCodeSuccess.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\game.html">
+    <Content Include="www\js\bootstrap.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\GiftCodeSuccess.html">
+    <Content Include="www\js\jquery-2.1.4.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\bootstrap.min.js">
+    <Content Include="www\scarabs.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\jquery-2.1.4.min.js">
+    <Content Include="www\Testing.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\scarabs.gif">
+    <Content Include="www\InvalidGiftCode.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\Testing.html">
+    <Content Include="www\GiftCode.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\InvalidGiftCode.html">
+    <Content Include="www\TestingIsOffline.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\GiftCode.html">
+    <Content Include="www\TestingIsOffline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\TestingIsOffline.html">
+    <Content Include="www\testingVersion.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\TestingIsOffline.png">
+    <Content Include="www\TransferAccount.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\testingVersion.txt">
+    <Content Include="www\verifyFail.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\TransferAccount.html">
+    <Content Include="www\verifySuccess.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\verifyFail.html">
+    <Content Include="www\css\KBPAY.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\verifySuccess.html">
+    <Content Include="www\css\rotmg.common.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\KBPAY.css">
+    <Content Include="www\css\skin_rotmg.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\rotmg.common.css">
+    <Content Include="www\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\css\skin_rotmg.css">
+    <Content Include="www\images\logo-300x65.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\favicon.ico">
+    <Content Include="www\js\AC_OETags.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\images\logo-300x65.png">
+    <Content Include="www\js\base_single_icon.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\index-.html">
+    <Content Include="www\js\jquery-1.7.1.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\AC_OETags.js">
+    <Content Include="www\js\jquery-1.8.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\base_single_icon.js">
+    <Content Include="www\js\KBPAY_api%281%29.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\jquery-1.7.1.min.js">
+    <Content Include="www\js\KBPAY_api.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\jquery-1.8.0.min.js">
+    <Content Include="www\js\legacyRadioController.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\KBPAY_api%281%29.js">
+    <Content Include="www\js\pct.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\KBPAY_api.js">
+    <Content Include="www\js\rotmg.KabamPayment.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\legacyRadioController.js">
+    <Content Include="www\js\rotmg.Marketing.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\pct.js">
+    <Content Include="www\js\rotmg.SalesForce.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\rotmg.KabamPayment.js">
+    <Content Include="www\js\rotmg.UrlLib.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\rotmg.Marketing.js">
+    <Content Include="www\js\trimpath-template-1.0.38.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\rotmg.SalesForce.js">
+    <Content Include="www\logowtext.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\rotmg.UrlLib.js">
+    <Content Include="www\lib\constants.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\js\trimpath-template-1.0.38.js">
+    <Content Include="www\lib\dump.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\logowtext.png">
+    <Content Include="www\lib\export.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\constants.js">
+    <Content Include="www\lib\favicon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\dump.css">
+    <Content Include="www\lib\hp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\export.js">
+    <Content Include="www\lib\jquery.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\favicon.png">
+    <Content Include="www\lib\jquery.masonry.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\hp.png">
+    <Content Include="www\lib\jquery.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\jquery.js">
+    <Content Include="www\lib\masonry.pkgd.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\jquery.masonry.min.js">
+    <Content Include="www\lib\mp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\jquery.min.js">
+    <Content Include="www\lib\muledump.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\masonry.pkgd.min.js">
+    <Content Include="www\lib\options.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\mp.png">
+    <Content Include="www\lib\pcstats.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\muledump.js">
+    <Content Include="www\lib\portrait.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\options.js">
+    <Content Include="www\lib\prices.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\pcstats.js">
+    <Content Include="www\lib\renders.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\portrait.js">
+    <Content Include="www\lib\sheets.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\prices.js">
+    <Content Include="www\muledump.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\renders.png">
+    <Content Include="www\rmgdirectp2.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\lib\sheets.js">
+    <Content Include="www\saved_resource.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\muledump.html">
+    <Content Include="www\login.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\rmgdirectp2.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="game\saved_resource.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="game\login.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="game\userData.htm">
+    <Content Include="www\userData.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="app\globalNews\globalNews.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="game\version.txt">
+    <Content Include="www\version.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="init.txt">

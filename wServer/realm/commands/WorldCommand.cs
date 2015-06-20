@@ -1,5 +1,6 @@
 ﻿#region
 
+using db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,41 @@ using wServer.realm.entities.player;
 
 namespace wServer.realm.commands
 {
+    internal class ShowGiftCode : Command
+    {
+        public ShowGiftCode()
+            : base("giftcode")
+        {
+        }
+
+        protected override bool Process(Player player, RealmTime time, string[] args)
+        {
+            var giftCode = player.Client.Account.NextGiftCode();
+            if (giftCode == null)
+            {
+                player.SendError("No new giftcode found.");
+                return false;
+            }
+
+            var data = AccountDataHelper.GenerateAccountGiftCodeData(player.AccountId, giftCode).Write();
+            var qrGenerator = new QRGenerator();
+            var qrCode = qrGenerator.CreateQrCode($"{Program.Settings.GetValue<string>("serverDomain")}/account/redeemGiftCode?data={data}", QRGenerator.EccLevel.H);
+            var bmp = qrCode.GetGraphic(5);
+            var rgbValues = bmp.GetPixels();
+
+            player.Client.SendPacket(new PicPacket
+            {
+                BitmapData = new BitmapData
+                {
+                    Bytes = rgbValues,
+                    Height = bmp.Height,
+                    Width = bmp.Width
+                }
+            });
+            return true;
+        }
+    }
+
     internal class TutorialCommand : Command
     {
         public TutorialCommand()

@@ -12,21 +12,13 @@ namespace Client_Updater
             InitializeComponent();
         }
 
-        private void localhost_btn_Click(object sender, EventArgs e)
-        {
-            updater = new ClientUpdater("127.0.0.1:8080", label1);
-            updater.UpdateClient();
-        }
+        private void localhost_btn_Click(object sender, EventArgs e) => runUpdater("127.0.0.1:8080");
+        private void c453_btn_Click(object sender, EventArgs e) => runUpdater("25.108.113.162");
+        private void button1_Click(object sender, EventArgs e) => runUpdater("71.231.167.96");
 
-        private void c453_btn_Click(object sender, EventArgs e)
+        private void runUpdater(string ip)
         {
-            updater = new ClientUpdater("25.103.138.168:8080", label1);
-            updater.UpdateClient();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            updater = new ClientUpdater("71.231.167.96", label1);
+            updater = new ClientUpdater(ip, label1);
             updater.UpdateClient();
         }
     }

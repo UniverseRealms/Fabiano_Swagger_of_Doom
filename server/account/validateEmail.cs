@@ -15,9 +15,9 @@ namespace server.account
                 using (StreamWriter wtr = new StreamWriter(Context.Response.OutputStream))
                 {
                     if (cmd.ExecuteNonQuery() == 1)
-                        Program.SendFile("game/verifySuccess.html", Context);
+                        Program.SendFile("www/verifySuccess.html", Context);
                     else
-                        Program.SendFile("game/verifyFail.html", Context);
+                        Program.SendFile("www/verifyFail.html", Context);
                 }
             }
         }

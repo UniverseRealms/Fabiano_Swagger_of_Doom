@@ -31,7 +31,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -67,6 +67,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountDataHelper.cs" />
     <Compile Include="DailyQuestConstants.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Database.Guilds.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="NWriter.cs" />
     <Compile Include="NReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QRGenerator.cs" />
     <Compile Include="SimpleSettings.cs" />
     <Compile Include="WeakDictionary.cs" />
   </ItemGroup>

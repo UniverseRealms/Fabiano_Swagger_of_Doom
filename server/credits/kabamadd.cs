@@ -8,7 +8,7 @@ namespace server.credits
         {
             using (StreamWriter wtr = new StreamWriter(Context.Response.OutputStream))
             {
-                string s = File.ReadAllText("game/saved_resource.htm");
+                string s = File.ReadAllText("www/saved_resource.htm");
                 wtr.Write(s);
             }
         }

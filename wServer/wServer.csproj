@@ -51,7 +51,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -60,7 +60,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -160,11 +160,13 @@
     <Compile Include="logic\db\BehaviorDb.Drakes.cs" />
     <Compile Include="logic\db\BehaviorDb.ForestMaze.cs" />
     <Compile Include="logic\db\BehaviorDb.LotLL.cs" />
+    <None Include="logic\db\BehaviorDb.Lab.cs" />
     <Compile Include="logic\db\BehaviorDb.Nexus.cs" />
     <Compile Include="logic\db\BehaviorDb.OryxCastle.cs" />
     <Compile Include="logic\db\BehaviorDb.Pentaract.cs" />
     <Compile Include="logic\db\BehaviorDb.PirateCave.cs" />
     <Compile Include="logic\db\BehaviorDb.Sphinx.cs" />
+    <None Include="logic\db\BehaviorDb.SpriteWorld.cs" />
     <Compile Include="logic\transitions\ChatTransition.cs" />
     <Compile Include="logic\transitions\EntitiesNotExistsTransition.cs" />
     <Compile Include="logic\behaviors\RealmPortalDrop.cs" />
@@ -609,6 +611,7 @@
     <EmbeddedResource Include="realm\worlds\maps\spiderden.wmap" />
     <EmbeddedResource Include="realm\worlds\maps\spriteworld.wmap" />
     <EmbeddedResource Include="realm\worlds\maps\nexus_winter.jm" />
+    <EmbeddedResource Include="realm\worlds\maps\nexus_summer.jm" />
     <None Include="wServer.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

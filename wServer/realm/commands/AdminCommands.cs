@@ -339,29 +339,31 @@ namespace wServer.realm.commands
 
     internal class KillAll : Command
     {
-        public KillAll()
-            : base("killall", 1)
+        public KillAll() : base("killAll", 1)
         {
         }
 
         protected override bool Process(Player player, RealmTime time, string[] args)
         {
-            if (args.Length == 0)
+            var _iterations = 0;
+            var _lastKilled = -1;
+            var _killed = 0;
+
+            var mobName = args.Aggregate((s, a) => string.Concat(s, " ", a));
+            while (_killed != _lastKilled)
             {
-                player.SendHelp("Usage: /killall <entityname>");
-                return false;
-            }
-            foreach (KeyValuePair<int, Enemy> i in player.Owner.Enemies)
-            {
-                if ((i.Value.ObjectDesc != null) &&
-                    (i.Value.ObjectDesc.ObjectId != null) &&
-                    (i.Value.ObjectDesc.ObjectId.Contains(args[0])))
+                _lastKilled = _killed;
+                foreach (var i in player.Owner.Enemies.Values.Where(e =>
+                    e.ObjectDesc?.ObjectId != null && e.ObjectDesc.ObjectId.ContainsIgnoreCase(mobName)))
                 {
-                    i.Value.Damage(player, new RealmTime(), 1000 * 10000, true); //may not work for ents/liches
-                    //i.Value.Owner.LeaveWorld(i.Value);
+                    i.Death(time);
+                    _killed++;
                 }
+                if (++_iterations >= 5)
+                    break;
             }
-            player.SendInfo("Success!");
+
+            player.SendInfo($"{_killed} enemy killed!");
             return true;
         }
     }
@@ -386,7 +388,6 @@ namespace wServer.realm.commands
                     (i.Value.ObjectDesc.ObjectId != null))
                 {
                     i.Value.Damage(player, new RealmTime(), 1000 * 10000, true); //may not work for ents/liches,
-                    //i.Value.Owner.LeaveWorld(i.Value);
                 }
             }
             player.SendInfo("Success!");
@@ -396,8 +397,7 @@ namespace wServer.realm.commands
 
     internal class Kick : Command
     {
-        public Kick()
-            : base("kick", 1)
+        public Kick() : base("kick", 1)
         {
         }
 
@@ -422,6 +422,39 @@ namespace wServer.realm.commands
             catch
             {
                 player.SendError("Cannot kick!");
+                return false;
+            }
+            return true;
+        }
+    }
+
+    internal class KickAll : Command
+    {
+        public KickAll() : base("kickall", 1)
+        {
+        }
+
+        protected override bool Process(Player player, RealmTime time, string[] args)
+        {
+            int _kicked = 0;
+            string _ending = "";
+            try
+            {
+                foreach (KeyValuePair<int, Player> i in player.Owner.Players)
+                {
+                    if (i.Value.Name.ToLower() != player.Name.ToLower())
+                    {
+                        i.Value.Client.Disconnect();
+                        _kicked++;
+                    }
+                }
+                if (_kicked == 0 || _kicked > 1)
+                    _ending = "s";
+                player.SendInfo($"Kicked {_kicked} player{_ending}");
+            }
+            catch
+            {
+                player.SendInfo("An error occurred");
                 return false;
             }
             return true;

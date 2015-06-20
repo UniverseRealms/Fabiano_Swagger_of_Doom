@@ -110,7 +110,7 @@ namespace db
 
         public List<NewsItem> GetNews(XmlData data, Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT icon, title, text, link, date FROM news ORDER BY date LIMIT 10;";
             List<NewsItem> ret = new List<NewsItem>();
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -195,7 +195,7 @@ AND characters.charId=death.chrId;";
 
         public Account Verify(string uuid, string password, XmlData data)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT * FROM accounts WHERE uuid=@uuid AND password=SHA1(@password);";
             cmd.Parameters.AddWithValue("@uuid", uuid);
             cmd.Parameters.AddWithValue("@password", password);
@@ -247,7 +247,7 @@ AND characters.charId=death.chrId;";
 
         public bool IsMuted(string accId)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT muted FROM accounts WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accId", accId);
             if ((int)cmd.ExecuteNonQuery() == 1) return true;
@@ -256,7 +256,7 @@ AND characters.charId=death.chrId;";
 
         public void MuteAccount(string accId)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET muted=1 WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accId", accId);
             cmd.ExecuteNonQuery();
@@ -264,7 +264,7 @@ AND characters.charId=death.chrId;";
 
         public void UnmuteAccount(string accId)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET muted=0 WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accId", accId);
             cmd.ExecuteNonQuery();
@@ -272,7 +272,7 @@ AND characters.charId=death.chrId;";
 
         public Account Register(string uuid, string password, bool isGuest, XmlData data)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT COUNT(id) FROM accounts WHERE uuid=@uuid;";
             cmd.Parameters.AddWithValue("@uuid", uuid);
             if ((int)(long)cmd.ExecuteScalar() > 0) return null;
@@ -286,7 +286,7 @@ AND characters.charId=death.chrId;";
             cmd.Parameters.AddWithValue("@name", Names[(uint)uuid.GetHashCode() % Names.Length]);
             cmd.Parameters.AddWithValue("@guest", isGuest);
             cmd.Parameters.AddWithValue("@regTime", DateTime.Now);
-            cmd.Parameters.AddWithValue("@authToken", GenerateRandomAuthKey(128));
+            cmd.Parameters.AddWithValue("@authToken", GenerateRandomString(128));
             cmd.Parameters.AddWithValue("@empty", "");
 
             if (emails.Contains(uuid))
@@ -357,23 +357,23 @@ AND characters.charId=death.chrId;";
             return GetDailyQuest(accId, data);
         }
 
-        public static string GenerateRandomAuthKey(int size)
+        public static string GenerateRandomString(int size, Random rand = null)
         {
-            StringBuilder builder = new StringBuilder();
-            Random random = new Random();
+            var _chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var _builder = new StringBuilder();
+            var _random = rand ?? new Random();
             char ch;
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
-                builder.Append(ch);
+                ch = _chars[_random.Next(0, _chars.Length - 1)];
+                _builder.Append(ch);
             }
-
-            return builder.ToString();
+            return _builder.ToString();
         }
 
         public bool HasUuid(string uuid)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT COUNT(id) FROM accounts WHERE uuid=@uuid;";
             cmd.Parameters.AddWithValue("@uuid", uuid);
             return (int)(long)cmd.ExecuteScalar() > 0;
@@ -381,7 +381,7 @@ AND characters.charId=death.chrId;";
 
         public Account GetAccountByName(string name, XmlData data)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText =
                 "SELECT * FROM accounts WHERE name=@name;";
             cmd.Parameters.AddWithValue("@name", name);
@@ -395,13 +395,13 @@ AND characters.charId=death.chrId;";
             return GetAccount(accId, data);
         }
 
-        public Account GetAccount(string id, XmlData data, string uuid = null, string password = null)
+        public Account GetAccount(string accId, XmlData data, string uuid = null, string password = null)
         {
-            if (String.IsNullOrWhiteSpace(id)) return CreateGuestAccount(id ?? String.Empty);
+            if (String.IsNullOrWhiteSpace(accId)) return CreateGuestAccount(accId ?? String.Empty);
             MySqlCommand cmd = CreateQuery();
             cmd.CommandText =
                 "SELECT * FROM accounts WHERE id=@id;";
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", accId);
             Account ret;
             using (MySqlDataReader rdr = cmd.ExecuteReader())
             {
@@ -412,11 +412,10 @@ AND characters.charId=death.chrId;";
                     Name = rdr.GetString(UppercaseFirst("name")),
                     AccountId = rdr.GetString("id"),
                     Admin = rdr.GetInt32("rank") >= 2,
-                    Email = uuid,
-                    Password = password,
+                    Email = uuid ?? rdr.GetString("uuid"),
+                    Password = password ?? rdr.GetString("password"),
                     VisibleMuledump = rdr.GetInt32("publicMuledump") == 1,
                     Rank = rdr.GetInt32("rank"),
-                    Warnings = rdr.GetInt32("warnings"),
                     Banned = rdr.GetBoolean("banned"),
                     BeginnerPackageTimeLeft = 0,
                     PetYardType = rdr.GetInt32("petYardType"),
@@ -441,14 +440,26 @@ AND characters.charId=death.chrId;";
                 };
             }
             ReadStats(ret);
+            ReadGiftCodes(ret);
             ret.Guild.Name = GetGuildName(ret.Guild.Id);
             ret.DailyQuest = GetDailyQuest(ret.AccountId, data);
             return ret;
         }
 
-        public int UpdateCredit(Account acc, int amount)
+        public void ReadGiftCodes(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
+            cmd.CommandText = "SELECT * FROM giftcodes WHERE accId=@accId;";
+            cmd.Parameters.AddWithValue("@accId", acc.AccountId);
+            acc.GiftCodes = new List<string>();
+            using (var rdr = cmd.ExecuteReader())
+                while (rdr.Read())
+                    acc.GiftCodes.Add(rdr.GetString("code"));
+        }
+
+    public int UpdateCredit(Account acc, int amount)
+        {
+            var cmd = CreateQuery();
             if (amount > 0)
             {
                 cmd.CommandText = "UPDATE stats SET totalCredits = totalCredits + @amount WHERE accId=@accId;";
@@ -466,7 +477,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public int UpdateFame(Account acc, int amount)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             if (amount > 0)
             {
                 cmd.CommandText = "UPDATE stats SET totalFame = totalFame + @amount WHERE accId=@accId;";
@@ -484,7 +495,7 @@ SELECT fame FROM stats WHERE accId=@accId;";
 
         public int UpdateFortuneToken(Account acc, int amount)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             if (amount > 0)
             {
                 cmd.CommandText = "UPDATE stats SET totalFortuneTokens = totalFortuneTokens + @amount WHERE accId=@accId;";
@@ -502,7 +513,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public void ReadStats(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT * FROM stats WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -539,7 +550,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public List<ClassStats> ReadClassStates(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT objType, bestLv, bestFame FROM classstats WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             List<ClassStats> ret = new List<ClassStats>();
@@ -558,7 +569,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public VaultData ReadVault(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT chestId, items FROM vaults WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -585,7 +596,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public void SaveChest(string accId, VaultChest chest)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE vaults SET items=@items WHERE accId=@accId AND chestId=@chestId;";
             cmd.Parameters.AddWithValue("@accId", accId);
             cmd.Parameters.AddWithValue("@chestId", chest.ChestId);
@@ -595,7 +606,7 @@ SELECT credits FROM stats WHERE accId=@accId;";
 
         public VaultChest CreateChest(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = @"INSERT INTO vaults(accId, items) VALUES(@accId, '-1, -1, -1, -1, -1, -1, -1, -1');
 SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
@@ -608,7 +619,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public void GetCharData(Account acc, Chars chrs)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT IFNULL(MAX(charId), 0) + 1 FROM characters WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             chrs.NextCharId = (int)(long)cmd.ExecuteScalar();
@@ -621,7 +632,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public int GetNextCharId(Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT IFNULL(MAX(charId), 0) + 1 FROM characters WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             int ret = (int)(long)cmd.ExecuteScalar();
@@ -630,7 +641,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public void LoadCharacters(Account acc, Chars chrs)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT * FROM characters WHERE accId=@accId AND dead = FALSE;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -756,7 +767,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public string GetEmail(string uuid, string password)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT email WHERE uuid=@uuid AND password=@pass LIMIT 1";
             cmd.Parameters.AddWithValue("@uuid", uuid);
             cmd.Parameters.AddWithValue("@pass", password);
@@ -772,7 +783,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
         {
             Console.WriteLine("Adding Email!");
 
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText =
                 "INSERT INTO emails(accId, name, email, accessKey) VALUES(@accId, @name, @email, @accessKey);";
             cmd.Parameters.AddWithValue("@accId", GetAccInfo(uuid, 1));
@@ -786,7 +797,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
         public string GetAccInfo(string guid, int type)
         {
             string info = "";
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT id, name, email FROM accounts WHERE uuid=@uuid LIMIT 1";
             cmd.Parameters.AddWithValue("@uuid", guid);
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -805,7 +816,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public bool HasEmail(string email)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT COUNT(id) FROM accounts WHERE email=@email;";
             cmd.Parameters.AddWithValue("@email", email);
             return (int)(long)cmd.ExecuteScalar() > 0;
@@ -813,7 +824,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
 
         public Char LoadCharacter(Account acc, int charId)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT * FROM characters WHERE accId=@accId AND charId=@charId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@charId", charId);
@@ -875,7 +886,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
         public void SaveCharacter(Account acc, Char chr)
         {
             if (acc == null || chr == null) return;
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = @"UPDATE characters SET
 level=@level,
 exp=@exp,
@@ -950,7 +961,7 @@ bestFame = GREATEST(bestFame, @bestFame);";
 
         public int[] GetBackpack(Char chr, Account acc)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT * FROM backpacks WHERE charId=@charId AND accId=@accId";
             cmd.Parameters.AddWithValue("@charId", chr.CharacterId);
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
@@ -969,7 +980,7 @@ bestFame = GREATEST(bestFame, @bestFame);";
         {
             if (chr.HasBackpack == 1)
             {
-                MySqlCommand cmd = CreateQuery();
+                var cmd = CreateQuery();
                 cmd.CommandText = @"INSERT INTO backpacks(accId, charId, items)
 VALUES(@accId, @charId, @items)
 ON DUPLICATE KEY UPDATE
@@ -983,7 +994,7 @@ items = @items;";
 
         public void Death(XmlData data, Account acc, Char chr, string killer) //Save first
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = @"UPDATE characters SET
 dead=TRUE,
 deathTime=NOW()
@@ -1060,7 +1071,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
         public void AddToArenaLb(int wave, List<string> participants)
         {
             string players = string.Join(", ", participants.ToArray());
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "INSERT INTO arenalb(wave, players) VALUES(@wave, @players)";
             cmd.Parameters.AddWithValue("@wave", wave);
             cmd.Parameters.AddWithValue("@players", players);
@@ -1077,7 +1088,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
         public string[][] GetArenaLeaderboards(string type, Account acc)
         {
             List<string[]> lbrankings = new List<string[]>();
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             switch (type)
             {
                 case "alltime":
@@ -1119,7 +1130,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
         {
             List<string> guildrankings = new List<string>();
 
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
 
             cmd.CommandText = "SELECT * FROM guilds ORDER BY guildFame DESC LIMIT 10";
 
@@ -1141,7 +1152,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
         public List<string> GetStarredPlayers(string accId)
         {
             List<string> ret = new List<string>();
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT locked FROM accounts WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accid", accId);
             try
@@ -1162,7 +1173,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
         public List<string> GetIgnoredPlayers(string accId)
         {
             List<string> ret = new List<string>();
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT ignored FROM accounts WHERE id=@accId";
             cmd.Parameters.AddWithValue("@accid", accId);
             try
@@ -1185,7 +1196,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             List<string> x = GetStarredPlayers(accId);
             x.Add(lockId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET locked=@newlocked WHERE id=@accId";
             cmd.Parameters.AddWithValue("@newlocked", s);
             cmd.Parameters.AddWithValue("@accId", accId);
@@ -1199,7 +1210,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             List<string> x = GetStarredPlayers(accId);
             x.Remove(lockId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET locked=@newlocked WHERE id=@accId";
             cmd.Parameters.AddWithValue("@newlocked", s);
             cmd.Parameters.AddWithValue("@accId", accId);
@@ -1213,7 +1224,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             List<string> x = GetIgnoredPlayers(accId);
             x.Add(ignoreId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET ignored=@newignored WHERE id=@accId";
             cmd.Parameters.AddWithValue("@newignored", s);
             cmd.Parameters.AddWithValue("@accId", accId);
@@ -1227,7 +1238,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
             List<string> x = GetIgnoredPlayers(accId);
             x.Remove(ignoreId.ToString());
             string s = Utils.GetCommaSepString(x.ToArray());
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET ignored=@newignored WHERE id=@accId";
             cmd.Parameters.AddWithValue("@newignored", s);
             cmd.Parameters.AddWithValue("@accId", accId);
@@ -1238,7 +1249,7 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public void CreatePet(Account acc, PetItem item)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT COUNT(petId) FROM pets WHERE petId=@petId AND accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@petId", item.InstanceId);
@@ -1275,7 +1286,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
 
         public int GetNextPetId(string accId)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT IFNULL(MAX(petId), 0) FROM pets WHERE accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", accId);
             int ret = (int)(long)cmd.ExecuteScalar() + 1;
@@ -1285,7 +1296,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
         public void UpdateLastSeen(string accId, int charId, string location)
         {
             string currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd:HH-mm-ss");
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET lastSeen=@lastSeen WHERE id=@accId;";
             cmd.Parameters.AddWithValue("@lastSeen", currentDate);
             cmd.Parameters.AddWithValue("@accId", accId);
@@ -1302,7 +1313,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
 
         public bool CheckAccountInUse(Account acc, ref int? timeout)
         {
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "SELECT lastSeen, accountInUse FROM accounts WHERE id=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             using (MySqlDataReader rdr = cmd.ExecuteReader())
@@ -1329,7 +1340,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
         public void LockAccount(Account acc)
         {
             if (acc == null) return;
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET accountInUse=1 WHERE id=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.ExecuteScalar();
@@ -1338,21 +1349,47 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
         public void UnlockAccount(Account acc)
         {
             if (acc == null) return;
-            MySqlCommand cmd = CreateQuery();
+            var cmd = CreateQuery();
             cmd.CommandText = "UPDATE accounts SET accountInUse=0 WHERE id=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.ExecuteScalar();
         }
 
-        public string GenerateGiftcode(string contents)
+        public string GenerateGiftcode(string contents, string accId)
         {
-            string code = GenerateRandomAuthKey(29);
+            var _code = generateGiftCode(5, 5);
+            while (giftCodeExists(_code))
+                _code = generateGiftCode(5, 5);
+
             var cmd = CreateQuery();
-            cmd.CommandText = "INSERT INTO giftCodes(code, content) VALUES(@code, @contents);";
-            cmd.Parameters.AddWithValue("@code", code);
+            cmd.CommandText = "INSERT INTO giftCodes(code, content, accId) VALUES(@code, @contents, @accId);";
+            cmd.Parameters.AddWithValue("@code", _code);
             cmd.Parameters.AddWithValue("@contents", contents);
+            cmd.Parameters.AddWithValue("@accId", accId);
             cmd.ExecuteNonQuery();
-            return code;
+            return _code;
+        }
+
+        private string generateGiftCode(int blocks, int blockLength)
+        {
+            var _builder = new StringBuilder();
+            var _random = new Random();
+            for (var i = 0; i < blocks; i++)
+            {
+                _builder.Append(GenerateRandomString(blockLength, _random));
+                if (i < blocks - 1)
+                    _builder.Append("-");
+            }
+            return _builder.ToString();
+        }
+
+        private bool giftCodeExists(string code)
+        {
+            var cmd = CreateQuery();
+            cmd.CommandText = "SELECT code FROM giftCodes WHERE code=@code";
+            cmd.Parameters.AddWithValue("@code", code);
+            using (var rdr = cmd.ExecuteReader())
+                return rdr.HasRows;
         }
 
         public bool SaveChars(string oldAccId, Chars oldChars, Chars chrs, XmlData data)
