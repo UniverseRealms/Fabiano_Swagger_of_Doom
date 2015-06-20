@@ -25,7 +25,7 @@ rotmg.Marketing = (function () {
         }
 
         if ((document.location.host != "www.realmofthemadgod.com") &&
-            (document.location.host != "realmofthemadgod.appspot.com")) {
+            (document.location.host != "realmofthemadgodhrd.appspot.com")) {
             return;
         }
 

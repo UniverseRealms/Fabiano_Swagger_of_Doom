@@ -3,7 +3,8 @@ var rotmg = rotmg || {};
 rotmg.KabamPayment = (function ($) {
     var SERVER_INFO_ = {
         "testing": {
-            "server": "payv2beta.kabam.com",
+            //"server": "payv2beta.kabam.com",  //problem with kabam payments beta. using prod server until they fix
+            "server": "payv2.kabam.com",
             "gameId": 24
         },
         "production": {
@@ -32,7 +33,7 @@ rotmg.KabamPayment = (function ($) {
         KBPAY.init(jQuery.extend({}, apiOptions_, extraOptions));
 
         var showOptions = {
-            "iframeOnly": true,
+            "iframeOnly": false,
             "width": 570,
             "height": 560,
             "onPaymentProviderClose": onPaymentProviderClose_,
@@ -108,7 +109,7 @@ rotmg.KabamPayment = (function ($) {
 
     var setupServerInfo_ = function () {
         if ((document.location.host == "www.realmofthemadgod.com") ||
-            (document.location.host == "realmofthemadgod.appspot.com")) {
+            (document.location.host == "realmofthemadgodhrd.appspot.com")) {
             serverInfo_ = SERVER_INFO_["production"];
             return;
         }

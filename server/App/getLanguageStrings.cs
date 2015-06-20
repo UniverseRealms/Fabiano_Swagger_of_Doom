@@ -10,7 +10,7 @@ namespace server.app
 {
     internal class getLanguageStrings : RequestHandler
     {
-        public static readonly Dictionary<string, string> languages = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> Languages = new Dictionary<string, string>
         {
             {"de", File.ReadAllText("app/Languages/de.txt")},
             {"en", File.ReadAllText("app/Languages/en.txt")},
@@ -22,15 +22,16 @@ namespace server.app
 
         protected override void HandleRequest()
         {
-            string lang;
-            byte[] buf;
+            string _language;
+            byte[] _buf;
             if (Query.AllKeys.Length > 0)
-                if (!languages.TryGetValue(Query["languageType"], out lang))
-                    buf = Encoding.ASCII.GetBytes("<Error>Invalid langauge type.</Error>");
-                else buf = Encoding.ASCII.GetBytes(lang);
+                if (!Languages.TryGetValue(Query["languageType"], out _language))
+                    _buf = Encoding.ASCII.GetBytes("<Error>Invalid langauge type.</Error>");
+                else
+                    _buf = Encoding.ASCII.GetBytes(_language);
             else
-                buf = Encoding.ASCII.GetBytes("<Error>Invalid langauge type.</Error>");
-            Context.Response.OutputStream.Write(buf, 0, buf.Length);
+                _buf = Encoding.ASCII.GetBytes("<Error>Invalid langauge type.</Error>");
+            Context.Response.OutputStream.Write(_buf, 0, _buf.Length);
         }
     }
 }
