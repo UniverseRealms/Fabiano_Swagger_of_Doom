@@ -117,16 +117,17 @@ namespace wServer.logic.behaviors.PetBehaviors
 
         private int CalculateHeal(int level, ref int cooldown)
         {
+            // Accurate enough for me
             if (Enumerable.Range(0, 30).Contains(level))
-                cooldown = 3821;
+                cooldown = (int)Math.Round(10000 - level * 205.96666666666666666666666666667);
             if (Enumerable.Range(30, 20).Contains(level))
-                cooldown = 2658;
+                cooldown = (int)Math.Round(3821 - (level - 30) * 58.15);
             if (Enumerable.Range(50, 20).Contains(level))
-                cooldown = 1958;
+                cooldown = (int)Math.Round(2658 - (level - 50) * 35.00);
             if (Enumerable.Range(70, 20).Contains(level))
-                cooldown = 1420;
+                cooldown = (int)Math.Round(1958 - (level - 70) * 26.9);
             if (Enumerable.Range(90, 11).Contains(level))
-                cooldown = 1000;
+                cooldown = (int)Math.Round(1420 - (level - 90) * 42.0);
             return (int)Math.Round(5.83283522976111E-07 * Math.Pow(level, 4) - 0.0000469692310249639 * Math.Pow(level, 3) + 0.0076256636031656 * Math.Pow(level, 2) - 0.0776182463432286 * level + 10.0998122309192);
             throw new Exception("PetLevel not supported");
         }

@@ -111,7 +111,17 @@ namespace wServer.logic.behaviors.PetBehaviors
 
         private double GetElectricDistance(Pet host, PetLevel type)
         {
-            return 2.5; // Eletric level 100
+            if (Enumerable.Range(0, 30).Contains(type.Level))
+                return Math.Round(0.1 + type.Level * 0.01333333333333333333333333333333, 2);
+            if (Enumerable.Range(30, 20).Contains(type.Level))
+                return Math.Round(0.5 + (type.Level - 30) * 0.025, 2);
+            if (Enumerable.Range(50, 20).Contains(type.Level))
+                return Math.Round(1.0 + (type.Level - 50) * 0.025, 2);
+            if (Enumerable.Range(70, 20).Contains(type.Level))
+                return Math.Round(1.5 + (type.Level - 70) * 0.025, 2);
+            if (Enumerable.Range(90, 11).Contains(type.Level))
+                return Math.Round(2.0 + (type.Level - 90) * 0.025, 2);
+            throw new Exception("PetLevel not supported");
         }
     }
 }

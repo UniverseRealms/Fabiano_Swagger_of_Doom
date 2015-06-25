@@ -1,2 +1,2 @@
-﻿$Oryx will get you.
-Check out my repo: https://github.com/BlackRayquaza/fabiano-swagger-of-doom
+﻿#Oryx will get you.
+Smurph

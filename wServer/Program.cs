@@ -129,10 +129,10 @@ namespace wServer
             {
                 ChatManager chat = new ChatManager(manager);
                 string text = news[new Random().Next(news.Length)];
-                if (text.StartsWith("$"))
-                    chat.Announce(text.Replace("$", string.Empty));
+                if (text.StartsWith("#"))
+                    chat.Announce(text.TrimStart('#'));
                 else chat.News(text);
-                Thread.Sleep(5 * 60 * 1000);
+                Thread.Sleep(1 * 60 * 1000);
             }
         }
     }
