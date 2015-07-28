@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010, 2011, 2012, 2013, 2014 Vladimir Panteleev <vladimir@thecybershadow.net>
+ *  Copyright 2010, 2011, 2012 Vladimir Panteleev <vladimir@thecybershadow.net>
  *  This file is part of RABCDAsm.
  *
  *  RABCDAsm is free software: you can redistribute it and/or modify
@@ -157,11 +157,6 @@ final class ASProgram
 		uint id; // file index
 
 		MethodBody vbody;
-
-		override string toString() const
-		{
-			return name;
-		}
 	}
 
 	static class Metadata
@@ -170,7 +165,6 @@ final class ASProgram
 		string[] keys, values;
 
 		mixin AutoCompare;
-		mixin AutoToString;
 		mixin ProcessAllData;
 	}
 
@@ -238,7 +232,7 @@ final class ASProgram
 
 		Instance instance;
 
-		override string toString() const
+		override string toString()
 		{
 			return instance.name.toString();
 		}
@@ -261,7 +255,8 @@ final class ASProgram
 		Exception[] exceptions;
 		Trait[] traits;
 
-		ABCFile.Error[] errors;
+		string error;
+		ubyte[] rawBytes;
 	}
 
 	struct Instruction
@@ -582,7 +577,8 @@ private final class ABCtoAS
 			e.varName = multinames[exc.varName];
 		}
 		n.traits = convertTraits(vbody.traits);
-		n.errors = vbody.errors;
+		n.error = vbody.error;
+		n.rawBytes = vbody.rawBytes;
 		return n;
 	}
 
@@ -741,84 +737,134 @@ private final class AStoABC : ASVisitor
 	}
 
 	/// Maintain an unordered set of values; sort/index by usage count
-	struct Pool(T, bool byRef, bool haveNull = true)
+	struct ConstantPool(T, bool haveNull = true)
 	{
-		static if (byRef)
-			alias void* Key;
-		else
-		static if (is(T == double))
-			alias ulong Key; // https://issues.dlang.org/show_bug.cgi?id=13420
-		else
-			alias immutable(T) Key;
-
-		Key toKey(T value)
-		{
-			static if (is(T == double))
-				return *cast(ulong*)&value;
-			else
-				return cast(Key)value;
-		}
+		alias immutable(T) I;
 
 		struct Entry
 		{
 			uint hits;
 			T value;
-			size_t addIndex, index;
-			Key[] parents;
+			uint index;
 
-			mixin AutoToString;
-			mixin ProcessAllData;
+			mixin AutoCompare;
+
+			R processData(R, string prolog, string epilog, H)(ref H handler) const
+			{
+				mixin(prolog);
+				mixin(addAutoField("hits", true));
+				mixin(addAutoField("value"));
+				mixin(epilog);
+			}
 		}
 
-		Entry[Key] pool;
+		Entry[immutable(T)] pool;
 		T[] values;
 
 		bool add(T value) // return true if added
 		{
-			if ((haveNull || byRef) && isNull(value))
+			if (haveNull && isNull(value))
 				return false;
-			auto p = toKey(value) in pool;
-			if (p is null)
+			auto cp = cast(I)value in pool;
+			if (cp is null)
 			{
-				pool[toKey(value)] = Entry(1, value, pool.length);
+				pool[cast(I)value] = Entry(1, value);
 				return true;
 			}
 			else
 			{
-				p.hits++;
+				cp.hits++;
 				return false;
 			}
 		}
 
 		bool notAdded(T value)
 		{
-			static if (haveNull || byRef)
-				if (isNull(value))
-					return false;
-			auto ep = toKey(value) in pool;
+			auto ep = cast(I)value in pool;
 			if (ep)
 				ep.hits++;
-			return !ep;
+			return !((haveNull && isNull(value)) || ep);
 		}
 
-		/// "from" is child of "to", thus "from" must come after "to"
+		void finalize()
+		{
+			auto all = pool.values;
+			all.sort;
+			enum { NullOffset = haveNull ? 1 : 0 }
+			values.length = all.length + NullOffset;
+			foreach (uint i, ref c; all)
+			{
+				pool[cast(I)c.value].index = i + NullOffset;
+				values[i + NullOffset] = c.value;
+			}
+		}
+
+		uint get(T value)
+		{
+			if (haveNull && isNull(value))
+				return 0;
+			return pool[cast(I)value].index;
+		}
+	}
+
+	/// Pair an index with class instances
+	struct ReferencePool(T : Object)
+	{
+		struct Entry
+		{
+			uint hits;
+			void* object;
+			uint addIndex, index;
+			void*[] parents;
+
+			mixin AutoToString;
+			mixin ProcessAllData;
+		}
+
+		Entry[void*] pool;
+		T[] objects;
+
+		bool add(T obj) // return true if added
+		{
+			if (obj is null)
+				return false;
+			auto p = cast(void*)obj;
+			auto rp = p in pool;
+			if (rp is null)
+			{
+				pool[p] = Entry(1, p, to!uint(pool.length));
+				return true;
+			}
+			else
+			{
+				rp.hits++;
+				return false;
+			}
+		}
+
+		bool notAdded(T obj)
+		{
+			auto ep = (cast(void*)obj) in pool;
+			if (ep)
+				ep.hits++;
+			return !(obj is null || ep);
+		}
+
 		void registerDependency(T from, T to)
 		{
-			auto pfrom = toKey(from) in pool;
+			auto pfrom = (cast(void*)from) in pool;
 			assert(pfrom, "Unknown dependency source");
-			auto vto = toKey(to);
+			auto vto = cast(void*)to;
 			auto pto = vto in pool;
 			assert(pto, "Unknown dependency target");
-			assert(!pfrom.parents.contains!Key(vto), "Dependency already set");
+			assert(!pfrom.parents.contains(vto), "Dependency already set");
 			pfrom.parents ~= vto;
 		}
 
-		T[] getPreliminaryValues()
+		T[] getPreliminaryObjects()
 		{
 			return cast(T[])pool.keys;
 		}
-
-		enum { NullOffset = haveNull ? 1 : 0 }
 
 		void finalize()
 		{
@@ -829,17 +875,7 @@ private final class AStoABC : ASVisitor
 				all[i++] = &e;
 
 			// sort
-			static if (is(T == double))
-			{
-				static ulong repr(double d) { static assert(double.sizeof == ulong.sizeof); return *cast(ulong*)(&d); }
-				static bool sortPred(Entry* a, Entry* b) { return a.hits > b.hits || (a.hits == b.hits && repr(a.value) < repr(b.value)); }
-			}
-			else
-			static if (byRef)
-				enum sortPred = q{a.hits > b.hits || (a.hits == b.hits && a.addIndex < b.addIndex)};
-			else
-				enum sortPred = q{a.hits > b.hits || (a.hits == b.hits && a.value < b.value)};
-			all.sort!sortPred();
+			sort!q{a.hits > b.hits || (a.hits == b.hits && a.addIndex < b.addIndex)}(all);
 
 			// topographical sort
 			topSort:
@@ -860,27 +896,16 @@ private final class AStoABC : ASVisitor
 					}
 				}
 
-			values.length = NullOffset + i;
+			objects.length = i;
 			foreach (j, e; all)
-				values[NullOffset + j] = e.value;
+				objects[j] = cast(T)e.object;
 		}
 
-		uint get(T value)
+		uint get(T obj)
 		{
-			if (haveNull && isNull(value))
-				return 0;
-			return NullOffset + to!uint(pool[toKey(value)].index);
+			assert(obj !is null, "Trying to get index of null object");
+			return pool[cast(void*)obj].index;
 		}
-	}
-
-	template ConstantPool(T, bool haveNull=true)
-	{
-		alias Pool!(T, false, haveNull) ConstantPool;
-	}
-
-	template ReferencePool(T : Object)
-	{
-		alias Pool!(T, true, false) ReferencePool;
 	}
 
 	ConstantPool!(long) ints;
@@ -973,7 +998,7 @@ private final class AStoABC : ASVisitor
 	{
 		ASProgram.Class[ASProgram.Multiname] classByName;
 
-		ASProgram.Class[] classObjects = classes.getPreliminaryValues();
+		ASProgram.Class[] classObjects = classes.getPreliminaryObjects();
 		foreach (c; classObjects)
 		{
 			assert(!(c.instance.name in classByName), "Duplicate class name " ~ c.instance.name.toString());
@@ -991,18 +1016,6 @@ private final class AStoABC : ASVisitor
 					}
 	}
 
-	void registerMultinameDependencies()
-	{
-		foreach (m; multinames.getPreliminaryValues())
-			if (m.kind == ASType.TypeName)
-			{
-				multinames.registerDependency(m, m.vTypeName.name);
-				foreach (t; m.vTypeName.params)
-					if (t)
-						multinames.registerDependency(m, t);
-			}
-	}
-
 	this(ASProgram as)
 	{
 		super(as);
@@ -1014,7 +1027,6 @@ private final class AStoABC : ASVisitor
 		super.run();
 
 		registerClassDependencies();
-		registerMultinameDependencies();
 
 		ints.finalize();
 		uints.finalize();
@@ -1103,8 +1115,8 @@ private final class AStoABC : ASVisitor
 
 		ASProgram.MethodBody[] bodies;
 
-		abc.methods.length = methods.values.length;
-		foreach (i, o; methods.values)
+		abc.methods.length = methods.objects.length;
+		foreach (i, o; methods.objects)
 		{
 			auto n = &abc.methods[i];
 			n.paramTypes.length = o.paramTypes.length;
@@ -1127,8 +1139,8 @@ private final class AStoABC : ASVisitor
 				bodies ~= o.vbody;
 		}
 
-		abc.instances.length = classes.values.length;
-		foreach (i, c; classes.values)
+		abc.instances.length = classes.objects.length;
+		foreach (i, c; classes.objects)
 		{
 			auto o = c.instance;
 			auto n = &abc.instances[i];
@@ -1144,8 +1156,8 @@ private final class AStoABC : ASVisitor
 			n.traits = convertTraits(o.traits);
 		}
 
-		abc.classes.length = classes.values.length;
-		foreach (i, o; classes.values)
+		abc.classes.length = classes.objects.length;
+		foreach (i, o; classes.objects)
 		{
 			auto n = &abc.classes[i];
 			n.cinit = methods.get(o.cinit);

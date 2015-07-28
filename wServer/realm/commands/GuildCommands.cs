@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using wServer.networking.svrPackets;
 using wServer.realm.entities.player;
-
-#endregion
 
 namespace wServer.realm.commands
 {

@@ -12,14 +12,14 @@ namespace Client_Updater
             InitializeComponent();
         }
 
-        private void localhost_btn_Click(object sender, EventArgs e) => runUpdater("127.0.0.1:8080");
-        private void c453_btn_Click(object sender, EventArgs e) => runUpdater("25.108.113.162");
-        private void button1_Click(object sender, EventArgs e) => runUpdater("71.231.167.96");
-
         private void runUpdater(string ip)
         {
             updater = new ClientUpdater(ip, label1);
             updater.UpdateClient();
         }
+
+        private void metroTile1_Click(object sender, EventArgs e) => runUpdater(textBox1.Text.ToString());
+
+        private void metroTile2_Click(object sender, EventArgs e) => runUpdater("25.103.138.168:8080");
     }
 }

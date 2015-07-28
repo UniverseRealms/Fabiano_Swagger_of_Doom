@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010, 2011, 2012, 2013, 2014 Vladimir Panteleev <vladimir@thecybershadow.net>
+ *  Copyright 2010, 2011, 2012 Vladimir Panteleev <vladimir@thecybershadow.net>
  *  This file is part of RABCDAsm.
  *
  *  RABCDAsm is free software: you can redistribute it and/or modify
@@ -18,16 +18,14 @@
 
 module disassembler;
 
-import std.algorithm;
+import std.file;
+import std.string;
 import std.array;
 import std.conv;
-import std.digest.md;
 import std.exception;
-import std.file;
-import std.format;
+import std.algorithm;
 import std.path;
-import std.stdio;
-import std.string;
+import std.md5;
 import abcfile;
 import asprogram;
 import autodata;
@@ -37,20 +35,37 @@ alias std.array.join join;
 
 final class StringBuilder
 {
-	enum BUF_SIZE = 256*1024;
-
-	static char[] buf;
-	static size_t pos;
-
+	char[] buf;
+	size_t pos;
 	string filename;
-	File file;
 
 	this(string filename)
 	{
-		this.filename = filename;
 		if (exists(longPath(filename)))
 			throw new Exception(filename ~ " exists");
+		this.filename = filename;
+		buf.length = 1024;
+	}
 
+	void opCatAssign(string s)
+	{
+		checkIndent();
+		auto end = pos + s.length;
+		while (buf.length < end)
+			buf.length = buf.length*2;
+		buf[pos..end] = s;
+		pos = end;
+	}
+
+	void opCatAssign(char c)
+	{
+		if (buf.length < pos+1) // speed hack: no loop, no indent check
+			buf.length = buf.length*2;
+		buf[pos++] = c;
+	}
+
+	void save()
+	{
 		string[] dirSegments = split(filename, "/");
 		for (int l=0; l<dirSegments.length-1; l++)
 		{
@@ -58,58 +73,7 @@ final class StringBuilder
 			if (subdir.length && !exists(longPath(subdir)))
 				mkdir(longPath(subdir));
 		}
-		file = openFile(filename, "wb");
-		assert(!pos, "Opening new file with unflushed buffer");
-	}
-
-	static this()
-	{
-		buf = new char[BUF_SIZE];
-	}
-
-	void put(in char[] s)
-	{
-		checkIndent();
-		auto end = pos + s.length;
-		if (end > buf.length)
-		{
-			flush();
-			end = s.length;
-			while (end > buf.length)
-				buf.length = buf.length*2;
-		}
-		buf[pos..end] = s[];
-		pos = end;
-	}
-
-	void put(char c)
-	{
-		if (pos == buf.length) // speed hack: no indent check
-			flush();
-		buf[pos++] = c;
-	}
-
-	alias put opCatAssign;
-
-	void write(T)(T v)
-	{
-		checkIndent();
-		formattedWrite(this, "%s", v);
-	}
-
-	void flush()
-	{
-		if (pos)
-		{
-			file.rawWrite(buf[0..pos]);
-			pos = 0;
-		}
-	}
-
-	void save()
-	{
-		flush();
-		file.close();
+		write(longPath(filename), buf[0..pos]);
 	}
 
 	int indent;
@@ -238,7 +202,7 @@ final class RefBuilder : ASTraitsVisitor
 							assert(0);
 				}
 				case Type.String:
-					return [Segment((filename && filenameSuffix) ? '.' : '/', str)];
+					return [Segment(filenameSuffix ? '.' : '/', str)];
 				case Type.Group:
 				{
 					Segment[] segments;
@@ -293,32 +257,18 @@ final class RefBuilder : ASTraitsVisitor
 			final switch (type)
 			{
 				case Type.Multiname:
-					switch (multiname.kind)
+					auto ns = multiname.vQName.ns;
+					if (ns.kind == ASType.PrivateNamespace)
 					{
-						case ASType.QName:
-						{
-							auto ns = multiname.vQName.ns;
-							if (ns.kind == ASType.PrivateNamespace)
-							{
-							//	auto pcontext = ns.id in refs.namespaces[ns.kind].contexts;
-							//	if (pcontext is null)
-							//		return (&this)[0..1];
-							//	assert(pcontext);
-								auto context = refs.namespaces[ns.kind].getContext(refs, ns.id);
-								debug(CONTEXTS) std.stdio.writefln("Context of namespace %s is:\n\t%s\n", ns, context);
-							//	auto expanded = expand(refs, context);
-							//	if (expanded is null) return null;
-								return /*expanded*/context ~ (multiname.vQName.name.length ? [ContextItem(multiname.vQName.name)] : null); // hack
-							}
-							break;
-						}
-						case ASType.Multiname:
-							return multiname.vMultiname.name.length ? [ContextItem(multiname.vMultiname.name)] : null;
-						default:
-							debug
-								assert(false, text(multiname.kind));
-							else
-								break;
+					//	auto pcontext = ns.id in refs.namespaces[ns.kind].contexts;
+					//	if (pcontext is null)
+					//		return (&this)[0..1];
+					//	assert(pcontext);
+						auto context = refs.namespaces[ns.kind].getContext(refs, ns.id);
+						debug(CONTEXTS) std.stdio.writefln("Context of namespace %s is:\n\t%s\n", ns, context);
+					//	auto expanded = expand(refs, context);
+					//	if (expanded is null) return null;
+						return /*expanded*/context ~ (multiname.vQName.name.length ? [ContextItem(multiname.vQName.name)] : null); // hack
 					}
 					break;
 				case Type.String:
@@ -382,7 +332,6 @@ final class RefBuilder : ASTraitsVisitor
 				case ContextItem.Type.String:
 					return i1.str == i2.str;
 				case ContextItem.Type.Multiname:
-					assert(i1.multiname.kind == ASType.QName && i2.multiname.kind == ASType.QName);
 					if (i1.multiname.vQName.name != i2.multiname.vQName.name) return false;
 					return nsSimilar(i1.multiname.vQName.ns, i2.multiname.vQName.ns);
 				case ContextItem.Type.Group:
@@ -476,24 +425,16 @@ final class RefBuilder : ASTraitsVisitor
 	void pushContext(T...)(T v) { context ~= ContextItem(v); }
 	void popContext() { context = context[0..$-1]; }
 
-	enum ContextPriority
-	{
-		declaration,
-		usage,
-		orphan,
-		max
-	}
-
 	struct ContextSet(T, bool ALLOW_DUPLICATES)
 	{
 		ContextItem[][T] contexts;
-		ContextItem[][][ContextPriority.max][T] contextSets;
+		ContextItem[][][T] contextSets;
 		debug bool contextsSealed;
 
 		string[T] names, filenames;
 		debug bool coagulated;
 
-		bool add(U)(U obj, ContextItem[] context, ContextPriority priority)
+		bool add(U)(U obj, ContextItem[] context)
 		{
 			debug assert(!coagulated);
 			debug assert(!contextsSealed);
@@ -503,25 +444,23 @@ final class RefBuilder : ASTraitsVisitor
 
 			if (!pset)
 			{
-				contextSets[p] = contextSets[p].init;
-				contextSets[p][priority] ~= context.dup;
+				contextSets[p] ~= context.dup;
 				return true;
 			}
 			else
 			{
-				static bool rawEqual(T)(T[] arr1, T[] arr2) { return cast(ubyte[])arr1 == cast(ubyte[])arr2; }
-				if ((*pset)[priority].length==0 || !rawEqual((*pset)[priority][$-1], context)) // Optimization: don't add contexts identical to the last added
-					(*pset)[priority] ~= context.dup;
+				if ((*pset)[$-1] != context)
+					*pset ~= context.dup;
 				return false;
 			}
 		}
 
-		bool addIfNew(U)(U obj, ContextItem[] context, ContextPriority priority)
+		bool addIfNew(U)(U obj, ContextItem[] context)
 		{
 			if (isAdded(obj))
 				return false;
 			else
-				return add(obj, context, priority);
+				return add(obj, context);
 		}
 
 		void coagulate(RefBuilder refs)
@@ -574,10 +513,7 @@ final class RefBuilder : ASTraitsVisitor
 			if (pcontext)
 				return *pcontext;
 
-			ContextItem[][] set;
-			foreach (prioritySet; contextSets[p])
-				if (prioritySet)
-					set = prioritySet;
+			auto set = contextSets[p];
 
 			static if (ALLOW_DUPLICATES)
 			{
@@ -661,33 +597,31 @@ final class RefBuilder : ASTraitsVisitor
 			ContextItem[] classContexts;
 
 			foreach (trait; v.traits)
-			{
-				if (trait.name.kind == ASType.QName && trait.name.vQName.ns.kind != ASType.PrivateNamespace)
+				if (trait.name.vQName.ns.kind != ASType.PrivateNamespace)
 					classContexts ~= ContextItem(trait.name);
-			}
 
 			if (!classContexts.length)
 				foreach (trait; v.traits)
 					classContexts ~= ContextItem(trait.name);
 
 			context = [ContextItem(classContexts, "script_" ~ to!string(i))];
-			scripts.add(v, context, ContextPriority.declaration);
-			pushContext("init", true);
-			addMethod(v.sinit, ContextPriority.declaration);
+			scripts.add(v, context);
+			pushContext("sinit", true);
+			addMethod(v.sinit);
 			context = null;
 		}
 		foreach (i, vclass; as.orphanClasses)
 			if (!objects.isAdded(vclass))
 			{
 				pushContext("orphan_class_" ~ to!string(i));
-				addClass(vclass, ContextPriority.orphan);
+				addClass(vclass);
 				popContext();
 			}
 		foreach (i, method; as.orphanMethods)
 			if (!objects.isAdded(method))
 			{
 				pushContext("orphan_method_" ~ to!string(i));
-				addMethod(method, ContextPriority.orphan);
+				addMethod(method);
 				popContext();
 			}
 
@@ -697,13 +631,13 @@ final class RefBuilder : ASTraitsVisitor
 		foreach (v; as.scripts)
 			foreach (trait; v.traits)
 				if (trait.name.kind == ASType.QName)
-					namespaces[trait.name.vQName.ns.kind].addIfNew(trait.name.vQName.ns.id, scripts.getContext(this, v), ContextPriority.declaration);
+					namespaces[trait.name.vQName.ns.kind].addIfNew(trait.name.vQName.ns.id, scripts.getContext(this, v));
 
 		foreach (id, b; possibleOrphanPrivateNamespaces)
 			if (!namespaces[ASType.PrivateNamespace].isAdded(id))
 			{
 				pushContext("orphan_namespace_" ~ to!string(id));
-				namespaces[ASType.PrivateNamespace].add(id, context, ContextPriority.orphan);
+				namespaces[ASType.PrivateNamespace].add(id, context);
 				popContext();
 			}
 
@@ -717,59 +651,36 @@ final class RefBuilder : ASTraitsVisitor
 	{
 		auto m = trait.name;
 
-	//	if (m.kind != ASType.QName)
-	//		throw new Exception("Trait name is not a QName");
+		if (m.kind != ASType.QName)
+			throw new Exception("Trait name is not a QName");
 
 		pushContext(m);
-		visitMultiname(m, ContextPriority.declaration);
+		visitMultiname(m);
 		switch (trait.kind)
 		{
-			case TraitKind.Slot:
-			case TraitKind.Const:
-				visitMultiname(trait.vSlot.typeName, ContextPriority.usage);
-
-				super.visitTrait(trait);
-				break;
 			case TraitKind.Class:
-				addClass(trait.vClass.vclass, ContextPriority.declaration);
-
-				pushContext("class", true);
-				visitTraits(trait.vClass.vclass.traits);
-				popContext();
-
-				pushContext("instance", true);
-				visitTraits(trait.vClass.vclass.instance.traits);
-				popContext();
-
+				addClass(trait.vClass.vclass);
 				break;
 			case TraitKind.Function:
-				addMethod(trait.vFunction.vfunction, ContextPriority.declaration);
-
-				super.visitTrait(trait);
+				addMethod(trait.vFunction.vfunction);
 				break;
 			case TraitKind.Method:
-				addMethod(trait.vMethod.vmethod, ContextPriority.declaration);
-
-				super.visitTrait(trait);
+				addMethod(trait.vMethod.vmethod);
 				break;
 			case TraitKind.Getter:
 				pushContext("getter");
-				addMethod(trait.vMethod.vmethod, ContextPriority.declaration);
+				addMethod(trait.vMethod.vmethod);
 				popContext();
-
-				super.visitTrait(trait);
 				break;
 			case TraitKind.Setter:
 				pushContext("setter");
-				addMethod(trait.vMethod.vmethod, ContextPriority.declaration);
+				addMethod(trait.vMethod.vmethod);
 				popContext();
-
-				super.visitTrait(trait);
 				break;
 			default:
-				super.visitTrait(trait);
 				break;
 		}
+		super.visitTrait(trait);
 		popContext();
 	}
 
@@ -805,7 +716,7 @@ final class RefBuilder : ASTraitsVisitor
 
 	bool[uint] possibleOrphanPrivateNamespaces;
 
-	void visitNamespace(ASProgram.Namespace ns, ContextPriority priority)
+	void visitNamespace(ASProgram.Namespace ns)
 	{
 		if (ns is null) return;
 
@@ -819,7 +730,7 @@ final class RefBuilder : ASTraitsVisitor
 
 		auto myPos = context.length;
 		foreach (i, ref item; context)
-			if (item.type == ContextItem.Type.Multiname && item.multiname.kind == ASType.QName && item.multiname.vQName.ns == ns)
+			if (item.type == ContextItem.Type.Multiname && item.multiname.vQName.ns == ns)
 			{
 				myPos = i;
 				break;
@@ -830,17 +741,17 @@ final class RefBuilder : ASTraitsVisitor
 			return;
 		}
 
-		auto myContext = context[0..myPos];
-		namespaces[ns.kind].add(ns.id, myContext, priority);
+		auto myContext = context[0..myPos].dup;
+		namespaces[ns.kind].add(ns.id, myContext);
 	}
 
-	void visitNamespaceSet(ASProgram.Namespace[] nsSet, ContextPriority priority)
+	void visitNamespaceSet(ASProgram.Namespace[] nsSet)
 	{
 		foreach (ns; nsSet)
-			visitNamespace(ns, priority);
+			visitNamespace(ns);
 	}
 
-	void visitMultiname(ASProgram.Multiname m, ContextPriority priority)
+	void visitMultiname(ASProgram.Multiname m)
 	{
 		if (m is null) return;
 		with (m)
@@ -848,20 +759,20 @@ final class RefBuilder : ASTraitsVisitor
 			{
 				case ASType.QName:
 				case ASType.QNameA:
-					visitNamespace(vQName.ns, priority);
+					visitNamespace(vQName.ns);
 					break;
 				case ASType.Multiname:
 				case ASType.MultinameA:
-					visitNamespaceSet(vMultiname.nsSet, priority);
+					visitNamespaceSet(vMultiname.nsSet);
 					break;
 				case ASType.MultinameL:
 				case ASType.MultinameLA:
-					visitNamespaceSet(vMultinameL.nsSet, priority);
+					visitNamespaceSet(vMultinameL.nsSet);
 					break;
 				case ASType.TypeName:
-					visitMultiname(vTypeName.name, priority);
+					visitMultiname(vTypeName.name);
 					foreach (param; vTypeName.params)
-						visitMultiname(param, priority);
+						visitMultiname(param);
 					break;
 				default:
 					break;
@@ -875,21 +786,21 @@ final class RefBuilder : ASTraitsVisitor
 				switch (type)
 				{
 					case OpcodeArgumentType.Namespace:
-						visitNamespace(instruction.arguments[i].namespacev, ContextPriority.usage);
+						visitNamespace(instruction.arguments[i].namespacev);
 						break;
 					case OpcodeArgumentType.Multiname:
-						visitMultiname(instruction.arguments[i].multinamev, ContextPriority.usage);
+						visitMultiname(instruction.arguments[i].multinamev);
 						break;
 					case OpcodeArgumentType.Class:
 						pushContext("inline_class");
 						if (isOrphan(instruction.arguments[i].classv))
-							addClass(instruction.arguments[i].classv, ContextPriority.usage);
+							addClass(instruction.arguments[i].classv);
 						popContext();
 						break;
 					case OpcodeArgumentType.Method:
 						pushContext("inline_method");
 						if (isOrphan(instruction.arguments[i].methodv))
-							addMethod(instruction.arguments[i].methodv, ContextPriority.usage);
+							addMethod(instruction.arguments[i].methodv);
 						popContext();
 						break;
 					default:
@@ -956,7 +867,7 @@ final class RefBuilder : ASTraitsVisitor
 					}
 
 				if (pathSegment.length > 240)
-					pathSegment = assumeUnique(pathSegment[0..200] ~ '-' ~ toHexString(md5Of(pathSegment)));
+					pathSegment = pathSegment[0..200] ~ '-' ~ getDigestString(pathSegment);
 			}
 
 			return arrayJoin(pathSegments, "/");
@@ -969,38 +880,35 @@ final class RefBuilder : ASTraitsVisitor
 		return arrayJoin(strings);
 	}
 
-	bool addObject(T)(T obj, ContextPriority priority) { return objects.add(obj, context, priority); }
+	bool addObject(T)(T obj) { return objects.add(obj, context); }
 
-	void addClass(ASProgram.Class vclass, ContextPriority priority)
+	void addClass(ASProgram.Class vclass)
 	{
-		addObject(vclass, priority);
+		addObject(vclass);
 
-		pushContext("class", true);
-		pushContext("init", true);
-		addMethod(vclass.cinit, ContextPriority.declaration);
-		popContext(); // init
-		popContext(); // class
+		pushContext("cinit");
+		addMethod(vclass.cinit);
+		popContext();
 
-		pushContext("instance", true);
-		pushContext("init", true);
-		addMethod(vclass.instance.iinit, ContextPriority.declaration);
-		popContext(); // init
+		pushContext("iinit");
+		addMethod(vclass.instance.iinit);
+		popContext();
 
-		visitMultiname(vclass.instance.name, ContextPriority.declaration);
-		visitMultiname(vclass.instance.superName, ContextPriority.usage);
-		visitNamespace(vclass.instance.protectedNs, ContextPriority.declaration);
+		pushContext("instance");
+		visitMultiname(vclass.instance.name);
+		visitMultiname(vclass.instance.superName);
 		foreach (iface; vclass.instance.interfaces)
-			visitMultiname(iface, ContextPriority.usage);
-		popContext(); // instance
+			visitMultiname(iface);
+		popContext();
 	}
 
-	void addMethod(ASProgram.Method method, ContextPriority priority)
+	void addMethod(ASProgram.Method method)
 	{
-		if (addObject(method, priority))
+		if (addObject(method))
 		{
 			foreach (paramType; method.paramTypes)
-				visitMultiname(paramType, ContextPriority.usage);
-			visitMultiname(method.returnType, ContextPriority.usage);
+				visitMultiname(paramType);
+			visitMultiname(method.returnType);
 			if (method.vbody)
 				visitMethodBody(method.vbody);
 		}
@@ -1024,7 +932,6 @@ final class Disassembler
 				base = dirName(base), up++;
 			string rel  = replicate("../", up) ~ full[base.length+1..$];
 
-			mainsb.flush();
 			StringBuilder sb = new StringBuilder(full);
 			callback(sb);
 			sb.save();
@@ -1113,7 +1020,7 @@ final class Disassembler
 		if (v == ABCFile.NULL_INT)
 			sb ~= "null";
 		else
-			sb.write(v);
+			sb ~= to!string(v);
 	}
 
 	void dumpUInt(StringBuilder sb, ulong v)
@@ -1121,16 +1028,7 @@ final class Disassembler
 		if (v == ABCFile.NULL_UINT)
 			sb ~= "null";
 		else
-			sb.write(v);
-	}
-
-	static struct StaticBuf(T, size_t size)
-	{
-		T[size] buf;
-		size_t pos;
-		void put(T v) { buf[pos++] = v; }
-		void put(in T[] v) { buf[pos..pos+v.length] = v[]; pos+=v.length; }
-		T[] data() { return buf[0..pos]; }
+			sb ~= to!string(v);
 	}
 
 	void dumpDouble(StringBuilder sb, double v)
@@ -1139,22 +1037,14 @@ final class Disassembler
 			sb ~= "null";
 		else
 		{
-			StaticBuf!(char, 64) buf;
-			formattedWrite(&buf, "%.18g", v);
-			char[] s = buf.data();
+			string s = format("%.18g", v);
 
 			static double forceDouble(double d) { static double n; n = d; return n; }
 			if (s != "nan" && s != "inf" && s != "-inf")
 			{
 				foreach_reverse (i; 1..s.length)
-					if (s[i]>='0' && s[i]<='8')
-					{
-						s[i]++;
-						if (forceDouble(to!double(s[0..i+1]))==v)
-							s = s[0..i+1];
-						else
-							s[i]--;
-					}
+					if (s[i]>='0' && s[i]<='8' && forceDouble(to!double(s[0..i] ~ cast(char)(s[i]+1)))==v)
+						s = s[0..i] ~ cast(char)(s[i]+1);
 				while (s.length>2 && s[$-1]!='.' && forceDouble(to!double(s[0..$-1]))==v)
 					s = s[0..$-1];
 			}
@@ -1546,7 +1436,7 @@ final class Disassembler
 	void dumpScript(StringBuilder sb, ASProgram.Script script, uint index)
 	{
 		sb ~= "script ; ";
-		sb.write(index);
+		sb ~= to!string(index);
 		sb.indent++; sb.newLine();
 		dumpMethod(sb, script.sinit, "sinit");
 		dumpTraits(sb, script.traits, true);
@@ -1564,17 +1454,24 @@ final class Disassembler
 	void dumpLabel(StringBuilder sb, ref ABCFile.Label label)
 	{
 		sb ~= 'L';
-		sb.write(label.index);
+		sb ~= to!string(label.index);
 		if (label.offset != 0)
 		{
 			if (label.offset > 0)
 				sb ~= '+';
-			sb.write(label.offset);
+			sb ~= to!string(label.offset);
 		}
 	}
 
 	void dumpMethodBody(StringBuilder sb, ASProgram.MethodBody mbody)
 	{
+		if (mbody.error)
+		{
+			sb ~= "; Error while disassembling method: " ~ mbody.error;
+			sb.newLine();
+			sb.linePrefix = "; ";
+		}
+
 		sb ~= "body";
 		sb.indent++; sb.newLine();
 		dumpUIntField(sb, "maxstack", mbody.maxStack);
@@ -1590,7 +1487,17 @@ final class Disassembler
 			labels[e.from.index] = labels[e.to.index] = labels[e.target.index] = true;
 
 		sb.indent++;
-		dumpInstructions(sb, mbody.instructions, labels, mbody.errors);
+		if (mbody.error)
+			foreach (i, b; mbody.rawBytes)
+			{
+				sb ~= format("0x%02X", b);
+				if (i%16==15 || i==mbody.rawBytes.length-1)
+					sb.newLine();
+				else
+					sb ~= " ";
+			}
+		else
+			dumpInstructions(sb, mbody.instructions, labels);
 		sb.indent--;
 
 		sb ~= "end ; code";
@@ -1615,7 +1522,7 @@ final class Disassembler
 		sb.linePrefix = null;
 	}
 
-	void dumpInstructions(StringBuilder sb, ASProgram.Instruction[] instructions, bool[] labels, ABCFile.Error[] errors)
+	void dumpInstructions(StringBuilder sb, ASProgram.Instruction[] instructions, bool[] labels)
 	{
 		foreach (ref instruction; instructions)
 			foreach (i, type; opcodeInfo[instruction.opcode].argumentTypes)
@@ -1639,15 +1546,11 @@ final class Disassembler
 			{
 				sb.noIndent();
 				sb ~= 'L';
-				sb.write(ii);
+				sb ~= to!string(ii);
 				sb ~= ':';
 				sb.newLine();
 			}
 		}
-
-		string[] iErrors = new string[instructions.length + 1];
-		foreach (ref error; errors)
-			iErrors[error.loc.index] = error.msg;
 
 		bool extraNewLine = false;
 		foreach (uint ii, ref instruction; instructions)
@@ -1656,20 +1559,6 @@ final class Disassembler
 				sb.newLine();
 			extraNewLine = newLineAfter[instruction.opcode];
 			checkLabel(ii);
-
-			if (iErrors[ii])
-			{
-				sb ~= "; Error: ";
-				sb ~= iErrors[ii];
-				sb.newLine();
-			}
-
-			if (instruction.opcode == Opcode.OP_raw)
-			{
-				sb ~= "; 0x%02X".format(instruction.arguments[0].ubytev);
-				sb.newLine();
-				continue;
-			}
 
 			sb ~= opcodeInfo[instruction.opcode].name;
 			auto argTypes = opcodeInfo[instruction.opcode].argumentTypes;
@@ -1685,13 +1574,13 @@ final class Disassembler
 							throw new Exception("Don't know how to disassemble OP_" ~ opcodeInfo[instruction.opcode].name);
 
 						case OpcodeArgumentType.UByteLiteral:
-							sb.write(instruction.arguments[i].ubytev);
+							sb ~= to!string(instruction.arguments[i].ubytev);
 							break;
 						case OpcodeArgumentType.IntLiteral:
-							sb.write(instruction.arguments[i].intv);
+							sb ~= to!string(instruction.arguments[i].intv);
 							break;
 						case OpcodeArgumentType.UIntLiteral:
-							sb.write(instruction.arguments[i].uintv);
+							sb ~= to!string(instruction.arguments[i].uintv);
 							break;
 
 						case OpcodeArgumentType.Int:
@@ -1804,7 +1693,6 @@ static this()
 		Opcode.OP_si32,
 		Opcode.OP_sf32,
 		Opcode.OP_sf64,
-		Opcode.OP_throw,
 	])
 		newLineAfter[o] = true;
 }

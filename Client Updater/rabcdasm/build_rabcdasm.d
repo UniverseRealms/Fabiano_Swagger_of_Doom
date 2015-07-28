@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010, 2011, 2012, 2013 Vladimir Panteleev <vladimir@thecybershadow.net>
+ *  Copyright 2010, 2011, 2012 Vladimir Panteleev <vladimir@thecybershadow.net>
  *  This file is part of RABCDAsm.
  *
  *  RABCDAsm is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 /// A simple tool to build RABCDAsm in one command.
 /// You can use the DC and DCFLAGS environment variables to override the detected compiler and compilation flags.
-/// You can also pass program names or compilation options on the command-line to override the default ones.
 
 module build_rabcdasm;
 
@@ -53,20 +52,17 @@ void compile(string program)
 
 void test(string code, string extraFlags=null)
 {
-	const BASE = "build_rabcdasm_buildtest";
-	const FN = BASE ~ ".d";
+	const FN = "test.d";
 	std.file.write(FN, code);
-	scope(exit) foreach (de; dirEntries(".", BASE ~ "*", SpanMode.shallow)) remove(de.name);
-	enforce(system(format("rdmd --force --compiler=%s -od. %s %s %s", compiler, flags, extraFlags, FN)) == 0, "Test failed");
+	scope(exit) remove(FN);
+	enforce(system(format("rdmd --force --compiler=%s %s %s %s", compiler, flags, extraFlags, FN)) == 0, "Test failed");
 	stderr.writeln(" >>> OK");
 }
 
-int main(string[] args)
+int main()
 {
 	try
 	{
-		auto programs = ["rabcasm", "rabcdasm", "abcexport", "abcreplace", "swfbinexport", "swfbinreplace", "swfdecompress", "swf7zcompress"];
-
 		compiler = getenv("DC");
 		if (compiler is null)
 			compiler = DEFAULT_COMPILER;
@@ -74,15 +70,6 @@ int main(string[] args)
 		flags = getenv("DCFLAGS");
 		if (flags is null)
 			flags = DEFAULT_FLAGS;
-
-		string[] optionArgs, programArgs;
-		foreach (arg; args[1..$])
-			(arg.startsWith("-") ? optionArgs : programArgs) ~= arg;
-
-		if (optionArgs.length)
-			flags = optionArgs.join(" ");
-		if (programArgs.length)
-			programs = programArgs;
 
 		stderr.writeln("* Checking for working compiler...");
 		test(`
@@ -116,7 +103,7 @@ int main(string[] args)
 		if (haveLZMA)
 			flags ~= " " ~ LZMA_FLAGS;
 
-		foreach (program; programs)
+		foreach (program; ["rabcasm", "rabcdasm", "abcexport", "abcreplace", "swfbinexport", "swfbinreplace", "swfdecompress", "swf7zcompress"])
 			compile(program);
 
 		if (haveLZMA)

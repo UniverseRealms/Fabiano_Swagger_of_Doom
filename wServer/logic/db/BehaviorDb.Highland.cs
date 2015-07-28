@@ -1,10 +1,6 @@
-﻿#region
-
-using wServer.logic.behaviors;
+﻿using wServer.logic.behaviors;
 using wServer.logic.loot;
 using wServer.logic.transitions;
-
-#endregion
 
 namespace wServer.logic
 {
@@ -13,6 +9,7 @@ namespace wServer.logic
         private _ Highland = () => Behav()
             .Init("Minotaur",
                 new State(
+                    new DropPortalOnDeath("Snake Pit Portal", 20, PortalDespawnTimeSec: 100),
                     new State("idle",
                         new StayAbove(0.6, 160),
                         new PlayerWithinTransition(10, "charge")
@@ -74,6 +71,7 @@ namespace wServer.logic
             )
             .Init("Ogre King",
                 new State(
+                    new DropPortalOnDeath("Snake Pit Portal", 20, PortalDespawnTimeSec: 100),
                     new Spawn("Ogre Warrior", 4, coolDown: 12000),
                     new Spawn("Ogre Mage", 2, coolDown: 16000),
                     new Spawn("Ogre Wizard", 2, coolDown: 20000),
@@ -167,6 +165,7 @@ namespace wServer.logic
             )
             .Init("Lizard God",
                 new State(
+                    new DropPortalOnDeath("Snake Pit Portal", 20, PortalDespawnTimeSec: 100),
                     new Spawn("Night Elf Archer", 4),
                     new Spawn("Night Elf Warrior", 3),
                     new Spawn("Night Elf Mage", 2),
@@ -374,6 +373,7 @@ namespace wServer.logic
             )
             .Init("Flayer God",
                 new State(
+                    new DropPortalOnDeath("Snake Pit Portal", 20, PortalDespawnTimeSec: 100),
                     new Spawn("Flayer", 2),
                     new Spawn("Flayer Veteran", 3),
                     new Reproduce("Flayer God", densityMax: 2),

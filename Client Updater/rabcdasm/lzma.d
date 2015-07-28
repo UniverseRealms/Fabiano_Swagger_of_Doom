@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012, 2013, 2014 Vladimir Panteleev <vladimir@thecybershadow.net>
+ *  Copyright 2012 Vladimir Panteleev <vladimir@thecybershadow.net>
  *  This file is part of RABCDAsm.
  *
  *  RABCDAsm is free software: you can redistribute it and/or modify
@@ -59,7 +59,6 @@ ubyte[] lzmaDecompress(LZMAHeader header, in ubyte[] compressedData)
 	}
 
 	header.decompressedSize = -1; // Required as Flash uses End-of-Stream marker
-	fixDictSize(header.dictionarySize);
 	decompress(cast(ubyte[])(&header)[0..1]);
 	decompress(compressedData);
 
@@ -79,12 +78,13 @@ ubyte[] lzmaCompress(in ubyte[] decompressedData, LZMAHeader* header)
 	lzmaEnforce(lzma_alone_encoder(&strm, &opts), "lzma_alone_encoder");
 	scope(exit) lzma_end(&strm);
 
-	auto outBuf = new ubyte[decompressedData.length * 11 / 10 + 1024];
+	auto outBuf = new ubyte[decompressedData.length + 1024];
 	strm.next_out  = outBuf.ptr;
 	strm.avail_out = outBuf.length;
 	strm.next_in   = decompressedData.ptr;
 	strm.avail_in  = decompressedData.length;
 	lzmaEnforce(lzma_code(&strm, lzma_action.LZMA_RUN), "lzma_code (LZMA_RUN)");
+	scope(failure) { import std.stdio; writeln("avail_in=", strm.avail_in); }
 	enforce(strm.avail_in == 0, "Not all data was read");
 	enforce(strm.avail_out != 0, "Ran out of compression space");
 
@@ -98,19 +98,4 @@ private void lzmaEnforce(bool STREAM_END_OK=false)(lzma_ret v, string f)
 {
 	if (v != lzma_ret.LZMA_OK && (!STREAM_END_OK || v != lzma_ret.LZMA_STREAM_END))
 		throw new Exception(text(f, " error: ", v));
-}
-
-/// Work around an artificial lzma_alone_decoder limitation in liblzma
-/// which prevents it from accepting any streams with a dictionary size
-/// that is not 2^n or 2^n + 2^(n-1).
-/// See xz\src\liblzma\common\alone_decoder.c (git commit e7b424d267), line 87
-private void fixDictSize(ref uint d)
-{
-	--d;
-	d |= d >> 2;
-	d |= d >> 3;
-	d |= d >> 4;
-	d |= d >> 8;
-	d |= d >> 16;
-	++d;
 }

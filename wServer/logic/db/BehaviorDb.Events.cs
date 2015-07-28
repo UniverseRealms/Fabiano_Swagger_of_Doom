@@ -1,12 +1,17 @@
-﻿using wServer.logic.behaviors;
+﻿#region
+
+using wServer.logic.behaviors;
 using wServer.logic.loot;
 using wServer.logic.transitions;
+
+#endregion
 
 namespace wServer.logic
 {
     partial class BehaviorDb
     {
         private _ Events = () => Behav()
+        #region Skull Shrine
 
             .Init("Skull Shrine",
                 new State(
@@ -55,6 +60,9 @@ namespace wServer.logic
                     new Shoot(15, 2, 5, 0, predictive: 1, coolDown: 750)
                     )
             )
+        #endregion
+
+        #region Hermit God
 
             .Init("Hermit God",
                 new State(
@@ -92,6 +100,7 @@ namespace wServer.logic
                         new InvisiToss("Hermit God Tentacle", 5, 270, 90000001, coolDownOffset: 0),
                         new InvisiToss("Hermit God Tentacle", 5, 315, 90000001, coolDownOffset: 0),
                         //new InvisiToss("Hermit God Drop", 5, 0, coolDown: 90000001, coolDownOffset: 0),
+
                         //new Spawn("Hermit God Tentacle", 8, 8, coolDown:9000001),
                         new TimedTransition(1000, "check")
                         ),
@@ -177,19 +186,8 @@ namespace wServer.logic
                 new Threshold(0.05,
                     new ItemLoot("Helm of the Juggernaut", 0.005)
                 )
-            )
-
-            .Init("Ghost Ship",
-                new State(
-                    new State("idle",
-                        new HpLessTransition(0.9999, "active")
-                        ),
-                    new State("active",
-                        new Prioritize(
-                            new Wander(0.1)
-                            )
-                        )
-                    )
             );
+
+        #endregion
     }
 }

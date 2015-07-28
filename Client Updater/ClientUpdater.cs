@@ -29,6 +29,8 @@ namespace Client_Updater
             ReplaceDomain();
             ReplaceRSA();
             ChangeCopyright();
+            FixEntityClass();
+            EnableRemoteTexture();
             Recompile();
             DeleteFolders();
             UpdateLabel("Client done!");
@@ -262,8 +264,92 @@ namespace wServer
             p = Process.Start(new ProcessStartInfo(Environment.CurrentDirectory + @"\rabcdasm\swflzmacompress.exe", "client-mod.swf"));
             p.WaitForExit();
 
-            File.Copy(Environment.CurrentDirectory + "\\client-mod.swf", Environment.CurrentDirectory + "\\client-release.swf", true);
+            int unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            File.Copy(Environment.CurrentDirectory + "\\client-mod.swf", Environment.CurrentDirectory + $"\\AssembleeGameClient{unixTimestamp}.swf", true);
             File.Delete(Environment.CurrentDirectory + "\\client-mod.swf");
+        }
+
+        private void EnableRemoteTexture()
+        {
+            UpdateLabel("searching for texture class");
+            Dictionary<string, string> files = new Dictionary<string, string>();
+            string filetext = String.Empty;
+
+            foreach (string path in this.files)
+            {
+                using (StreamReader rdr = new StreamReader(File.Open(path, FileMode.Open)))
+                {
+                    filetext = rdr.ReadToEnd();
+                    if (filetext.Contains("Texture")
+                        && filetext.Contains("AnimatedTexture")
+                        && filetext.Contains("RemoteTexture")
+                        && filetext.Contains("RandomTexture")
+                        && filetext.Contains("AltTexture")
+                        && filetext.Contains("Mask")
+                        && filetext.Contains("Effect")
+                        && filetext.Contains("trait method QName(PackageNamespace(\"\", \"#0\"), \"getTexture\") flag OVERRIDE")
+                        && filetext.Contains("trait method QName(PackageNamespace(\"\", \"#0\"), \"getAltTextureData\") flag OVERRIDE"))
+                    {
+                        UpdateLabel("texture class found!");
+                        files.Add(path, filetext);
+                    }
+                }
+            }
+            var superCalled = false;
+            foreach (var file in files)
+            {
+                UpdateLabel("doing texture class stuff");
+                filetext = String.Empty;
+                using (StreamReader rdr = new StreamReader(File.Open(file.Key, FileMode.Open)))
+                {
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine();
+                        if (line.Contains("constructsuper"))
+                            superCalled = true;
+
+                        if (superCalled && line.Contains("callproperty"))
+                        {
+                            line = "     pushtrue";
+                            superCalled = false;
+                        }
+
+                        filetext += line + "\n";
+                    }
+                }
+                using (StreamWriter wtr = new StreamWriter(file.Key, false))
+                    wtr.Write(filetext);
+            }
+            UpdateLabel("texture class: Done!");
+        }
+
+        private void FixEntityClass()
+        {
+            UpdateLabel("searching for entity class");
+            Dictionary<string, string> files = new Dictionary<string, string>();
+            string filetext = String.Empty;
+
+            foreach (string path in this.files)
+            {
+                using (StreamReader rdr = new StreamReader(File.Open(path, FileMode.Open)))
+                {
+                    filetext = rdr.ReadToEnd();
+                    if (filetext.Contains("toString") && filetext.Contains("\"objectType_: \"") && filetext.Contains("\" status_: \"") && filetext.Contains("readShort") && filetext.Contains("parseFromInput"))
+                    {
+                        UpdateLabel("entity class found!");
+                        files.Add(path, filetext);
+                    }
+                }
+            }
+
+            foreach (var file in files)
+            {
+                UpdateLabel("replacing short with unsigned short");
+                filetext = file.Value.Replace("readShort", "readUnsignedShort");
+                using (StreamWriter wtr = new StreamWriter(file.Key, false))
+                    wtr.Write(filetext);
+            }
+            UpdateLabel("Entity class: Done!");
         }
 
         private void ChangeCopyright()
@@ -423,11 +509,9 @@ namespace wServer
                             case 0:
                                 objectxml += xml;
                                 break;
-
                             case 1:
                                 groundxml += xml;
                                 break;
-
                             case 2:
                                 equipentsetsxml += xml;
                                 break;

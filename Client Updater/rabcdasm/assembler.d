@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010, 2011, 2012, 2013, 2014 Vladimir Panteleev <vladimir@thecybershadow.net>
+ *  Copyright 2010, 2011, 2012 Vladimir Panteleev <vladimir@thecybershadow.net>
  *  This file is part of RABCDAsm.
  *
  *  RABCDAsm is free software: you can redistribute it and/or modify
@@ -18,175 +18,85 @@
 
 module assembler;
 
-import std.conv;
-import std.exception;
 import std.file;
-import std.path;
-import std.range;
-import std.stdio;
 import std.string;
-
+import std.conv;
+import std.path;
+import std.exception;
 import abcfile;
 import asprogram;
 import common;
 
 final class Assembler
 {
-	static struct Position
+	struct Position
 	{
-		File file;
-		ulong offset;
+		string filename;
+		size_t pos;
 
 		File load()
 		{
-			assert(file.ptr == file.end);
-			file.filePosition = offset;
-			return file;
+			File f = File.load(filename);
+			f.pos = f.buf.ptr + pos;
+			return f;
 		}
 	}
 
-	static final class File
+	struct File
 	{
-		string name;
+		string filename;
+		string buf;
+		immutable(char)* pos;
+		immutable(char)* end;
 		string[] arguments;
-		string data;
-		@property bool isVirtual() { return data ! is null; }
+		string basePath;
 
-		File parent;
-
-		const(char)* ptr, end;
-
-		enum BUF_SIZE = 256*1024;
-		enum PADDING = 16;
-		private char[] buffer;
-		static char[][] usedBuffers;
-
-		ulong filePosition; // File position of buffer.ptr
-		sizediff_t shift; // Error location adjustment
-		std.stdio.File f;
-
-		this(string name, string data = null, string[] arguments = null)
+		static File load(string filename, string[] arguments = null)
 		{
-			this.name = name;
-			this.arguments = arguments;
-			this.data = data;
-			if (data)
-			{
-				createBuffer(data.length);
-				buffer[] = data[];
-				ptr = buffer.ptr;
-				end = ptr + data.length;
-			}
-			else
-			{
-				createBuffer(BUF_SIZE);
-				f = openFile(name, "rb");
-			}
+			return fromFile(filename, cast(string)read(longPath(filename)), arguments);
 		}
 
-		bool loadNextChunk()
+		static File fromFile(string filename, string data, string[] arguments = null)
 		{
-			if (!f.isOpen)
-				return false;
-
-			filePosition += end - buffer.ptr;
-			assert(filePosition == f.tell, "%s %s".format(filePosition, f.tell));
-
-			auto result = f.rawRead(buffer[0..BUF_SIZE]);
-			if (result.length)
-			{
-				ptr = result.ptr;
-				end = ptr + result.length;
-				if (result.length < BUF_SIZE)
-					buffer[result.length..result.length+PADDING] = 0;
-				return true;
-			}
-			else
-			{
-				f.close();
-				ptr = end = buffer.ptr + buffer.length - PADDING;
-				usedBuffers ~= buffer;
-				buffer = null;
-				return false;
-			}
+			return fromData(filename, data, arguments, dirName(filename));
 		}
 
-		void createBuffer(size_t size)
+		static File fromData(string name, string data, string[] arguments = null, string basePath = null)
 		{
-			// guarantee that an out-of-bounds access (within a few bytes)
-			// will result in a null character, as an optimization
-			auto bufferSize = size + PADDING;
-			if (usedBuffers.length && usedBuffers[0].length >= bufferSize)
-			{
-				buffer = usedBuffers[0];
-				usedBuffers = usedBuffers[1..$];
-			}
-			else
-				buffer = new char[bufferSize];
-			ptr = end = buffer.ptr;
-			buffer[] = 0;
+			data ~= "\0"; data = data[0..$-1]; // hack to prevent readWord etc. from checking for end-of-file on every character
+			return File(name, data, data.ptr, data.ptr + data.length, arguments, basePath);
 		}
 
 		@property Position position()
 		{
-			return Position(this, filePosition + (buffer ? ptr - buffer.ptr : 0) + shift);
+			Position p;
+			p.filename = filename;
+			p.pos = pos - buf.ptr;
+			return p;
 		}
 
 		@property string positionStr()
 		{
-			auto offset = position.offset;
-			ulong p = 0;
-			ulong line = 1;
-			ulong lineStart = 0;
-
-			InputRange!(ubyte[]) dataSource;
-			if (isVirtual)
-				dataSource = (cast(ubyte[])data).only.inputRangeObject;
-			else
-			{
-				f = openFile(name, "rb");
-				dataSource = f.byChunk(BUF_SIZE).inputRangeObject;
-			}
-			scope(exit) if (!isVirtual) f.close();
-
-			foreach (ubyte[] buffer; dataSource)
-				foreach (b; buffer)
-				{
-					if (p == offset)
-						return "%s(%d,%d)".format(name, line, p-lineStart+1);
-					p++;
-					if (b == 10)
-					{
-						line++;
-						lineStart = p;
-					}
-				}
-			return "%s(???)".format(name);
-		}
-
-		@property char front()
-		{
-			char c;
-			return (c = *ptr) != 0 ? c : (loadNextChunk(), *ptr);
-		}
-
-		void popFront()
-		{
-			ptr++;
+			auto lines = splitLines(buf);
+			foreach (i, line; lines)
+				if (pos <= line.ptr + line.length)
+					return format("%s(%d,%d)", filename, i+1, pos-line.ptr+1);
+			return format("%s(???)", filename);
 		}
 	}
 
-	File currentFile;
+	File[64] files;
+	int fileCount; /// recursion depth
 
 	string getBasePath()
 	{
-		for (auto f = currentFile; f; f = f.parent)
-			if (!f.isVirtual)
-				return f.name.dirName();
+		foreach (ref file; files[0..fileCount])
+			if (file.basePath !is null)
+				return file.basePath;
 		return null;
 	}
 
-	string convertFilename(in char[] filename)
+	string convertFilename(string filename)
 	{
 		if (filename.length == 0)
 			throw new Exception("Empty filename");
@@ -201,11 +111,11 @@ final class Assembler
 	{
 		while (true)
 		{
-			char c;
-			while ((c = peekChar())==0)
+			while (files[0].pos == files[0].end)
 				popFile();
+			char c = *files[0].pos;
 			if (c == ' ' || c == '\r' || c == '\n' || c == '\t')
-				skipChar();
+				files[0].pos++;
 			else
 			if (c == '#')
 				handlePreprocessor();
@@ -214,9 +124,9 @@ final class Assembler
 				handleVar();
 			else
 			if (c == ';')
-				do
-					skipChar();
-				while (peekChar() != '\n');
+			{
+				do {} while (*++files[0].pos != '\n');
+			}
 			else
 				return;
 		}
@@ -233,23 +143,23 @@ final class Assembler
 		switch (word)
 		{
 			case "mixin":
-				pushFile(new File("#mixin", readImmString()));
+				pushFile(File.fromData("#mixin", readString()));
 				break;
 			case "call": // #mixin with arguments
-				pushFile(new File("#call", readImmString(), readList!('(', ')', readImmString, false)()));
+				pushFile(File.fromData("#call", readString(), readList!('(', ')', readString, false)()));
 				break;
 			case "include":
-				pushFile(new File(convertFilename(readString())));
+				pushFile(File.load(convertFilename(readString())));
 				break;
 			case "get":
 				auto filename = convertFilename(readString());
-				pushFile(new File(filename, toStringLiteral(cast(string)read(longPath(filename)))));
+				pushFile(File.fromFile(filename, toStringLiteral(cast(string)read(longPath(filename)))));
 				break;
 			case "set":
-				vars[readWord()] = readImmString();
+				vars[readWord()] = readString();
 				break;
 			case "unset":
-				vars.remove(readWord().idup);
+				vars.remove(readWord());
 				break;
 			case "privatens":
 				enforce(sourceVersion < 3, "#privatens is deprecated");
@@ -257,21 +167,21 @@ final class Assembler
 				readString();
 				break;
 			case "version":
-				sourceVersion = readUInt().to!uint();
+				sourceVersion = cast(uint)readUInt();
 				enforce(sourceVersion >= 1 && sourceVersion <= 3, "Invalid/unknown #version");
 				break;
 			default:
-				backpedal(word.length);
-				throw new Exception("Unknown preprocessor declaration: " ~ word.idup);
+				files[0].pos -= word.length;
+				throw new Exception("Unknown preprocessor declaration: " ~ word);
 		}
 	}
 
 	void handleVar()
 	{
-		skipChar(); // $
+		skipChar();
 		skipWhitespace();
 
-		const(char)[] name;
+		string name;
 		bool asStringLiteral;
 		if (peekChar() == '"')
 		{
@@ -285,14 +195,14 @@ final class Assembler
 			throw new Exception("Empty var name");
 		if (name[0] >= '1' && name[0] <= '9')
 		{
-			for (auto f = currentFile; f; f = f.parent)
-				if (f.arguments.length)
+			foreach (ref file; files[0..fileCount])
+				if (file.arguments.length)
 				{
 					uint index = .to!uint(name)-1;
-					if (index >= f.arguments.length)
+					if (index >= file.arguments.length)
 						throw new Exception("Argument index out-of-bounds");
-					string value = f.arguments[index];
-					pushFile(new File('$' ~ name.assumeUnique(), asStringLiteral ? toStringLiteral(value) : value));
+					string value = file.arguments[index];
+					pushFile(File.fromData('$' ~ name, asStringLiteral ? toStringLiteral(value) : value));
 					return;
 				}
 			throw new Exception("No arguments in context");
@@ -301,9 +211,9 @@ final class Assembler
 		{
 			auto pvalue = name in vars;
 			if (pvalue is null)
-				throw new Exception("variable %s is not defined".format(name));
+				throw new Exception("variable " ~ name ~ " is not defined");
 			string value = *pvalue;
-			pushFile(new File('$' ~ name.assumeUnique(), asStringLiteral ? toStringLiteral(value) : value));
+			pushFile(File.fromData('$' ~ name, asStringLiteral ? toStringLiteral(value) : value));
 		}
 	}
 
@@ -312,24 +222,20 @@ final class Assembler
 		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-' || c == '+' || c == '.';
 	}
 
-	const(char)[] readWord()
+	string readWord()
 	{
 		skipWhitespace();
-		if (!isWordChar(currentFile.front))
+		if (!isWordChar(*files[0].pos))
 			//throw new Exception("Word character expected");
 			return null;
-		auto b = getBuf();
-		while (true)
+		auto start = files[0].pos;
+		char c;
+		do
 		{
-			auto c = currentFile.front;
-			if (!isWordChar(c))
-				break;
-			b.put(c);
-			currentFile.popFront();
-		}
-		return b.get();
+			c = *++files[0].pos;
+		} while (isWordChar(c));
+		return start[0..files[0].pos-start];
 	}
-	string readImmWord() { return readWord().idup; }
 
 	ubyte fromHex(char x)
 	{
@@ -358,65 +264,63 @@ final class Assembler
 
 	void pushFile(File file)
 	{
-		file.parent = currentFile;
-		currentFile = file;
+		if (fileCount == files.length)
+			throw new Exception("Recursion limit exceeded");
+		files[1..fileCount+1] = files[0..fileCount].dup;
+		fileCount++;
+		files[0] = file;
 	}
 
 	/// For restoring the position of an error
 	void setFile(File file)
 	{
-		currentFile = file;
+		files[0] = file;
+		fileCount = -1;
 	}
 
 	void popFile()
 	{
-		if (!currentFile || !currentFile.parent)
+		assert(fileCount > 0);
+		if (fileCount==1)
 			throw new Exception("Unexpected end of file");
-		currentFile = currentFile.parent;
+		fileCount--;
+		files[0..fileCount] = files[1..fileCount+1].dup;
 	}
 
 	void expectWord(string expected)
 	{
-		auto word = readWord();
+		string word = readWord();
 		if (word != expected)
 		{
-			backpedal(word.length);
+			files[0].pos -= word.length;
 			throw new Exception("Expected " ~ expected);
 		}
 	}
 
 	char peekChar()
 	{
-		return currentFile.front;
+		return *files[0].pos;
 	}
 
 	void skipChar()
 	{
-		currentFile.popFront();
+		files[0].pos++;
 	}
 
 	void backpedal(size_t amount=1)
 	{
-		currentFile.shift -= amount;
+		files[0].pos -= amount;
 	}
 
 	char readChar()
 	{
-		auto c = currentFile.front;
-		if (c)
-			currentFile.popFront;
-		return c;
-	}
-
-	char readSymbol()
-	{
 		skipWhitespace();
-		return readChar();
+		return *files[0].pos++;
 	}
 
-	void expectSymbol(char c)
+	void expectChar(char c)
 	{
-		if (readSymbol() != c)
+		if (readChar() != c)
 		{
 			backpedal();
 			throw new Exception("Expected " ~ c);
@@ -437,12 +341,12 @@ final class Assembler
 			throw new Exception(name ~ " not set");
 	}
 
-	static ASType toASType(in char[] name)
+	static ASType toASType(string name)
 	{
 		auto t = name in ASTypeByName;
 		if (t)
 			return *t;
-		throw new Exception("Unknown ASType %s".format(name));
+		throw new Exception("Unknown ASType " ~ name);
 	}
 
 	static void addUnique(string name, K, V)(ref V[K] aa, K k, V v)
@@ -490,7 +394,7 @@ final class Assembler
 	{
 		ASProgram.Value v;
 		v.vkind = toASType(readWord());
-		expectSymbol('(');
+		expectChar('(');
 		switch (v.vkind)
 		{
 			case ASType.Integer:
@@ -503,7 +407,7 @@ final class Assembler
 				v.vdouble = readDouble();
 				break;
 			case ASType.Utf8:
-				v.vstring = readImmString();
+				v.vstring = readString();
 				break;
 			case ASType.Namespace:
 			case ASType.PackageNamespace:
@@ -522,7 +426,7 @@ final class Assembler
 			default:
 				throw new Exception("Unknown type");
 		}
-		expectSymbol(')');
+		expectChar(')');
 		return v;
 	}
 
@@ -534,7 +438,7 @@ final class Assembler
 			if (word == names[i])
 				return f;
 		backpedal(word.length);
-		throw new Exception("Unknown flag %s".format(word));
+		throw new Exception("Unknown flag " ~ word);
 	}
 
 	T[] readList(char OPEN, char CLOSE, alias READER, bool ALLOW_NULL, T=typeof(READER()))()
@@ -554,8 +458,8 @@ final class Assembler
 			}
 		}
 
-		expectSymbol(OPEN);
-		auto a = appender!(T[]);
+		expectChar(OPEN);
+		T[] r;
 
 		skipWhitespace();
 		if (peekChar() == CLOSE)
@@ -563,9 +467,9 @@ final class Assembler
 			skipChar(); // CLOSE
 			static if (ALLOW_NULL)
 			{
-				static T[1] sr;
 				// HACK: give r a .ptr so (r is null) is false, to distinguish it from "null"
-				auto r = sr[0..0];
+				r.length = 1;
+				r.length = 0;
 				assert(r !is null);
 				return r;
 			}
@@ -574,8 +478,8 @@ final class Assembler
 		}
 		while (true)
 		{
-			a.put(READER());
-			char c = readSymbol();
+			r ~= READER();
+			char c = readChar();
 			if (c == CLOSE)
 				break;
 			if (c != ',')
@@ -584,14 +488,14 @@ final class Assembler
 				throw new Exception("Expected " ~ CLOSE ~ " or ,");
 			}
 		}
-		return a.data;
+		return r;
 	}
 
 	// **************************************************
 
 	long readInt()
 	{
-		auto w = readWord();
+		string w = readWord();
 		if (w == "null")
 			return ABCFile.NULL_INT;
 		auto v = to!long(w);
@@ -601,7 +505,7 @@ final class Assembler
 
 	ulong readUInt()
 	{
-		auto w = readWord();
+		string w = readWord();
 		if (w == "null")
 			return ABCFile.NULL_UINT;
 		auto v = to!ulong(w);
@@ -611,90 +515,68 @@ final class Assembler
 
 	double readDouble()
 	{
-		auto w = readWord();
+		string w = readWord();
 		if (w == "null")
 			return ABCFile.NULL_DOUBLE;
 		return to!double(w);
 	}
 
-	const(char)[] readString()
+	string readString()
 	{
 		skipWhitespace();
-		char c = readSymbol();
-		if (c != '"')
+		if (peekChar() != '"')
 		{
-			auto word = readWord();
-			if (c == 'n' && word == "ull")
+			string word = readWord();
+			if (word == "null")
 				return null;
 			else
 			{
-				backpedal(1 + word.length);
+				backpedal(word.length);
 				throw new Exception("String literal expected");
 			}
 		}
-		auto buf = getBuf();
+		string s = "";
 		while (true)
-			switch (c = readChar())
+			switch (*++files[0].pos)
 			{
 				case '"':
-					return buf.get();
+					skipChar();
+					return s;
 				case '\\':
-					switch (c = readChar())
+					switch (*++files[0].pos)
 					{
-						case 'n': buf.put('\n'); break;
-						case 'r': buf.put('\r'); break;
-						case 'x':
-						{
-							char c0 = readChar();
-							char c1 = readChar();
-							buf.put(cast(char)((fromHex(c0) << 4) | fromHex(c1)));
-							break;
-						}
-						default : buf.put(c);
+						case 'n': s ~= '\n'; break;
+						case 'r': s ~= '\r'; break;
+						case 'x': s ~= cast(char)((fromHex(*++files[0].pos) << 4) | fromHex(*++files[0].pos)); break;
+						default: s ~= *files[0].pos;
 					}
 					break;
-				case 0:
-					throw new Exception("Unexpected null/terminator");
 				default:
-					buf.put(c);
+					s ~= *files[0].pos;
 			}
 	}
-
-	StringPool stringPool;
-	string readImmString() { return stringPool.get(readString()); }
-
-	Pool!(ASProgram.Namespace, ASType, string, uint) namespacePool;
 
 	ASProgram.Namespace readNamespace()
 	{
 		auto word = readWord();
 		if (word == "null")
 			return null;
-		auto kind = toASType(word);
-		expectSymbol('(');
-		auto name = readImmString();
-		uint id;
+		ASProgram.Namespace n = new ASProgram.Namespace;
+		n.kind = toASType(word);
+		expectChar('(');
+		n.name = readString();
 		if (peekChar() == ',')
 		{
 			skipChar();
-			string s = readImmString();
-			auto pindex = s in namespaceLabels;
+			string name = readString();
+			auto pindex = name in namespaceLabels;
 			if (pindex)
-				id = *pindex;
+				n.id = *pindex;
 			else
-				id = namespaceLabels[s] = cast(uint)namespaceLabels.length+1;
+				n.id = namespaceLabels[name] = cast(uint)namespaceLabels.length+1;
 		}
-		expectSymbol(')');
-
-		static ASProgram.Namespace createNamespace(ASType kind, string name, uint id)
-		{
-			ASProgram.Namespace n = new ASProgram.Namespace;
-			n.kind = kind;
-			n.name = name;
-			n.id = id;
-			return n;
-		}
-		return namespacePool.get(kind, name, id, &createNamespace);
+		expectChar(')');
+		return n;
 	}
 
 	ASProgram.Namespace[] readNamespaceSet()
@@ -709,26 +591,26 @@ final class Assembler
 			return null;
 		ASProgram.Multiname m = new ASProgram.Multiname;
 		m.kind = toASType(word);
-		expectSymbol('(');
+		expectChar('(');
 		switch (m.kind)
 		{
 			case ASType.QName:
 			case ASType.QNameA:
 				m.vQName.ns = readNamespace();
-				expectSymbol(',');
-				m.vQName.name = readImmString();
+				expectChar(',');
+				m.vQName.name = readString();
 				break;
 			case ASType.RTQName:
 			case ASType.RTQNameA:
-				m.vRTQName.name = readImmString();
+				m.vRTQName.name = readString();
 				break;
 			case ASType.RTQNameL:
 			case ASType.RTQNameLA:
 				break;
 			case ASType.Multiname:
 			case ASType.MultinameA:
-				m.vMultiname.name = readImmString();
-				expectSymbol(',');
+				m.vMultiname.name = readString();
+				expectChar(',');
 				m.vMultiname.nsSet = readNamespaceSet();
 				break;
 			case ASType.MultinameL:
@@ -742,7 +624,7 @@ final class Assembler
 			default:
 				throw new Exception("Unknown Multiname kind");
 		}
-		expectSymbol(')');
+		expectChar(')');
 		return m;
 	}
 
@@ -764,7 +646,6 @@ final class Assembler
 			throw new Exception("Unknown trait kind");
 		}
 		t.kind = *pkind;
-		kind = TraitKindNames[t.kind];
 		t.name = readMultiname();
 		switch (t.kind)
 		{
@@ -772,14 +653,14 @@ final class Assembler
 			case TraitKind.Const:
 				while (true)
 				{
-					auto word = readWord();
+					string word = readWord();
 					switch (word)
 					{
 						case "flag":
 							t.attr |= readFlag(TraitAttributeNames);
 							break;
 						case "slotid":
-							t.vSlot.slotId = readUInt().to!uint();
+							t.vSlot.slotId = cast(uint)readUInt();
 							break;
 						case "type":
 							mustBeNull(t.vSlot.typeName);
@@ -794,20 +675,20 @@ final class Assembler
 						case "end":
 							return t;
 						default:
-							throw new Exception("Unknown %s trait field %s".format(kind, word));
+							throw new Exception("Unknown " ~ kind ~ " trait field " ~ word);
 					}
 				}
 			case TraitKind.Class:
 				while (true)
 				{
-					auto word = readWord();
+					string word = readWord();
 					switch (word)
 					{
 						case "flag":
 							t.attr |= readFlag(TraitAttributeNames);
 							break;
 						case "slotid":
-							t.vClass.slotId = readUInt().to!uint();
+							t.vClass.slotId = cast(uint)readUInt();
 							break;
 						case "class":
 							mustBeNull(t.vClass.vclass);
@@ -819,20 +700,20 @@ final class Assembler
 						case "end":
 							return t;
 						default:
-							throw new Exception("Unknown %s trait field %s".format(kind, word));
+							throw new Exception("Unknown " ~ kind ~ " trait field " ~ word);
 					}
 				}
 			case TraitKind.Function:
 				while (true)
 				{
-					auto word = readWord();
+					string word = readWord();
 					switch (word)
 					{
 						case "flag":
 							t.attr |= readFlag(TraitAttributeNames);
 							break;
 						case "slotid":
-							t.vFunction.slotId = readUInt().to!uint();
+							t.vFunction.slotId = cast(uint)readUInt();
 							break;
 						case "method":
 							mustBeNull(t.vFunction.vfunction);
@@ -844,7 +725,7 @@ final class Assembler
 						case "end":
 							return t;
 						default:
-							throw new Exception("Unknown %s trait field %s".format(kind, word));
+							throw new Exception("Unknown " ~ kind ~ " trait field " ~ word);
 					}
 				}
 			case TraitKind.Method:
@@ -852,14 +733,14 @@ final class Assembler
 			case TraitKind.Setter:
 				while (true)
 				{
-					auto word = readWord();
+					string word = readWord();
 					switch (word)
 					{
 						case "flag":
 							t.attr |= readFlag(TraitAttributeNames);
 							break;
 						case "dispid":
-							t.vMethod.dispId = readUInt().to!uint();
+							t.vMethod.dispId = cast(uint)readUInt();
 							break;
 						case "method":
 							mustBeNull(t.vMethod.vmethod);
@@ -871,7 +752,7 @@ final class Assembler
 						case "end":
 							return t;
 						default:
-							throw new Exception("Unknown %s trait field %s".format(kind, word));
+							throw new Exception("Unknown " ~ kind ~ " trait field " ~ word);
 					}
 				}
 			default:
@@ -882,14 +763,14 @@ final class Assembler
 	ASProgram.Metadata readMetadata()
 	{
 		auto metadata = new ASProgram.Metadata;
-		metadata.name = readImmString();
+		metadata.name = readString();
 		string[] items;
 		while (true)
 			switch (readWord())
 			{
 				case "item":
-					items ~= readImmString();
-					items ~= readImmString();
+					items ~= readString();
+					items ~= readString();
 					break;
 				case "end":
 					if (sourceVersion < 2)
@@ -923,10 +804,10 @@ final class Assembler
 			{
 				case "name":
 					mustBeNull(m.name);
-					m.name = readImmString();
+					m.name = readString();
 					break;
 				case "refid":
-					addUnique!("method")(methodsByID, readImmString(), m);
+					addUnique!("method")(methodsByID, readString(), m);
 					break;
 				case "param":
 					m.paramTypes ~= readMultiname();
@@ -942,7 +823,7 @@ final class Assembler
 					m.options ~= readValue();
 					break;
 				case "paramname":
-					m.paramNames ~= readImmString();
+					m.paramNames ~= readString();
 					break;
 				case "body":
 					m.vbody = readMethodBody();
@@ -951,7 +832,7 @@ final class Assembler
 				case "end":
 					return m;
 				default:
-					throw new Exception("Unknown method field %s".format(word));
+					throw new Exception("Unknown method field " ~ word);
 			}
 		}
 	}
@@ -990,7 +871,7 @@ final class Assembler
 					mustBeSet!("iinit")(i.iinit);
 					return i;
 				default:
-					throw new Exception("Unknown instance field %s".format(word));
+					throw new Exception("Unknown instance field " ~ word);
 			}
 		}
 	}
@@ -1004,7 +885,7 @@ final class Assembler
 			switch (word)
 			{
 				case "refid":
-					addUnique!("class")(classesByID, readImmString(), c);
+					addUnique!("class")(classesByID, readString(), c);
 					break;
 				case "instance":
 					mustBeNull(c.instance);
@@ -1022,7 +903,7 @@ final class Assembler
 					mustBeSet!("instance")(c.instance);
 					return c;
 				default:
-					throw new Exception("Unknown class field %s".format(word));
+					throw new Exception("Unknown class field " ~ word);
 			}
 		}
 	}
@@ -1065,7 +946,7 @@ final class Assembler
 					mustBeSet!("sinit")(s.sinit);
 					return s;
 				default:
-					throw new Exception("Unknown script field %s".format(word));
+					throw new Exception("Unknown script field " ~ word);
 			}
 		}
 	}
@@ -1080,16 +961,16 @@ final class Assembler
 			switch (word)
 			{
 				case "maxstack":
-					m.maxStack = readUInt().to!uint();
+					m.maxStack = cast(uint)readUInt();
 					break;
 				case "localcount":
-					m.localCount = readUInt().to!uint();
+					m.localCount = cast(uint)readUInt();
 					break;
 				case "initscopedepth":
-					m.initScopeDepth = readUInt().to!uint();
+					m.initScopeDepth = cast(uint)readUInt();
 					break;
 				case "maxscopedepth":
-					m.maxScopeDepth = readUInt().to!uint();
+					m.maxScopeDepth = cast(uint)readUInt();
 					break;
 				case "code":
 					m.instructions = readInstructions(labels);
@@ -1103,14 +984,14 @@ final class Assembler
 				case "end":
 					return m;
 				default:
-					throw new Exception("Unknown body field %s".format(word));
+					throw new Exception("Unknown body field " ~ word);
 			}
 		}
 	}
 
-	ABCFile.Label parseLabel(const(char)[] label, uint[string] labels)
+	ABCFile.Label parseLabel(string label, uint[string] labels)
 	{
-		auto name = label;
+		string name = label;
 		int offset = 0;
 		foreach (i, c; label)
 			if (c=='-' || c=='+')
@@ -1121,7 +1002,7 @@ final class Assembler
 			}
 		auto lp = name in labels;
 		if (lp is null)
-			throw new Exception("Unknown label %s".format(name));
+			throw new Exception("Unknown label " ~ name);
 
 		return ABCFile.Label(*lp, offset);
 	}
@@ -1140,7 +1021,7 @@ final class Assembler
 				break;
 			if (peekChar() == ':')
 			{
-				addUnique!("label")(labels, word.idup, to!uint(instructions.length));
+				addUnique!("label")(labels, word, to!uint(instructions.length));
 				skipChar(); // :
 				continue;
 			}
@@ -1149,7 +1030,7 @@ final class Assembler
 			if (popcode is null)
 			{
 				backpedal(word.length);
-				throw new Exception("Unknown opcode %s".format(word));
+				throw new Exception("Unknown opcode " ~ word);
 			}
 
 			ASProgram.Instruction instruction;
@@ -1183,7 +1064,7 @@ final class Assembler
 						instruction.arguments[i].doublev = readDouble();
 						break;
 					case OpcodeArgumentType.String:
-						instruction.arguments[i].stringv = readImmString();
+						instruction.arguments[i].stringv = readString();
 						break;
 					case OpcodeArgumentType.Namespace:
 						instruction.arguments[i].namespacev = readNamespace();
@@ -1192,26 +1073,26 @@ final class Assembler
 						instruction.arguments[i].multinamev = readMultiname();
 						break;
 					case OpcodeArgumentType.Class:
-						localClassFixups ~= LocalFixup(currentFile.position, to!uint(instructions.length), i, readImmString());
+						localClassFixups ~= LocalFixup(files[0].position, to!uint(instructions.length), i, readString());
 						break;
 					case OpcodeArgumentType.Method:
-						localMethodFixups ~= LocalFixup(currentFile.position, to!uint(instructions.length), i, readImmString());
+						localMethodFixups ~= LocalFixup(files[0].position, to!uint(instructions.length), i, readString());
 						break;
 
 					case OpcodeArgumentType.JumpTarget:
 					case OpcodeArgumentType.SwitchDefaultTarget:
-						jumpFixups ~= LocalFixup(currentFile.position, to!uint(instructions.length), i, readWord().idup);
+						jumpFixups ~= LocalFixup(files[0].position, to!uint(instructions.length), i, readWord());
 						break;
 
 					case OpcodeArgumentType.SwitchTargets:
-						string[] switchTargetLabels = readList!('[', ']', readImmWord, false)();
+						string[] switchTargetLabels = readList!('[', ']', readWord, false)();
 						instruction.arguments[i].switchTargets.length = switchTargetLabels.length;
 						foreach (uint li, s; switchTargetLabels)
-							switchFixups ~= LocalFixup(currentFile.position, to!uint(instructions.length), i, s, li);
+							switchFixups ~= LocalFixup(files[0].position, to!uint(instructions.length), i, s, li);
 						break;
 				}
 				if (i < argTypes.length-1)
-					expectSymbol(',');
+					expectChar(',');
 			}
 
 			instructions ~= instruction;
@@ -1271,7 +1152,7 @@ final class Assembler
 				case "end":
 					return e;
 				default:
-					throw new Exception("Unknown exception field %s".format(word));
+					throw new Exception("Unknown exception field " ~ word);
 			}
 		}
 	}
@@ -1287,10 +1168,10 @@ final class Assembler
 			switch (word)
 			{
 				case "minorversion":
-					as.minorVersion = readUInt().to!ushort();
+					as.minorVersion = cast(ushort)readUInt();
 					break;
 				case "majorversion":
-					as.majorVersion = readUInt().to!ushort();
+					as.majorVersion = cast(ushort)readUInt();
 					break;
 				case "script":
 					as.scripts ~= readScript();
@@ -1304,7 +1185,7 @@ final class Assembler
 				case "end":
 					return;
 				default:
-					throw new Exception("Unknown program field %s".format(word));
+					throw new Exception("Unknown program field " ~ word);
 			}
 		}
 	}
@@ -1314,17 +1195,9 @@ final class Assembler
 		this.as = as;
 	}
 
-	string context()
-	{
-		string s = currentFile.positionStr ~ ": ";
-		for (auto f = currentFile.parent; f; f = f.parent)
-			s ~= "\n\t(included from %s)".format(f.positionStr);
-		return s;
-	}
-
 	void assemble(string mainFilename)
 	{
-		pushFile(new File(mainFilename));
+		pushFile(File.load(mainFilename));
 
 		try
 		{
@@ -1360,102 +1233,18 @@ final class Assembler
 		}
 		catch (Exception e)
 		{
-			e.msg = "\n%s\n%s".format(context(), e.msg);
-			throw e;
+			string s = files[0].positionStr ~ ": ";
+			if (fileCount == -1)
+				s ~= "\n\t(inclusion context unavailable)";
+			else
+				foreach (ref f; files[1..fileCount])
+					s ~= "\n\t(included from " ~ f.positionStr ~ ")";
+			throw new Exception(s, e);
 		}
 
 		classFixups = null;
 		methodFixups = null;
 		classesByID = null;
 		methodsByID = null;
-	}
-}
-
-struct StackBuf
-{
-	enum BUF_COUNT = 16;
-	enum BUF_SIZE = 1024;
-	static char[BUF_SIZE][BUF_COUNT] bufStorage;
-	static char[][BUF_COUNT] buffers;
-	static uint counter;
-
-	static this()
-	{
-		foreach (n; 0..BUF_COUNT)
-			buffers[n] = bufStorage[n][];
-	}
-
-	static StackBuf create()
-	{
-		StackBuf b;
-		b.buffer = &buffers[counter++ % BUF_COUNT];
-		assert((*b.buffer).length);
-		b.setBuffer();
-		return b;
-	}
-
-	void setBuffer()
-	{
-		ptr = (*buffer).ptr;
-		end = ptr + (*buffer).length;
-	}
-
-	char[]* buffer;
-	char* ptr, end;
-
-	void put(char c)
-	{
-		if (ptr == end)
-		{
-			auto len = (*buffer).length;
-			buffer.length = len * 2;
-			setBuffer();
-			ptr += len;
-		}
-		*ptr++ = c;
-	}
-
-	char[] get()
-	{
-		return (*buffer)[0..ptr-(*buffer).ptr];
-	}
-}
-alias StackBuf.create getBuf;
-
-struct StringPool
-{
-	string[string] pool;
-
-	string get(in char[] s)
-	{
-		if (s is null)
-			return null;
-		auto p = s in pool;
-		if (p)
-			return *p;
-		auto i = s.idup;
-		if (i is null)
-			i = ""[0..0];
-		assert(i !is null);
-		return pool[i] = i;
-	}
-}
-
-struct Pool(T, IndexTypes...)
-{
-	struct Data
-	{
-		IndexTypes indices;
-	}
-
-	T[Data] pool;
-
-	T get(IndexTypes indices, T function(IndexTypes) ctor)
-	{
-		auto data = Data(indices);
-		auto p = data in pool;
-		if (p)
-			return *p;
-		return pool[data] = ctor(indices);
 	}
 }

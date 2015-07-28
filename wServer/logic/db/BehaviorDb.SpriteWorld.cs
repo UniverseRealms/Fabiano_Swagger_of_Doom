@@ -103,16 +103,13 @@ namespace wServer.logic
                     new ItemLoot("Cloak of the Planewalker", 0.005),
                     new ItemLoot("Wine Cellar Incantation", 0.005),
                     new ItemLoot("Sprite Wand", 0.01),
-                    new ItemLoot("Sprite Star Generator", 0.05),
-
+                    //new ItemLoot("Sprite Star Generator", 0.05),
                     new TierLoot(3, ItemType.Ring, 0.2),
-
                     new TierLoot(6, ItemType.Armor, 0.2),
-
                     new TierLoot(3, ItemType.Ability, 0.2),
                     new TierLoot(4, ItemType.Ability, 0.15),
                     new TierLoot(5, ItemType.Ability, 0.1),
-                 new Threshold(0.2,
+                new Threshold(0.2,
                     new EggLoot(EggRarity.Common, 0.1),
                     new EggLoot(EggRarity.Uncommon, 0.05),
                     new EggLoot(EggRarity.Rare, 0.01),
@@ -244,7 +241,7 @@ namespace wServer.logic
                 new ItemLoot("Magic Potion", 0.05),
                 new ItemLoot("Ring of Greater Magic", 0.05)
             )
-        .Init("Native Nature Sprite",
+        .Init("Native Darkness Sprite",
              new State(
                     new Shoot(10, 5, 20, angleOffset: 0 / 5, projectileIndex: 0, coolDown: 1000),
                     new Prioritize(
@@ -255,7 +252,7 @@ namespace wServer.logic
                 new ItemLoot("Health Potion", 0.05),
                 new ItemLoot("Ring of Dexterity", 0.05)
         )
-        .Init("Sprite God",
+        .Init("Native Sprite God",
                 new State(
                     new Prioritize(
                         new StayAbove(1, 200),

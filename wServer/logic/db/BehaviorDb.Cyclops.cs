@@ -1,10 +1,6 @@
-﻿#region
-
-using wServer.logic.behaviors;
+﻿using wServer.logic.behaviors;
 using wServer.logic.loot;
 using wServer.logic.transitions;
-
-#endregion
 
 namespace wServer.logic
 {
@@ -13,6 +9,7 @@ namespace wServer.logic
         private _ Cyclops = () => Behav()
             .Init("Cyclops God",
                 new State(
+                    new DropPortalOnDeath("Spider Den Portal", 20, PortalDespawnTimeSec: 100),
                     new State("idle",
                         new PlayerWithinTransition(11, "blade_attack"),
                         new HpLessTransition(0.8, "blade_attack")

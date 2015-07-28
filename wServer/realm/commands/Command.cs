@@ -1,11 +1,7 @@
-﻿#region
-
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections.Generic;
 using wServer.realm.entities.player;
-
-#endregion
 
 namespace wServer.realm.commands
 {
@@ -27,9 +23,7 @@ namespace wServer.realm.commands
 
         private static int GetPermissionLevel(Player player)
         {
-            if (player.Client.Account.Rank == 3)
-                return 1;
-            return 0;
+            return player.Client.Account.Rank;
         }
 
         public bool HasPermission(Player player)
@@ -43,7 +37,7 @@ namespace wServer.realm.commands
         {
             if (!HasPermission(player))
             {
-                player.SendError("No permission!");
+                player.SendInfo("You are not an Admin");
                 return false;
             }
 

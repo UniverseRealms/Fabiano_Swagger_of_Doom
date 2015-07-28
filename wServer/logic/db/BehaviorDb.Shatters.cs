@@ -608,6 +608,13 @@ namespace wServer.logic
                     new State("Spawn",
                         new Spawn("shtrs Blobomb", coolDown: 1000),
                         new TimedTransition(6000, "Idle")
+                     ),
+                    new State("blobombs avatar",
+                        new Spawn("shtrs Blobomb", maxChildren: 1, coolDown: 2000)
+                        ),
+                    new State("AVATAR HELP!",
+                        new Spawn("shtrs Blobomb", maxChildren: 1, coolDown: 2000),
+                        new TimedTransition(2000, "Idle")
                     )
                 )
             )
