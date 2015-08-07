@@ -1,0 +1,21 @@
+﻿<ExtData>
+  <Object id="Test Helm" ext="true">
+      <Class>Equipment</Class>
+      <Item />
+      <RemoteTexture>
+        <Instance>production</Instance>
+        <Id>Image1</Id>
+      </RemoteTexture>
+      <SlotType>16</SlotType>
+      <Description>{equip.A_steel_and_platinum_helm_of_ancient_design,_worn_by_earthr}</Description>
+      <ActivateOnEquip stat="21" amount="14">IncrementStat</ActivateOnEquip>
+      <Usable />
+      <BagType>4</BagType>
+      <FameBonus>5</FameBonus>
+      <MpCost>100</MpCost>
+      <Activate effect="Berserk" duration="6" range="4">ConditionEffectAura</Activate>
+      <Cooldown>7</Cooldown>
+      <feedPower>650</feedPower>
+      <DisplayId>{equip.Helm_of_the_Great_General}</DisplayId>
+   </Object>
+</ExtData>

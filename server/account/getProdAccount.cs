@@ -9,7 +9,7 @@ namespace server.account
 {
     internal class getProdAccount : RequestHandler
     {
-        public const string TRANSFERENGINEVERSION = "v1.0 (beta)";
+        public const string TRANSFERENGINEVERSION = "v1.1 (beta)";
 
         protected override void HandleRequest()
         {
@@ -29,7 +29,7 @@ namespace server.account
                     }
                     else if (!acc.Banned)
                     {
-                        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(String.Format("http://www.realmofthemadgodhrd.appspot.com/char/list?guid={0}&password={1}", Query["prodGuid"], Query["prodPassword"]));
+                        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(String.Format("http://www.realmofthemadgodhrd.appspot.com/char/list?guid={0}&{1}={2}", Query["prodGuid"], Query["prodGuid"].StartsWith("kongregate:") || Query["prodGuid"].StartsWith("steamworks:") ? "secret" : "password", Query["prodPassword"]));
                         var resp = req.GetResponse();
 
                         Chars chrs = new Chars();

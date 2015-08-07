@@ -175,6 +175,9 @@
   <ItemGroup>
     <Compile Include="account\register.cs" />
     <None Include="App.config" />
+    <Content Include="texture\Image1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="www\AssembleeGameClient1434817396.swf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

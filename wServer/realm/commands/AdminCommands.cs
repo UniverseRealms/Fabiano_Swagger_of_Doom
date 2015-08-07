@@ -871,10 +871,10 @@ namespace wServer.realm.commands
         }
     }
 
-    internal class SetCommand : Command
+    internal class SetStatCommand : Command
     {
-        public SetCommand()
-            : base("setStat", 1)
+        public SetStatCommand()
+            : base("setstat", 1)
         {
         }
 
@@ -923,7 +923,9 @@ namespace wServer.realm.commands
                             player.Stats[7] = amount;
                             break;
                         case "gold":
-                            player.Credits = amount;
+                        case "credit":
+                        case "credits":
+                            player.Credits += amount;
                             break;
                         default:
                             player.SendInfo("Invalid stat");
@@ -1009,10 +1011,7 @@ namespace wServer.realm.commands
             }
             else
             {
-                player.SendHelp("Usage: /setStat <Stat> <Amount>");
-                player.SendHelp("or");
-                player.SendHelp("Usage: /setStat <Player> <Stat> <Amount>");
-                player.SendHelp("Shortcuts: Hp, Mp, Atk, Def, Spd, Vit, Wis, Dex");
+                player.SendHelp("Usage: /setstat [Player] <Stat> <Amount>");
                 return false;
             }
         }
