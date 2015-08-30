@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using wServer.networking;
 using wServer.networking.svrPackets;
@@ -81,7 +82,7 @@ namespace wServer.realm.commands
     internal class BanCommand : Command
     {
         public BanCommand() :
-            base("ban", permLevel: 1)
+            base("ban", requiredrank: 1)
         {
         }
 
@@ -844,7 +845,7 @@ namespace wServer.realm.commands
 
     internal class CommandListCommand : Command
     {
-        public CommandListCommand() : base("commands", permLevel: 1)
+        public CommandListCommand() : base("commands", requiredrank: 1)
         {
         }
 
@@ -867,6 +868,106 @@ namespace wServer.realm.commands
             }
 
             player.SendInfo(sb.ToString());
+            return true;
+        }
+    }
+
+    internal class AccountTextureCommand : Command
+    {
+        public AccountTextureCommand() : base("acctex", 1)
+        {
+        }
+
+        protected override bool Process(Player player, RealmTime time, string[] args)
+        {
+            string arg = args[0].ToLower();
+            string enabled = player.Client.Account.UseAccountTexture ? "enabled" : "disabled";
+            switch (arg)
+            {
+                case "":
+                case "get":
+                    player.SendInfo($"Account textures are {enabled}");
+                    break;
+                case "enable":
+                case "true":
+                    player.Manager.Database.DoActionAsync(db =>
+                    {
+                        var cmd = db.CreateQuery();
+                        cmd.CommandText = "update accounts set accTexture = 1 where id=@accId";
+                        cmd.Parameters.AddWithValue("@accId", player.AccountId);
+                        cmd.ExecuteNonQuery();
+                    });
+                    player.Client.Account.UseAccountTexture = true;
+                    player.SendInfo("Account textures are now enabled");
+                    break;
+                case "disable":
+                case "false":
+                    player.Manager.Database.DoActionAsync(db =>
+                    {
+                        var cmd = db.CreateQuery();
+                        cmd.CommandText = "update accounts set accTexture = 0 where id=@accId";
+                        cmd.Parameters.AddWithValue("@accId", player.AccountId);
+                        cmd.ExecuteNonQuery();
+                    });
+                    player.Client.Account.UseAccountTexture = false;
+                    player.SendInfo("Account textures are now disabled");
+                    break;
+                case "tex1":
+                case "1":
+                    if (Regex.IsMatch(args[1], @"^\d+$"))
+                    {
+                        player.Manager.Database.DoActionAsync(db =>
+                        {
+                            var cmd = db.CreateQuery();
+                            cmd.CommandText = "update accounts set accTex1 = @tex1 where id=@accId";
+                            cmd.Parameters.AddWithValue("@tex1", int.Parse(args[1]));
+                            cmd.Parameters.AddWithValue("@accId", player.AccountId);
+                            cmd.ExecuteNonQuery();
+                        });
+                        player.SendInfo($"Account texture 1 has been set to {args[1]}");
+                    }
+                    else
+                        player.SendInfo("Not yet");
+                    break;
+                case "tex2":
+                case "2":
+                    if (Regex.IsMatch(args[1], @"^\d+$"))
+                    {
+                        player.Manager.Database.DoActionAsync(db =>
+                        {
+                            var cmd = db.CreateQuery();
+                            cmd.CommandText = "update accounts set accTex1 = @tex2 where id=@accId";
+                            cmd.Parameters.AddWithValue("@tex2", int.Parse(args[1]));
+                            cmd.Parameters.AddWithValue("@accId", player.AccountId);
+                            cmd.ExecuteNonQuery();
+                        });
+                        player.SendInfo($"Account texture 2 has been set to {args[1]}");
+                    }
+                    else
+                        player.SendInfo("Not yet");
+                    break;
+                case "set":
+                    if (player.Client.Account.UseAccountTexture)
+                    {
+                        try
+                        {
+                            player.Texture1 = player.Client.Account.AccountTexture1;
+                            player.Texture2 = player.Client.Account.AccountTexture2;
+                            player.SaveToCharacter();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(e);
+                            player.SendInfo("An error occured");
+                        }
+                        player.SendInfo("Success");
+                    }
+                    else
+                    {
+                        player.SendInfo($"Account textures are not enabled, type '/{CommandName} enable' to enable it");
+                    }
+                    break;
+            }
             return true;
         }
     }

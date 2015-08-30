@@ -181,6 +181,15 @@ public class Account
     }
 
     [XmlElement]
+    public bool UseAccountTexture { get; set; }
+
+    [XmlElement]
+    public int AccountTexture1 { get; set; }
+
+    [XmlElement]
+    public int AccountTexture2 { get; set; }
+
+    [XmlElement]
     public int Warnings { get; set; }
 
     [XmlElement("Banned")]

@@ -9,10 +9,10 @@ namespace wServer.realm.commands
     {
         protected static readonly ILog logger = LogManager.GetLogger(typeof(Command));
 
-        public Command(string name, int permLevel = 0)
+        public Command(string name, int requiredrank = 0)
         {
             CommandName = name;
-            PermissionLevel = permLevel;
+            PermissionLevel = requiredrank;
         }
 
         public string CommandName { get; private set; }
@@ -44,7 +44,18 @@ namespace wServer.realm.commands
             try
             {
                 string[] a = args.Split(' ');
-                return Process(player, time, a);
+                bool success = Process(player, time, a);
+                if (success)
+                player.Manager.Database.DoActionAsync(db =>
+                {
+                    var cmd = db.CreateQuery();
+                    cmd.CommandText = "insert into commandlog (command, args, player) values (@command, @args, @player);";
+                    cmd.Parameters.AddWithValue("@command", CommandName);
+                    cmd.Parameters.AddWithValue("@args", args);
+                    cmd.Parameters.AddWithValue("@player", $"{player.AccountId}:{player.Name}");
+                    cmd.ExecuteNonQuery();
+                });
+                return success;
             }
             catch (Exception ex)
             {
