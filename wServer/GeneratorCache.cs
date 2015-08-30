@@ -4,6 +4,7 @@ using DungeonGenerator.Templates.Abyss;
 using DungeonGenerator.Templates.MadLab;
 using DungeonGenerator.Templates.PirateCave;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -49,7 +50,7 @@ namespace wServer
             logger.Info($"Generating cache for dungeon: {key}");
             cachedMaps.Add(key, new List<string>());
             for (var i = 0; i < 3; i++) //Keep at least 3 maps in cache
-                cachedMaps[key].Add(generateNext(0, template));
+                cachedMaps[key].Add(generateNext((uint)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds, template));
         }
     }
 }
