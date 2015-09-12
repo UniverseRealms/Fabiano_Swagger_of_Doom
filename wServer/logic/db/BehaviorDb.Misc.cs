@@ -23,6 +23,22 @@ namespace wServer.logic
                             new Prioritize(
                                 new StayCloseToSpawn(0.1, 2),
                                 new Wander(0.1)),
-                        new Taunt(0.001, 1000, "baa", "baa baa"))));
+                        new Taunt(0.001, 1000, "baa", "baa baa"))))
+
+            .Init("Test Boss",
+                new State(
+                    new State("Kraaa",
+                        new ConditionalEffect(ConditionEffectIndex.Invulnerable),
+                        new Shoot(25, fixedAngle: 30, coolDown: 200),
+                        new Shoot(25, fixedAngle: 60, coolDown: 200),
+                        new Shoot(25, fixedAngle: 90, coolDown: 200),
+                        new Shoot(25, fixedAngle: 120, coolDown: 200),
+                        new Shoot(25, fixedAngle: 180, coolDown: 200),
+                        new Shoot(25, fixedAngle: 240, coolDown: 200),
+                        new Shoot(25, fixedAngle: 300, coolDown: 200),
+                        new Shoot(25, fixedAngle: 0, coolDown: 200),
+                        new TimedTransition(4500, "Tek")),
+                    new State("Tek",
+                        new ConditionalEffect(ConditionEffectIndex.Armored))));
     }
 }

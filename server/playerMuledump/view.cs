@@ -86,6 +86,7 @@ namespace server.playerMuledump
                 xws.OmitXmlDeclaration = true;
                 xws.Encoding = Encoding.UTF8;
                 xws.Indent = true;
+                xws.IndentChars = "    ";
                 XmlWriter xtw = XmlWriter.Create(Context.Response.OutputStream, xws);
                 serializer.Serialize(xtw, chrs, chrs.Namespaces);
             }

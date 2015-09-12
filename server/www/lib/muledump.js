@@ -12,7 +12,7 @@ var ROW = window.rowlength || 7
 // are totals not following equip/inv/vaults options?
 var TKGP = false;
 
-var URL = 'http://25.48.226.249:8080/playerMuledump/view?'
+var URL = 'http://localhost:8080/playerMuledump/view?'
 
 var autherr = {}
 
@@ -354,7 +354,6 @@ Mule.prototype.query = function (ignore_cache) {
 
     var params = { guid: this.guid, ignore: Math.floor(1e3 + 9e3 * Math.random()) };
     var pass = accounts[this.guid] || '';
-    params[this.guid.indexOf('kongregate:') == 0 ? 'secret' : 'password'] = pass;
     var url = URL + $.param(params);
 
     queue_request({

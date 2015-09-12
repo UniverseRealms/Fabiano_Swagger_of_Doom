@@ -18,4 +18,46 @@
       <feedPower>650</feedPower>
       <DisplayId>{equip.Helm_of_the_Great_General}</DisplayId>
    </Object>
+  <Object id="Test Boss" ext="true">
+    <Group>Test</Group>
+    <Enemy />
+    <Class>Character</Class>
+    <RemoteTexture>
+      <Instance>production</Instance>
+      <Id>Untitled</Id>
+    </RemoteTexture>
+    <HitSound>monster/minion_of_oryx_death</HitSound>
+    <DeathSound>monster/golems_death</DeathSound>
+    <Size>110</Size>
+    <MaxHitPoints>80000</MaxHitPoints>
+    <Defense>50</Defense>
+    <Quest />
+    <XpMult>1.6</XpMult>
+    <Projectile id="0">
+      <ObjectId>Test Projectile</ObjectId>
+      <Speed>80</Speed>
+      <Damage>75</Damage>
+      <Size>40</Size>
+      <LifetimeMS>1500</LifetimeMS>
+      <ArmorPiercing />
+      <MultiHit />
+    </Projectile>
+    <Projectile id="1">
+      <ObjectId>Test Projectile</ObjectId>
+      <Speed>100</Speed>
+      <Damage>40</Damage>
+      <Size>25</Size>
+      <LifetimeMS>1500</LifetimeMS>
+      <ArmorPiercing />
+      <MultiHit />
+    </Projectile>
+    <DisplayId>{shore.Bandit_Leader}</DisplayId>
+  </Object>
+  <Object id="Test Projectile" ext="true">
+    <Class>Projectile</Class>
+    <RemoteTexture>
+      <Instance>production</Instance>
+      <Id>TestProjectile</Id>
+    </RemoteTexture>
+  </Object>
 </ExtData>
