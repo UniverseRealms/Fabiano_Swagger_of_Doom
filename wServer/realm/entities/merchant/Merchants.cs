@@ -20,7 +20,7 @@ namespace wServer.realm.entities.merchant
         private const int MERCHANT_SIZE = 100;
         private static readonly ILog logger = LogManager.GetLogger(typeof(Merchants));
 
-        private readonly Dictionary<int, Tuple<int, CurrencyType>> prices = MerchantLists.MerchantPrices;
+        private readonly Dictionary<int, Tuple<int, int, int, CurrencyType, CurrencyType, CurrencyType>> prices = MerchantLists.MerchantPrices;
 
         private bool closing;
         private bool newMerchant;
@@ -346,15 +346,43 @@ namespace wServer.realm.entities.merchant
                     Discount = 10;
                 else Discount = 0;
 
-                Tuple<int, CurrencyType> price;
+                Tuple<int, int, int, CurrencyType, CurrencyType, CurrencyType> price;
                 if (prices.TryGetValue(MType, out price))
                 {
                     if (Discount != 0)
-                        Price = (int)(price.Item1 - (price.Item1 * ((double)Discount / 100))) < 1 ?
-                            price.Item1 : (int)(price.Item1 - (price.Item1 * ((double)Discount / 100)));
+                        if (Program.TestingMerchants)
+                        {
+                            Price = (int)(price.Item2 - (price.Item2 * ((double)Discount / 100))) < 1 ? price.Item2 : (int)(price.Item2 - (price.Item2 * ((double)Discount / 100)));
+                            Currency = price.Item5;
+                        }
+                        else if (Program.Settings.GetValue<bool>("SimplifiedMerchant", "false"))
+                        {
+                            Price = (int)(price.Item3 - (price.Item3 * ((double)Discount / 100))) < 1 ? price.Item3 : (int)(price.Item3 - (price.Item3 * ((double)Discount / 100)));
+                            Currency = price.Item6;
+                        }
+                        else
+                        {
+                            Price = (int)(price.Item1 - (price.Item1 * ((double)Discount / 100))) < 1 ? price.Item1 : (int)(price.Item1 - (price.Item1 * ((double)Discount / 100)));
+                            Currency = price.Item4;
+                        }
                     else
-                        Price = price.Item1;
-                    Currency = price.Item2;
+                    {
+                        if (Program.TestingMerchants)
+                        {
+                            Price = price.Item2;
+                            Currency = price.Item5;
+                        }
+                        else if (Program.Settings.GetValue<bool>("SimplifiedMerchant", "false"))
+                        {
+                            Price = price.Item3;
+                            Currency = price.Item6;
+                        }
+                        else
+                        {
+                            Price = price.Item1;
+                            Currency = price.Item4;
+                        }
+                    }
                 }
 
                 break;
