@@ -15,4 +15,3 @@ You can use this source as long as you credit the following people:
 - [ossimc82](https://github.com/ossimc82) - Fabian Fischer
 - [Tarp](https://github.com/trapped)
 - Anyone else that has contributed to this project/repository.
-# MuledumpPS 
