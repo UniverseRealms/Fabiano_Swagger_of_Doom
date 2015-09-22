@@ -1,6 +1,4 @@
-﻿#region
-
-using db;
+﻿using db;
 using MySql.Data.MySqlClient;
 using System;
 using System.Globalization;
@@ -8,8 +6,6 @@ using System.IO;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
-
-#endregion
 
 namespace server.account
 {
@@ -50,12 +46,12 @@ namespace server.account
                         status = Encoding.UTF8.GetBytes("<Error>Error.emailAlreadyUsed</Error>");
                     else
                     {
-                        MySqlCommand cmd = db.CreateQuery();
-                        cmd.CommandText =
-                            "UPDATE accounts SET uuid=@newUuid, name=@newUuid, password=SHA1(@password), guest=FALSE WHERE uuid=@uuid, name=@name;";
+                        var cmd = db.CreateQuery();
+                        cmd.CommandText = "UPDATE accounts SET uuid=@newUuid, name=@newUuid, password=SHA1(@password), guest=FALSE, line1=@empty, line2=@empty, line3=@empty WHERE uuid=@uuid, name=@name;";
                         cmd.Parameters.AddWithValue("@uuid", Query["guid"]);
                         cmd.Parameters.AddWithValue("@newUuid", Query["newGUID"]);
                         cmd.Parameters.AddWithValue("@password", Query["newPassword"]);
+                        cmd.Parameters.AddWithValue("@empty", string.Empty);
 
                         if (cmd.ExecuteNonQuery() > 0)
                             status = Encoding.UTF8.GetBytes("<Success />");

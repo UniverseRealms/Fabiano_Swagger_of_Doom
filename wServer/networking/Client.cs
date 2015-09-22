@@ -150,7 +150,7 @@ namespace wServer.networking
                     if (Character != null)
                     {
                         if (w != null) db.UpdateLastSeen(Account.AccountId, Character.CharacterId, w);
-                        db.SaveCharacter(Account, Character);
+                        db.SaveCharacter(Account, Character, Manager.GameData);
                     }
 
                     db.UnlockAccount(Account);

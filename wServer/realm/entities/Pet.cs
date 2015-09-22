@@ -91,15 +91,14 @@ namespace wServer.realm.entities
 
         public void Feed(IFeedable petFoodNOMNOMNOM)
         {
-            FirstPetLevel.Incease(petFoodNOMNOMNOM);
-            SecondPetLevel.Incease(petFoodNOMNOMNOM);
-            ThirdPetLevel.Incease(petFoodNOMNOMNOM);
+            FirstPetLevel.Increase(petFoodNOMNOMNOM);
+            SecondPetLevel.Increase(petFoodNOMNOMNOM);
+            ThirdPetLevel.Increase(petFoodNOMNOMNOM);
 
             Manager.Database.DoActionAsync(db =>
             {
                 MySqlCommand cmd = db.CreateQuery();
-                cmd.CommandText =
-                    "UPDATE pets SET levels=@newLevels, xp=@newXp WHERE petId=@petId AND accId=@accId";
+                cmd.CommandText = "UPDATE pets SET levels=@newLevels, xp=@newXp WHERE petId=@petId AND accId=@accId";
                 cmd.Parameters.AddWithValue("@petId", PetId);
                 cmd.Parameters.AddWithValue("@accId", Owner.Players.ToArray()[0].Value.AccountId);
                 cmd.Parameters.AddWithValue("@newLevels",
@@ -203,6 +202,7 @@ namespace wServer.realm.entities
                 {
                     InstanceId = db.GetNextPetId(player.AccountId),
                     Rarity = (int)egg.Rarity,
+                    Family = egg.Family.ToString(),
                     SkinName = skin.DisplayId,
                     Skin = skin.ObjectType,
                     Type = petStruct.ObjectType,
@@ -217,7 +217,7 @@ namespace wServer.realm.entities
                         item.Abilities[0].Points = 2080;
                         item.Abilities[1].Power = 11;
                         item.Abilities[1].Points = 290;
-                        item.Abilities[2].Power = 1;
+                        item.Abilities[2].Power = 0;
                         item.Abilities[2].Points = 0;
                         break;
 
@@ -227,7 +227,7 @@ namespace wServer.realm.entities
                         item.Abilities[0].Points = 10607;
                         item.Abilities[1].Power = 30;
                         item.Abilities[1].Points = 2080;
-                        item.Abilities[2].Power = 1;
+                        item.Abilities[2].Power = 0;
                         item.Abilities[2].Points = 0;
                         break;
 
@@ -255,9 +255,9 @@ namespace wServer.realm.entities
                         item.MaxAbilityPower = 30;
                         item.Abilities[0].Power = 1;
                         item.Abilities[0].Points = 0;
-                        item.Abilities[1].Power = 1;
+                        item.Abilities[1].Power = 0;
                         item.Abilities[1].Points = 0;
-                        item.Abilities[2].Power = 1;
+                        item.Abilities[2].Power = 0;
                         item.Abilities[2].Points = 0;
                         break;
                 }

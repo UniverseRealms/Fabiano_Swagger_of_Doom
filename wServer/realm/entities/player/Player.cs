@@ -508,7 +508,7 @@ namespace wServer.realm.entities.player
                 {
                     Client.Character.Dead = true;
                     SaveToCharacter();
-                    db.SaveCharacter(Client.Account, Client.Character);
+                    db.SaveCharacter(Client.Account, Client.Character, Manager.GameData);
                     db.Death(Manager.GameData, Client.Account, Client.Character, killer);
                 });
                 if (Owner.Id != -6)

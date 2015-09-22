@@ -35,6 +35,8 @@ namespace db
 
         public MySqlConnection Connection { get { return _con; } }
 
+        public XmlData GameData { get { return new XmlData(); } }
+
         public Database(string host, string database, string user, string password)
         {
             _host = host;
@@ -464,7 +466,7 @@ AND characters.charId=death.chrId;";
                     acc.GiftCodes.Add(rdr.GetString("code"));
         }
 
-    public int UpdateCredit(Account acc, int amount)
+        public int UpdateCredit(Account acc, int amount)
         {
             var cmd = CreateQuery();
             if (amount > 0)
@@ -709,6 +711,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
                         {
                             Abilities = GetPetAbilities(rdr),
                             Rarity = rdr.GetInt32("rarity"),
+                            Family = rdr.GetString("family"),
                             MaxAbilityPower = rdr.GetInt32("maxLevel"),
                             InstanceId = petId,
                             SkinName = rdr.GetString("skinName"),
@@ -890,7 +893,7 @@ SELECT MAX(chestId) FROM vaults WHERE accId = @accId;";
             return ret;
         }
 
-        public void SaveCharacter(Account acc, Char chr)
+        public void SaveCharacter(Account acc, Char chr, XmlData data)
         {
             if (acc == null || chr == null) return;
             var cmd = CreateQuery();
@@ -906,6 +909,7 @@ hp=@hp,
 mp=@mp,
 tex1=@tex1,
 tex2=@tex2,
+texIds=@texIds,
 petId=@pet,
 fameStats=@fameStats,
 hasBackpack=@hasBackpack,
@@ -916,7 +920,6 @@ ltTimer=@lootTierTime
 WHERE accId=@accId AND charId=@charId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@charId", chr.CharacterId);
-
             cmd.Parameters.AddWithValue("@level", chr.Level);
             cmd.Parameters.AddWithValue("@exp", chr.Exp);
             cmd.Parameters.AddWithValue("@fame", chr.CurrentFame);
@@ -939,6 +942,15 @@ WHERE accId=@accId AND charId=@charId;";
             cmd.Parameters.AddWithValue("@hasBackpack", chr.HasBackpack);
             cmd.Parameters.AddWithValue("@tex1", chr.Tex1);
             cmd.Parameters.AddWithValue("@tex2", chr.Tex2);
+            ushort _tex1 = 0, _tex2 = 0;
+            foreach (KeyValuePair<ushort, Item> items in data.Items)
+            {
+                if (items.Value.Texture1 == chr.Tex1)
+                    _tex1 = items.Value.ObjectType;
+                if (items.Value.Texture2 == chr.Tex2)
+                    _tex2 = items.Value.ObjectType;
+            }
+            cmd.Parameters.AddWithValue("@texIds", $"{_tex1},{_tex2}");
             cmd.Parameters.AddWithValue("@pet", chr.Pet == null ? -1 : chr.Pet.InstanceId);
             cmd.Parameters.AddWithValue("@skin", chr.Skin);
             cmd.Parameters.AddWithValue("@xpTime", chr.XpTimer);
@@ -1255,22 +1267,30 @@ VALUES(@accId, @chrId, @name, @objType, @tex1, @tex2, @skin, @items, @fame, @exp
 
         public void CreatePet(Account acc, PetItem item)
         {
+            XmlData data = new XmlData();
             var cmd = CreateQuery();
             cmd.CommandText = "SELECT COUNT(petId) FROM pets WHERE petId=@petId AND accId=@accId;";
             cmd.Parameters.AddWithValue("@accId", acc.AccountId);
             cmd.Parameters.AddWithValue("@petId", item.InstanceId);
             if ((int)(long)cmd.ExecuteScalar() == 0)
             {
-                //Not finished yet.
+                Family? _family = Family.Unknown;
+                var _pskin = 0;
                 cmd = CreateQuery();
                 cmd.CommandText =
-                    @"INSERT INTO pets(accId, petId, objType, skinName, skin, rarity, maxLevel, abilities, levels, xp)
-VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilities, @levels, @xp);";
+                    @"INSERT INTO pets(accId, petId, objType, skinName, skin, family, rarity, maxLevel, abilities, levels, xp)
+VALUES(@accId, @petId, @objType, @skinName, @skin, @family, @rarity, @maxLevel, @abilities, @levels, @xp);";
                 cmd.Parameters.AddWithValue("@accId", acc.AccountId);
                 cmd.Parameters.AddWithValue("@petId", item.InstanceId);
                 cmd.Parameters.AddWithValue("@objType", item.Type);
                 cmd.Parameters.AddWithValue("@skinName", item.SkinName);
                 cmd.Parameters.AddWithValue("@skin", item.Skin);
+                foreach (KeyValuePair<ushort, Item> items in data.Items)
+                {
+                    if (items.Value.ObjectType == item.InstanceId)
+                        _family = items.Value.Family;
+                }
+                cmd.Parameters.AddWithValue("@family", _family);
                 cmd.Parameters.AddWithValue("@rarity", item.Rarity);
                 cmd.Parameters.AddWithValue("@maxLevel", item.MaxAbilityPower);
                 cmd.Parameters.AddWithValue("@abilities",
@@ -1405,7 +1425,7 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
                 chrs.Account.AccountId = oldAccId;
 
                 var cmd = CreateQuery();
-                cmd.CommandText = "UPDATE accounts SET prodAcc=1, name=@name, namechosen=@nameChoosen, vaultCount=@vaults, maxCharSlot=@maxChars, ownedSkins=@skins, gifts=@gifts WHERE id=@oldAccId;";
+                cmd.CommandText = "UPDATE accounts SET prodAcc=1, name=@name, namechosen=@nameChoosen, vaultCount=@vaults, maxCharSlot=@maxChars, ownedSkins=@skins, gifts=@gifts, line1=@empty, line2=@empty, line3=@empty WHERE id=@oldAccId;";
                 cmd.Parameters.AddWithValue("@name", chrs.Account.Name);
                 cmd.Parameters.AddWithValue("@nameChoosen", chrs.Account.NameChosen ? 1 : 0);
                 cmd.Parameters.AddWithValue("@vaults", chrs.Account.Vault.Chests.Count);
@@ -1413,10 +1433,11 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
                 cmd.Parameters.AddWithValue("@oldAccId", oldAccId);
                 cmd.Parameters.AddWithValue("@gifts", chrs.Account._Gifts);
                 cmd.Parameters.AddWithValue("@skins", chrs.OwnedSkins);
+                cmd.Parameters.AddWithValue("@empty", string.Empty);
                 cmd.ExecuteNonQuery();
 
                 cmd = CreateQuery();
-                cmd.CommandText = "DELETE FROM characters WHERE accId=@accId AND dead=0;";
+                cmd.CommandText = "DELETE FROM characters WHERE accId=@accId;";
                 cmd.Parameters.AddWithValue("@accId", oldAccId);
                 cmd.ExecuteNonQuery();
 
@@ -1427,6 +1448,31 @@ VALUES(@accId, @petId, @objType, @skinName, @skin, @rarity, @maxLevel, @abilitie
 
                 cmd = CreateQuery();
                 cmd.CommandText = "DELETE FROM classstats WHERE accId=@accId";
+                cmd.Parameters.AddWithValue("@accId", oldAccId);
+                cmd.ExecuteNonQuery();
+
+                cmd = CreateQuery();
+                cmd.CommandText = "DELETE FROM arenalb WHERE accId=@accId";
+                cmd.Parameters.AddWithValue("@accId", oldAccId);
+                cmd.ExecuteNonQuery();
+
+                cmd = CreateQuery();
+                cmd.CommandText = "DELETE FROM backpacks WHERE accId=@accId";
+                cmd.Parameters.AddWithValue("@accId", oldAccId);
+                cmd.ExecuteNonQuery();
+
+                cmd = CreateQuery();
+                cmd.CommandText = "DELETE FROM pets WHERE accId=@accId;";
+                cmd.Parameters.AddWithValue("@accId", oldAccId);
+                cmd.ExecuteNonQuery();
+
+                cmd = CreateQuery();
+                cmd.CommandText = "DELETE FROM stats WHERE accId=@accId";
+                cmd.Parameters.AddWithValue("@accId", oldAccId);
+                cmd.ExecuteNonQuery();
+
+                cmd = CreateQuery();
+                cmd.CommandText = "DELETE FROM realmeye WHERE accId=@accId";
                 cmd.Parameters.AddWithValue("@accId", oldAccId);
                 cmd.ExecuteNonQuery();
 
@@ -1446,22 +1492,12 @@ bestFame = GREATEST(bestFame, @bestFame);";
                 }
 
                 cmd = CreateQuery();
-                cmd.CommandText = "DELETE FROM stats WHERE accId=@accId";
-                cmd.Parameters.AddWithValue("@accId", oldAccId);
-                cmd.ExecuteNonQuery();
-
-                cmd = CreateQuery();
                 cmd.CommandText = "INSERT INTO stats (accId, fame, totalFame, credits, totalCredits, fortuneTokens, totalFortuneTokens) VALUES(@accId, @fame, @fame, @gold, @gold, @tokens, @tokens)";
                 cmd.Parameters.AddWithValue("@accId", oldAccId);
                 cmd.Parameters.AddWithValue("@fame", chrs.Account.Stats.Fame);
                 cmd.Parameters.AddWithValue("@totalFame", chrs.Account.Stats.TotalFame);
                 cmd.Parameters.AddWithValue("@gold", chrs.Account.Credits);
                 cmd.Parameters.AddWithValue("@tokens", chrs.Account.FortuneTokens);
-                cmd.ExecuteNonQuery();
-
-                cmd = CreateQuery();
-                cmd.CommandText = "DELETE FROM pets WHERE accId=@accId;";
-                cmd.Parameters.AddWithValue("@accId", oldAccId);
                 cmd.ExecuteNonQuery();
 
                 foreach (var @char in chrs.Characters)
@@ -1481,6 +1517,7 @@ bestFame = GREATEST(bestFame, @bestFame);";
                     };
 
                     cmd = CreateQuery();
+                    cmd.CommandText = "INSERT INTO characters (accId, charId, charType, level, exp, fame, items, hp, mp, stats, dead, pet, fameStats, skin, createTime, lastSeen, lastLocation) VALUES (@accId, @charId, @charType, 1, 0, 0, @items, 100, 100, @stats, FALSE, -1, @fameStats, @skin, @time, @time, @location);";
                     cmd.Parameters.AddWithValue("@accId", chrs.Account.AccountId);
                     cmd.Parameters.AddWithValue("@charId", @char.CharacterId);
                     cmd.Parameters.AddWithValue("@charType", @char.ObjectType);
@@ -1488,8 +1525,8 @@ bestFame = GREATEST(bestFame, @bestFame);";
                     cmd.Parameters.AddWithValue("@stats", Utils.GetCommaSepString(stats));
                     cmd.Parameters.AddWithValue("@fameStats", @char.PCStats);
                     cmd.Parameters.AddWithValue("@skin", @char.Skin);
-                    cmd.CommandText =
-                        "INSERT INTO characters (accId, charId, charType, level, exp, fame, items, hp, mp, stats, dead, pet, fameStats, skin) VALUES (@accId, @charId, @charType, 1, 0, 0, @items, 100, 100, @stats, FALSE, -1, @fameStats, @skin);";
+                    cmd.Parameters.AddWithValue("@time", DateTime.UtcNow.ToString("yyyy-MM-dd:HH-mm-ss"));
+                    cmd.Parameters.AddWithValue("@location", "Transfer Centre");
                     cmd.ExecuteNonQuery();
 
                     if (@char.Pet != null)
@@ -1501,15 +1538,22 @@ bestFame = GREATEST(bestFame, @bestFame);";
 
                     if (@char.Equipment.Length > 12)
                     {
-                        @char.Backpack = new int[8];
-                        Array.Copy(@char.Equipment, 12, @char.Backpack, 0, 8);
-                        var eq = @char.Equipment;
-                        Array.Resize(ref eq, 12);
-                        @char.Equipment = eq;
-                        @char.HasBackpack = 1;
+                        try
+                        {
+                            @char.Backpack = new int[8];
+                            Array.Copy(@char.Equipment, 12, @char.Backpack, 0, 8);
+                            var eq = @char.Equipment;
+                            Array.Resize(ref eq, 12);
+                            @char.Equipment = eq;
+                            @char.HasBackpack = 1;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
                     }
                     chr = @char;
-                    SaveCharacter(chrs.Account, chr);
+                    SaveCharacter(chrs.Account, chr, GameData);
                 }
 
                 foreach (var chest in chrs.Account.Vault.Chests)

@@ -580,6 +580,9 @@ public class PetItem
     [XmlAttribute("rarity")]
     public int Rarity { get; set; }
 
+    [XmlAttribute("family")]
+    public string Family { get; set; }
+
     [XmlArray("Abilities")]
     [XmlArrayItem("Ability")]
     public List<AbilityItem> Abilities { get; set; }
